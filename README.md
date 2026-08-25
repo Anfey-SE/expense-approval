@@ -248,3 +248,18 @@ code changes, just a different target.
   from the line items on every write.
 - **404 instead of 403 on cross-department reads** so the API doesn't leak the existence of other
   departments' requests.
+
+---
+
+## License
+
+Released under the [MIT License](LICENSE).
+
+---
+
+## Related projects
+
+- **[flashdeal](https://github.com/LijuanTang94/flashdeal)** — Flash-sale backend: Redis + Lua admission control, RabbitMQ confirms
+- **[care-plan-rag](https://github.com/LijuanTang94/care-plan-rag)** — Retrieval-grounded LLM service with a CI eval gate
+
+More at **[github.com/LijuanTang94](https://github.com/LijuanTang94)**.
