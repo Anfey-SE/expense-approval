@@ -167,12 +167,12 @@ On first boot the app seeds three departments and five demo accounts (password `
 JAVA_HOME=$(/usr/libexec/java_home -v 21) ./mvnw test
 ```
 
-19 tests in two layers.
+32 tests in two layers.
 
 **13 unit tests** (no database, mocked repositories) cover the state-machine transition table and the
 RBAC guarantees: role-owns-stage, department scoping, no self-approval.
 
-**6 integration tests** boot the whole application against a real Postgres via Testcontainers,
+**19 integration tests** boot the whole application against a real Postgres via Testcontainers,
 because the mocked tests are blind to an entire class of failure — a migration that doesn't apply, an
 entity that no longer matches the schema (`ddl-auto: validate` only speaks up against a real
 database), a malformed `@Query`, or a `@PreAuthorize` expression that doesn't parse. All of those
@@ -184,6 +184,16 @@ pass a mocked suite and then fail at startup in production.
   race and raises `ObjectOptimisticLockingFailureException`, which the API surfaces as `409`. Also
   pins that a rejection is a terminal decision and that the audit trail gains exactly one row per
   successful transition.
+- `ApiSecurityIntegrationTest` — the outer authorization layer, over real HTTP: the role gates on
+  approve/reject stop an employee before any service code runs (403 even for an id that doesn't
+  exist, which is how you know the gate fired first), registration ignores a client-supplied role,
+  and the login token identifies the caller to every other endpoint.
+- `RoleScopedListingIntegrationTest` — the inner layer: `GET /api/requests` is one endpoint for every
+  role, and the query the service picks scopes it — employees see their own requests, managers their
+  department, finance everything.
+- `ApprovalWorkflowIntegrationTest` — the whole path the SPA drives, DRAFT → FINANCE_APPROVED, with
+  one audit row per transition read back out of Postgres, and a manager who holds the right role
+  still unable to decide on their own request.
 
 The Postgres container is a JVM-wide singleton, started in a static initialiser rather than through
 `@Testcontainers`/`@Container` — see the comment in `PostgresIntegrationTest` for why that matters
