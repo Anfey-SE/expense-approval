@@ -30,9 +30,9 @@ This log records every task assistance from AI (Antigravity), including the exac
   - Total: **75 tests run, 0 failures, 0 errors**.
 - **Combined Test Run (Upstream + Team Unit Tests: `mvnw test`)**:
   - Total: **107 tests run, 0 failures, 0 errors, 0 skipped**.
-- **JaCoCo Coverage Metric Verification**:
-  - `com.sandy.expense.service.ExpenseService`: **100% line coverage** (105/105 lines), **100% branch coverage** (50/50 branches).
-  - `com.sandy.expense.service.AuthService`: **100% line coverage** (33/33 lines), **100% branch coverage** (4/4 branches).
+- **JaCoCo Coverage Metric Verification** *(note: initial incremental run before `mvnw clean` measured 105/33 lines; clean `javac 21` compilation in Task 5 measured 107/32 lines — both 100%)*:
+  - `com.sandy.expense.service.ExpenseService`: **100% line coverage** (105/105 incremental; 107/107 clean `javac`), **100% branch coverage** (50/50 branches).
+  - `com.sandy.expense.service.AuthService`: **100% line coverage** (33/33 incremental; 32/32 clean `javac`), **100% branch coverage** (4/4 branches).
   - `com.sandy.expense.domain.RequestStatus`: **100% line coverage** (14/14 lines), **100% branch coverage** (6/6 branches).
   - `com.sandy.expense.domain.ExpenseRequest`: **100% line coverage** (9/9 lines), 0 branches.
 - **JaCoCo Rule Check (`mvnw jacoco:check`)**:
@@ -78,9 +78,9 @@ This log records every task assistance from AI (Antigravity), including the exac
 | `RequestStatus` | LINE | 14 | 0 | 14 | **100%** |
 | `RequestStatus` | BRANCH | 6 | 0 | 6 | **100%** |
 | `ExpenseRequest` | LINE | 9 | 0 | 9 | **100%** |
-| `ExpenseService` | LINE | 105 | 0 | 105 | **100%** |
+| `ExpenseService` | LINE | 105 *(107 clean)* | 0 | 105 *(107 clean)* | **100%** |
 | `ExpenseService` | BRANCH | 50 | 0 | 50 | **100%** |
-| `AuthService` | LINE | 33 | 0 | 33 | **100%** |
+| `AuthService` | LINE | 33 *(32 clean)* | 0 | 33 *(32 clean)* | **100%** |
 | `AuthService` | BRANCH | 4 | 0 | 4 | **100%** |
 
 No missed lines or branches on any of the 4 target classes. The check gate passes unchanged.
@@ -107,47 +107,47 @@ No missed lines or branches on any of the 4 target classes. The check gate passe
 
 ---
 
-## Task 3 â€” System Description and Scope (`docs/team/01_system_and_scope.md`)
+## Task 3 — System Description and Scope (`docs/team/01_system_and_scope.md`)
 
 | Field | Value |
 |---|---|
 | Tool | Antigravity (Google DeepMind) |
 | Date | 2026-11-25 |
 | Purpose | Write `docs/team/01_system_and_scope.md`: project identity, install commands, DB, roles, requirements, and 4 business rules, all with verbatim code snippets and file+line references |
-| Output | 278-line Markdown document covering project identity, install/start/reset commands, DB schema (Flyway V1+V2), role enforcement (HTTP + service layer), 13 requirements (REQ-A1â€“A4, REQ-E1â€“E8, REQ-AP1â€“AP4), and 4 business rules (BR1â€“BR4) |
+| Output | 278-line Markdown document covering project identity, install/start/reset commands, DB schema (Flyway V1+V2), role enforcement (HTTP + service layer), 13 requirements (REQ-A1–A4, REQ-E1–E8, REQ-AP1–AP4), and 4 business rules (BR1–BR4) |
 | What was checked | Every code snippet was read verbatim from the real source files (`ExpenseService.java`, `ExpenseDtos.java`, `ExpenseController.java`, `V1__init_schema.sql`, `V2__add_finance_role.sql`, `DataSeeder.java`) with line numbers verified by `Get-Content` and line-range reads. No requirement was invented; each is traceable to a specific method or annotation in the codebase. |
-| What was changed | None â€” doc is a new file. The previous session's fabricated code snippets are not present; all quotes in this document were taken from the live repo. |
+| What was changed | None — doc is a new file. The previous session's fabricated code snippets are not present; all quotes in this document were taken from the live repo. |
 
 **Prompt used (paraphrased)**: "Do Task 3 (docs/team/01_system_and_scope.md). Copy every code snippet verbatim from the real source with file and line numbers. Take requirements only from the real code or README."
 
 ---
 
-## Task 4 â€” MC/DC and CFG Analysis (`docs/team/03_mcdc_and_cfg.md`)
+## Task 4 — MC/DC and CFG Analysis (`docs/team/03_mcdc_and_cfg.md`)
 
 | Field | Value |
 |---|---|
 | Tool | Antigravity (Google DeepMind) |
 | Date | 2026-11-25 |
-| Purpose | Write `docs/team/03_mcdc_and_cfg.md`: CFG of `assertCanDecide`, cyclomatic complexity (both Eâˆ’N+2 and decisions+1), full MCC table, MC/DC independence pairs mapped to real test method names, BR2/BR4 decision tables, BR3 state transition table |
-| Output | 317-line Markdown document with ASCII CFG, 9-node/8-edge inventory, V(G)=5 (decisions+1) / V(G)=4 (closed-graph Eâˆ’N+2) with explanation of discrepancy, 7-row MCC table, MC/DC pairs for D1/D2/D3-A/D3-B/D4 each referencing exact test method names and line numbers in `ExpenseServiceWhiteBoxTest.java`, and three tables (BR2 decision, BR4 decision, BR3 state transitions) |
-| What was checked | Source of `assertCanDecide` read verbatim from `ExpenseService.java` lines 162â€“180. Test method names and line numbers verified against `tests/team/unit/com/sandy/expense/service/ExpenseServiceWhiteBoxTest.java`. No test name or line number was inferred; every reference was read from the file. Cyclomatic complexity computed by both formulas and cross-checked; discrepancy explained in the doc. |
-| What was changed | None â€” doc is a new file. |
+| Purpose | Write `docs/team/03_mcdc_and_cfg.md`: CFG of `assertCanDecide`, cyclomatic complexity (both E−N+2 and decisions+1), full MCC table, MC/DC independence pairs mapped to real test method names, BR2/BR4 decision tables, BR3 state transition table |
+| Output | 321-line Markdown document (after Task 5 CFG reconciliation) with ASCII CFG, 11-node/15-edge inventory, V(G)=6 by both formulas (`1 + 4 ifs + 1 && = 6` and `15 − 11 + 2 = 6`), 7-row MCC table, MC/DC pairs for D1/D2/D3-A/D3-B/D4 each referencing exact test method names and line numbers in `ExpenseServiceWhiteBoxTest.java`, and three tables (BR2 decision, BR4 decision, BR3 state transitions) |
+| What was checked | Source of `assertCanDecide` read verbatim from `ExpenseService.java` lines 162–180. Test method names and line numbers verified against `tests/team/unit/com/sandy/expense/service/ExpenseServiceWhiteBoxTest.java`. No test name or line number was inferred; every reference was read from the file. Cyclomatic complexity computed by both formulas and cross-checked. |
+| What was changed | None initially; later expanded in the Task 5 Correction Pass to split short-circuit `&&` and collapse `[EXIT]` so both formulas equal 6. |
 
-**Prompt used (paraphrased)**: "For Task 4, draw the CFG of `ExpenseService.assertCanDecide`, list nodes and edges, compute cyclomatic complexity step by step both ways (Eâˆ’N+2 and decisions+1). Build the full MCC table and MC/DC independence pairs, map each pair to the exact test method names. Add a decision table for BR2 and BR4 and a state transition table for BR3."
+**Prompt used (paraphrased)**: "For Task 4, draw the CFG of `ExpenseService.assertCanDecide`, list nodes and edges, compute cyclomatic complexity step by step both ways (E−N+2 and decisions+1). Build the full MCC table and MC/DC independence pairs, map each pair to the exact test method names. Add a decision table for BR2 and BR4 and a state transition table for BR3."
 
 
 ---
 
-## Task 5 — SonarQube Static Analysis (docs/team/02_static_analysis.md)
+## Task 5 — SonarQube Static Analysis (`docs/team/02_static_analysis.md`)
 
 | Field | Value |
 |---|---|
 | Tool | Antigravity (Google DeepMind) |
 | Date | 2026-11-25 |
-| Purpose | Run SonarQube Community scan on the project, capture all metrics (bugs, vulnerabilities, code smells, hotspots, coverage, complexity, duplication, ratings, tech debt, quality gate), and write docs/team/02_static_analysis.md explaining each metric in plain words |
-| Output | SonarQube Community Build 26.11.0.134175 running on Docker port 9000. sonar-maven-plugin 5.9.0.7382 added to pom.xml. Scan completed (CE task b21c523b, SUCCESS). All metrics captured via REST API and saved to docs/team/evidence/05_sonar_measures.txt and 05_sonar_scan.txt. 02_static_analysis.md written (220 lines). |
-| What was checked | Metrics pulled live from http://localhost:9000/api/measures/component and /api/issues/search after CE task reported SUCCESS. No numbers were fabricated — every value in the doc comes from the API responses captured in evidence files. The two vulnerabilities (S4502 and S5122) were verified against their actual rule IDs and descriptions from the SonarQube UI. |
-| What was changed | pom.xml: added sonar-maven-plugin 5.9.0.7382 and a sonar profile with standard properties. sonar-project.properties written (for reference). .sonar-token.txt written (gitignored). |
+| Purpose | Run SonarQube Community scan on the project, capture all metrics (bugs, vulnerabilities, code smells, hotspots, coverage, complexity, duplication, ratings, tech debt, quality gate), and write `docs/team/02_static_analysis.md` explaining each metric in plain words |
+| Output | SonarQube Community Build 26.11.0.134175 running on Docker port 9000. `sonar-maven-plugin` 5.9.0.7382 added to `pom.xml`. Final clean scan completed (CE task `07ae8f77-c571-4640-97c6-7253374e97ec`, SUCCESS). All metrics captured via REST API and saved to `docs/team/evidence/05_sonar_measures.txt` and `05_sonar_scan.txt`. `02_static_analysis.md` written (172 lines after Task 5 Correction Pass). |
+| What was checked | Metrics pulled live from `http://localhost:9000/api/measures/component` and `/api/issues/search` after CE task reported SUCCESS. No numbers were fabricated — every value in the doc comes from the API responses captured in evidence files. The two vulnerabilities (S4502 and S5122) were verified against their actual rule IDs and descriptions from SonarQube. |
+| What was changed | `pom.xml`: added `sonar-maven-plugin` 5.9.0.7382 and a `sonar` profile with standard properties. `sonar-project.properties` written (for reference). `.sonar-token.txt` written (gitignored). |
 
 **Prompts used (paraphrased)**: "Do Task 5 (SonarQube). Start SonarQube in Docker, run sonar:sonar feeding the JaCoCo XML. Capture complexity, duplication, smells, bugs, vulnerabilities, coverage, tech debt, ratings. Explain each metric in plain words in docs/team/02_static_analysis.md."
 
@@ -161,7 +161,7 @@ No missed lines or branches on any of the 4 target classes. The check gate passe
 | Date | 2026-11-25 |
 | Purpose | Fix three discrepancies identified before starting Task 6: (1) wipe `target/` with `mvnw clean` before running team-only tests so `jacoco.exec` does not append onto the 107-test run, (2) verify whether SonarQube exposes per-method complexity and replace estimated per-method figures with real file-level measures + recount `assertCanDecide` by hand as `1 + 4 ifs + 1 && = 6`, (3) explicitly state which tests produced coverage fed to Sonar and verify zero secrets/tokens are committed. |
 | Output | Re-ran `./mvnw clean test jacoco:report -Dtest="*WhiteBoxTest"` (75 tests, 0 failures) and `mvnw jacoco:check` (`All coverage checks have been met.`), then re-ran `mvnw sonar:sonar` (CE task `07ae8f77-c571-4640-97c6-7253374e97ec`, SUCCESS). Saved clean outputs in `docs/team/evidence/06_team_only_clean_jacoco.txt`, `06_team_only_clean_jacoco_check.txt`, `06_team_only_clean_jacoco.xml`, and updated `05_sonar_measures.txt` & `05_sonar_scan.txt`. Updated `03_mcdc_and_cfg.md`, `02_static_analysis.md`, and `viva_notes_member1.md`. |
-| What was checked | (1) Extracted clean JaCoCo XML totals: overall LINE 257/460 (55.87%), BRANCH 66/108 (61.11%); 4 scoped classes still 100%; `ExpenseController` 0/13 lines (0%) and 0/4 branches (0%), proving HTTP integration tests were excluded. (2) Queried `api/measures/component_tree` under `ExpenseService.java` (returned 0 child components — confirming SonarQube exposes file-level complexity only: `ExpenseService.java` cyclomatic = 45, cognitive = 22, 14 functions). Expanded CFG in `03_mcdc_and_cfg.md` to split short-circuit `&&` (`N5a`, `N5b`) with collapsed `[EXIT]` (`N=11, E=15 -> E-N+2 = 6`), matching `1 + 4 ifs + 1 && = 6`. (3) Verified `git ls-files .sonar-token.txt` and `git grep sqa_` both return empty, and `.gitignore` ignores `.sonar-token.txt` and `.sonar/`. |
-| What was changed | Updated `docs/team/03_mcdc_and_cfg.md` (CFG nodes/edges, `V(G)=6` both ways, removed estimated per-method Sonar figures), `docs/team/02_static_analysis.md` (clean coverage 56.9% overall, `ExpenseController` 0.0% proof, file-level complexity table for `ExpenseService.java`, token security statement), `docs/team/viva_notes_member1.md` (updated Task 4/5 notes and fixed UTF-8 punctuation). |
+| What was checked | (1) Extracted clean JaCoCo XML totals: overall LINE 257/460 (55.87%), BRANCH 66/108 (61.11%); 4 scoped classes still 100% (`ExpenseService` 107/107 L + 50/50 B, `AuthService` 32/32 L + 4/4 B, `RequestStatus` 14/14 L + 6/6 B, `ExpenseRequest` 9/9 L — note that earlier pre-`clean` Task 2 runs showed 105/105 and 33/33 from incremental compilation before `mvnw clean` recompiled all classes cleanly with `javac 21`); `ExpenseController` 0/13 lines (0%) and 0/4 branches (0%), proving HTTP integration tests were excluded. (2) Queried `api/measures/component_tree` under `ExpenseService.java` (returned 0 child components — confirming SonarQube exposes file-level complexity only: `ExpenseService.java` cyclomatic = 45, cognitive = 22, 14 functions). Expanded CFG in `03_mcdc_and_cfg.md` to split short-circuit `&&` (`N5a`, `N5b`) with collapsed `[EXIT]` (`N=11, E=15 -> E-N+2 = 6`), matching `1 + 4 ifs + 1 && = 6`. (3) Verified `git ls-files .sonar-token.txt` and `git grep sqa_` both return empty, and `.gitignore` ignores `.sonar-token.txt` and `.sonar/`. |
+| What was changed | Updated `docs/team/03_mcdc_and_cfg.md` (CFG nodes/edges, `V(G)=6` both ways, removed estimated per-method Sonar figures), `docs/team/02_static_analysis.md` (clean coverage 56.9% overall, `ExpenseController` 0.0% proof, file-level complexity table for `ExpenseService.java`, token security statement), `docs/team/viva_notes_member1.md` (updated Task 4/5 notes and fixed UTF-8 punctuation), `docs/team/ai_use_member1.md` (reconciled doc line counts and pre/post-clean JaCoCo line counts). |
 
 **Prompt used (paraphrased)**: "Before Task 6: (1) Run `.\mvnw clean test -Dtest="*WhiteBoxTest" jacoco:report` so `target/` is wiped first; report overall totals, 4 scoped classes, and `ExpenseController` coverage near 0%. (2) Show if Sonar gives per-method complexity; if not, remove those figures, show real file-level values for `ExpenseService.java`, and recount the method by hand (`1 + 4 ifs + 1 && = 6`). (3) State clearly which tests fed coverage to Sonar and confirm no Sonar token/password is committed."
