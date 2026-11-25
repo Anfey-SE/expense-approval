@@ -199,3 +199,32 @@ SonarQube does **not** expose per-method complexity (API stops at file level); f
 - If someone adds a nested `if-else` inside `assertCanDecide`: hand-computed V(G) increases by at least 1, `ExpenseService.java` file cyclomatic increases from 45, and file cognitive increases by more than 1 due to nesting penalty.
 - If CSRF is re-enabled in `SecurityConfig`: vulnerability `S4502` disappears and security rating improves from D.
 - If a Quality Gate condition requires e.g. 80% project-wide coverage on a unit-only run: it would FAIL at 56.9% unless upstream integration tests (`src/test`) also run (in Task 7 CI, all 107 tests run together).
+
+---
+
+## Task 6 — Mutation Testing (PIT + Custom Mutators)
+
+**What mutation testing proves beyond line/branch coverage**: 100% coverage only proves tests *execute* every line and branch; mutation testing intentionally injects small faults ("mutants") into compiled bytecode and checks whether assertions actually *fail* when behaviour breaks.
+
+**How a PIT plugin mutator works (viva summary)**:
+- Custom mutators implement PIT's `MethodMutatorFactory` and are registered via Java's `ServiceLoader` (`META-INF/services/org.pitest.mutationtest.engine.gregor.MethodMutatorFactory`) in a JAR whose manifest includes `Implementation-Title` and `Implementation-Vendor`.
+- PIT walks target `.class` files with ASM's `MethodVisitor`. When a mutator sees its target bytecode pattern, it registers a `MutationIdentifier`; during that mutant's test execution, `context.shouldMutate(id)` returns `true` and swaps the bytecode instructions in memory.
+
+**Our 2 custom business-rule mutators (`tools/pit-custom-mutators/`)**:
+1. `DROP_DEPARTMENT_CHECK` (`DropDepartmentCheckMutator.java`): Inside `ExpenseService.assertCanDecide`, pops the result of `Long.equals(me.getDepartmentId())` and `GOTO`s past the `throw ApiException.forbidden(...)`, letting any manager approve across departments (**1/1 killed**).
+2. `SWAP_APPROVER_ROLE` (`SwapApproverRoleMutator.java`): Inside `RequestStatus.approverRole()`, swaps `Role.MANAGER` and `Role.FINANCE`, inverting stage ownership between `SUBMITTED` and `MANAGER_APPROVED` (**2/2 killed**).
+
+**Key numbers**:
+- Baseline (`DEFAULTS`): **71/79 (90%)** — 8 `VoidMethodCallMutator` survivors.
+- `DEFAULTS` + custom (before -> after): **74/82 (90%)** -> **81/82 (99%)**.
+- `STRONGER` + custom (before): **100/108 (93%)** (all 22 `RemoveConditionalMutator_EQUAL_IF` and 4 `SwitchMutator` mutants killed).
+- Extended `ALL` + custom (before -> after): **312/333 (94%)** -> **328/333 (98%, test strength 99%)**, killing all 16 weak-assertion survivors via 4 new tests (`create_copiesTitleAndAllItemFields`, `approve_setsApprovalRequestBackReference`, `register_persistsEmailAndFullName`, `login_passesEmailAndPasswordToAuthenticationManager`), raising the team suite from 75 to **79 tests**.
+
+**Why the 5 remaining mutants in `ALL` are equivalent / unreachable**:
+- `ExpenseService.create:53` (`setStatus(DRAFT)`): `ExpenseRequest.java:69` already defaults `status = RequestStatus.DRAFT`, so skipping `setStatus(DRAFT)` changes nothing.
+- `ExpenseService.get:95-96` (`getItems().size()`, `getApprovals().size()`): Hibernate lazy-loading touch calls whose return values are discarded; unit tests use eager `ArrayList`s.
+- `ExpenseService.list:82` & `assertCanView:187` (`MatchException::<init>`): `javac` 21 emits unreachable default branches on exhaustive `Role` switches.
+
+**Viva failure predictions**:
+- If someone drops the department check in `assertCanDecide` (exact fault modeled by `DROP_DEPARTMENT_CHECK`): `approve_managerOtherDepartment_isForbidden_D3_BtoTrue` and `reject_managerOtherDepartment_isForbidden` immediately fail.
+- If someone swaps `Role.MANAGER` and `Role.FINANCE` in `RequestStatus.approverRole()` (modeled by `SWAP_APPROVER_ROLE`): `DomainWhiteBoxTest.transitionTable` and `approve_managerSameDepartment_isAllowed_D3_BtoFalse` / `approve_financeOnRequestFromAnotherDepartment_isAllowed_D3_A_false` immediately fail.

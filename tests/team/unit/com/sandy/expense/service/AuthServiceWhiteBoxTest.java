@@ -28,6 +28,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /** Member 1 white-box tests for {@link AuthService}: every branch of register / login / me. */
@@ -100,6 +102,24 @@ class AuthServiceWhiteBoxTest {
         verify(users, never()).save(any());
     }
 
+    @Test
+    void register_persistsEmailAndFullName() {
+        when(users.existsByEmail("newuser@acme.com")).thenReturn(false);
+        when(encoder.encode("password123")).thenReturn("hash");
+        when(jwt.issue(any())).thenReturn("tok");
+        when(jwt.ttlSeconds()).thenReturn(7200L);
+
+        AuthResponse res =
+                service.register(new RegisterRequest("newuser@acme.com", "password123", "New User", null));
+
+        ArgumentCaptor<User> saved = ArgumentCaptor.forClass(User.class);
+        verify(users).save(saved.capture());
+        assertThat(saved.getValue().getEmail()).isEqualTo("newuser@acme.com");
+        assertThat(saved.getValue().getFullName()).isEqualTo("New User");
+        assertThat(res.user().email()).isEqualTo("newuser@acme.com");
+        assertThat(res.user().fullName()).isEqualTo("New User");
+    }
+
     // ---- login ----
 
     @Test
@@ -134,6 +154,22 @@ class AuthServiceWhiteBoxTest {
         assertThatThrownBy(() -> service.login(new LoginRequest("ghost@acme.com", "pw")))
                 .isInstanceOf(ApiException.class)
                 .hasMessageContaining("User not found");
+    }
+
+    @Test
+    void login_passesEmailAndPasswordToAuthenticationManager() {
+        User u = user(6L, "login@acme.com", Role.EMPLOYEE);
+        when(users.findByEmail("login@acme.com")).thenReturn(Optional.of(u));
+        when(jwt.issue(u)).thenReturn("tok");
+        when(jwt.ttlSeconds()).thenReturn(60L);
+
+        service.login(new LoginRequest("login@acme.com", "secret-pw"));
+
+        ArgumentCaptor<Authentication> authCap = ArgumentCaptor.forClass(Authentication.class);
+        verify(authManager).authenticate(authCap.capture());
+        assertThat(authCap.getValue()).isInstanceOf(UsernamePasswordAuthenticationToken.class);
+        assertThat(authCap.getValue().getPrincipal()).isEqualTo("login@acme.com");
+        assertThat(authCap.getValue().getCredentials()).isEqualTo("secret-pw");
     }
 
     // ---- me ----

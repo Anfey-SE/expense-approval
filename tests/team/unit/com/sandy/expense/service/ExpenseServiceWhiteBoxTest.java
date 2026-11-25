@@ -119,6 +119,23 @@ class ExpenseServiceWhiteBoxTest {
     }
 
     @Test
+    void create_copiesTitleAndAllItemFields() {
+        stubUser(alice);
+        LocalDate date = LocalDate.of(2026, 3, 15);
+        ItemInput inputItem = new ItemInput("Airfare", "Travel", new BigDecimal("350.00"), date);
+        RequestDetail d =
+                service.create(
+                        principal(alice),
+                        new CreateRequest("Client Summit", "Hotel & flights", "usd", List.of(inputItem)));
+
+        assertThat(d.title()).isEqualTo("Client Summit");
+        assertThat(d.items()).hasSize(1);
+        assertThat(d.items().get(0).description()).isEqualTo("Airfare");
+        assertThat(d.items().get(0).category()).isEqualTo("Travel");
+        assertThat(d.items().get(0).incurredOn()).isEqualTo(date);
+    }
+
+    @Test
     void create_userNotFound_throwsNotFound() {
         when(users.findById(10L)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> service.create(principal(alice), new CreateRequest("T", null, null, items("1"))))
@@ -461,6 +478,14 @@ class ExpenseServiceWhiteBoxTest {
         assertThat(a.getFromStatus()).isEqualTo(RequestStatus.SUBMITTED);
         assertThat(a.getToStatus()).isEqualTo(RequestStatus.MANAGER_APPROVED);
         assertThat(a.getActor()).isSameAs(bob);
+    }
+
+    @Test
+    void approve_setsApprovalRequestBackReference() {
+        ExpenseRequest r = request(56L, alice, eng, RequestStatus.SUBMITTED);
+        when(requests.findById(56L)).thenReturn(Optional.of(r));
+        service.approve(principal(bob), 56L, "ok");
+        assertThat(r.getApprovals().get(0).getRequest()).isSameAs(r);
     }
 
     /** D3 with a manager whose principal carries no department: B evaluates true -> denied. */
