@@ -28,106 +28,110 @@ private void assertCanDecide(AppUserPrincipal me, ExpenseRequest r) {  // line 1
 
 ## 2. Control-Flow Graph (CFG)
 
-Nodes represent maximal straight-line code sequences; edges represent flow of control.
+Nodes represent maximal straight-line code sequences and individual short-circuit branch predicates; edges represent flow of control. All `throw` and normal `return` exits terminate at a single collapsed `[EXIT]` node (standard single-entry, single-exit CFG).
 
 ```
-N1 ──────────────────────────────────────────────
-   needed = r.getStatus().approverRole();         (line 167)
-   Test: needed == null ?                          (line 168)
-─────────────────────────────────────────────────
-         │ true                   │ false
-         ▼                        ▼
-N2: throw NOT_PENDING          N3: Test: me.getRole() != needed ?  (line 171)
-         │                             │ true             │ false
-         ▼ (exit)                      ▼                  ▼
-      [EXIT-1]                  N4: throw 403         N5: Test: needed==MANAGER
-                                         │                  && !dept.equals(myDept) ?
-                                         ▼ (exit)                 (line 174)
-                                      [EXIT-2]          │ true             │ false
-                                                         ▼                  ▼
-                                                   N6: throw 403       N7: Test: requester==me ?
-                                                         │                       (line 177)
-                                                         ▼ (exit)      │ true        │ false
-                                                      [EXIT-3]          ▼             ▼
-                                                                  N8: throw 403    N9: return (fall-through)
-                                                                        │                │
-                                                                        ▼ (exit)         ▼ (exit)
-                                                                     [EXIT-4]         [EXIT-5]
+N1 ───────────────────────────────────────────────────────
+   needed = r.getStatus().approverRole();      (line 167)
+   Test D1: needed == null ?                   (line 168)
+──────────────────────────────────────────────────────────
+         │ true                           │ false
+         ▼                                ▼
+N2: throw NOT_PENDING (line 169)     N3: Test D2: me.getRole() != needed ?  (line 171)
+         │                                │ true                 │ false
+         │                                ▼                      ▼
+         │                           N4: throw 403          N5a: Test D3-A: needed == Role.MANAGER ? (line 174)
+         │                                │                      │ true                 │ false (short-circuit)
+         │                                │                      ▼                      │
+         │                                │                 N5b: Test D3-B: !dept.equals(myDept) ? (line 174)
+         │                                │                      │ true        │ false  │
+         │                                │                      ▼             ▼        ▼
+         │                                │                 N6: throw 403     N7: Test D4: requester == me ? (line 177)
+         │                                │                      │             │ true        │ false
+         │                                │                      │             ▼             ▼
+         │                                │                      │        N8: throw 403    N9: return (line 180)
+         │                                │                      │             │             │
+         └────────────────────────────────┴──────────────────────┴─────────────┴─────────────┘
+                                                                 │
+                                                                 ▼
+                                                              [EXIT]
 ```
 
 ### Node and Edge Inventory
 
 | Node | Description | Lines |
 |---|---|---|
-| N1 | Entry: compute `needed`; test `needed == null` | 167–168 |
+| N1 | Entry: compute `needed`; test D1 (`needed == null`) | 167–168 |
 | N2 | Throw `NOT_PENDING` | 169 |
-| N3 | Test `me.getRole() != needed` | 171 |
+| N3 | Test D2 (`me.getRole() != needed`) | 171 |
 | N4 | Throw role-mismatch 403 | 172 |
-| N5 | Test compound: `needed == Role.MANAGER && !dept.equals(myDept)` | 174 |
+| N5a | Test D3-A (`needed == Role.MANAGER`) — left side of `&&` | 174 |
+| N5b | Test D3-B (`!r.getDepartment().getId().equals(me.getDepartmentId())`) — right side of `&&` | 174 |
 | N6 | Throw dept-mismatch 403 | 175 |
-| N7 | Test `requester.getId().equals(me.getUserId())` | 177 |
+| N7 | Test D4 (`r.getRequester().getId().equals(me.getUserId())`) | 177 |
 | N8 | Throw self-decision 403 | 178 |
 | N9 | Normal return (fall-through) | 180 |
+| EXIT | Collapsed terminal exit node (target of all throws and normal return) | — |
 
 Edges (directed, source → target):
 
-| # | From | To | Condition |
+| # | From | To | Condition / Flow |
 |---|---|---|---|
-| e1 | N1 | N2 | `needed == null` is true |
-| e2 | N1 | N3 | `needed == null` is false |
-| e3 | N3 | N4 | `me.getRole() != needed` is true |
-| e4 | N3 | N5 | `me.getRole() != needed` is false |
-| e5 | N5 | N6 | compound D3 is true |
-| e6 | N5 | N7 | compound D3 is false |
-| e7 | N7 | N8 | `requester.getId().equals(me.getUserId())` is true |
-| e8 | N7 | N9 | `requester.getId().equals(me.getUserId())` is false |
+| e1 | N1 | N2 | D1 true (`needed == null`) |
+| e2 | N1 | N3 | D1 false (`needed != null`) |
+| e3 | N3 | N4 | D2 true (`me.getRole() != needed`) |
+| e4 | N3 | N5a | D2 false (`me.getRole() == needed`) |
+| e5 | N5a | N5b | D3-A true (`needed == Role.MANAGER`) |
+| e6 | N5a | N7 | D3-A false (short-circuit `&&`, `needed != Role.MANAGER`) |
+| e7 | N5b | N6 | D3-B true (`!dept.equals(myDept)`) |
+| e8 | N5b | N7 | D3-B false (`dept.equals(myDept)`) |
+| e9 | N7 | N8 | D4 true (`requester == me`) |
+| e10 | N7 | N9 | D4 false (`requester != me`) |
+| e11 | N2 | EXIT | exception exit (409 `NOT_PENDING`) |
+| e12 | N4 | EXIT | exception exit (403 wrong role) |
+| e13 | N6 | EXIT | exception exit (403 wrong department) |
+| e14 | N8 | EXIT | exception exit (403 self-decision) |
+| e15 | N9 | EXIT | normal return |
 
-**N = 9 nodes, E = 8 edges** (each throw/return is a unique exit node with no outgoing edges).
+**N = 11 nodes, E = 15 edges.**
 
 ## 3. Cyclomatic Complexity — Step-by-Step
 
 ### Method 1: V(G) = E − N + 2
 
-```
-E = 8   (edges listed above)
-N = 9   (nodes listed above)
-V(G) = 8 − 9 + 2 = 1
-```
-
-Wait — this gives 1, which is the base case with no decisions. The formula `E − N + 2` applies to a **connected** graph with a single entry and single exit. Here there are **5 exit nodes** (N2, N4, N6, N8, N9). Using the standard formulation for a graph with multiple exits, we add one edge from each exit back to the entry to close the graph, giving:
+For a single-entry, single-exit connected CFG (1 component, $P = 1$):
 
 ```
-E_closed = 8 + 5 (back-edges from each exit to N1) = 13
-N_closed = 9
-V(G) = E_closed − N_closed + 2 = 13 − 9 + 2 = 6
+E = 15  (edges e1..e15 listed above)
+N = 11  (nodes N1..N9 + EXIT listed above)
+V(G) = E − N + 2 = 15 − 11 + 2 = 6
 ```
-
-> [!NOTE]
-> Alternatively, treat the method as one connected region by counting only the **number of linearly independent paths**. The correct answer is **5**, matching decisions+1 below, because the standard `E − N + 2` with a single exit is equivalent.
 
 ### Method 2: Decisions + 1 (McCabe's shortcut)
 
-Count every binary decision (predicate) in the method:
+Count every binary decision point in the method. McCabe's rule: each `if` counts +1, and each additional boolean operator (`&&`, `||`) in a compound predicate also counts +1.
 
-| # | Predicate | Line |
-|---|---|---|
-| D1 | `needed == null` | 168 |
-| D2 | `me.getRole() != needed` | 171 |
-| D3 | `needed == Role.MANAGER && !r.getDepartment().getId().equals(me.getDepartmentId())` | 174 |
-| D4 | `r.getRequester().getId().equals(me.getUserId())` | 177 |
-
-D3 is a **compound predicate** (two conditions: A = `needed == Role.MANAGER`, B = `!dept.equals(myDept)`) joined by `&&`. McCabe counts it as one decision; MC/DC treats A and B as independent conditions.
+| # | Decision point | Line | +N |
+|---|---|---|---|
+| — | Base (every method starts at 1) | — | 1 |
+| D1 | `if (needed == null)` | 168 | +1 |
+| D2 | `if (me.getRole() != needed)` | 171 | +1 |
+| D3-if | `if (needed == Role.MANAGER && ...)` | 174 | +1 |
+| D3-&& | `&&` operator in D3 | 174 | +1 |
+| D4 | `if (r.getRequester().getId().equals(me.getUserId()))` | 177 | +1 |
 
 ```
-V(G) = decisions + 1 = 4 + 1 = 5
+V(G) = 1 + 4 ifs + 1 && = 6
 ```
 
 ### Reconciliation
 
-The two methods agree when the graph is treated as a single-entry, single-exit (SESE) region. The correct **cyclomatic complexity is 5**: there are 4 binary decisions, giving 5 linearly independent paths through the method (one for each exit point). The `E − N + 2` with the standard multi-exit treatment above gives 6 because it counts the closed graph; the **McCabe shortcut (5) is the authoritative figure** cited in test/coverage planning.
+Both methods give **V(G) = 6**:
+- `E − N + 2` (single-entry, single-exit CFG with short-circuit `&&` expanded): `15 − 11 + 2 = 6` ✓
+- `1 + decisions` (4 `if` statements + 1 `&&` operator): `1 + 4 + 1 = 6` ✓
 
 > [!NOTE]
-> SonarQube cognitive complexity counts the nesting depth in addition to the number of decisions, so it typically reports a **higher** number than McCabe cyclomatic for deeply nested code. `assertCanDecide` is flat (no nesting), so both metrics agree at approximately 5. The exact SonarQube cyclomatic figure will be recorded once the SonarQube scan is run in Task 5.
+> SonarQube Community Build 26.11.0.134175 does **not** expose per-method cyclomatic or cognitive complexity via the UI or REST API (`api/measures/component` returns file-level aggregates only). For `ExpenseService.java` as a whole (14 functions), SonarQube reports **cyclomatic complexity = 45** and **cognitive complexity = 22**. The value **V(G) = 6** for `assertCanDecide` is therefore our hand calculation verified by both CFG and predicate-counting formulas.
 
 ## 4. Conditions (D1–D4) and Labels
 

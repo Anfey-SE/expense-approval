@@ -150,3 +150,18 @@ No missed lines or branches on any of the 4 target classes. The check gate passe
 | What was changed | pom.xml: added sonar-maven-plugin 5.9.0.7382 and a sonar profile with standard properties. sonar-project.properties written (for reference). .sonar-token.txt written (gitignored). |
 
 **Prompts used (paraphrased)**: "Do Task 5 (SonarQube). Start SonarQube in Docker, run sonar:sonar feeding the JaCoCo XML. Capture complexity, duplication, smells, bugs, vulnerabilities, coverage, tech debt, ratings. Explain each metric in plain words in docs/team/02_static_analysis.md."
+
+---
+
+## Task 5 Correction Pass — Clean JaCoCo Isolation & Complexity Reconciliation (`docs/team/02_static_analysis.md`, `docs/team/03_mcdc_and_cfg.md`)
+
+| Field | Value |
+|---|---|
+| Tool | Antigravity (Google DeepMind) |
+| Date | 2026-11-25 |
+| Purpose | Fix three discrepancies identified before starting Task 6: (1) wipe `target/` with `mvnw clean` before running team-only tests so `jacoco.exec` does not append onto the 107-test run, (2) verify whether SonarQube exposes per-method complexity and replace estimated per-method figures with real file-level measures + recount `assertCanDecide` by hand as `1 + 4 ifs + 1 && = 6`, (3) explicitly state which tests produced coverage fed to Sonar and verify zero secrets/tokens are committed. |
+| Output | Re-ran `./mvnw clean test jacoco:report -Dtest="*WhiteBoxTest"` (75 tests, 0 failures) and `mvnw jacoco:check` (`All coverage checks have been met.`), then re-ran `mvnw sonar:sonar` (CE task `07ae8f77-c571-4640-97c6-7253374e97ec`, SUCCESS). Saved clean outputs in `docs/team/evidence/06_team_only_clean_jacoco.txt`, `06_team_only_clean_jacoco_check.txt`, `06_team_only_clean_jacoco.xml`, and updated `05_sonar_measures.txt` & `05_sonar_scan.txt`. Updated `03_mcdc_and_cfg.md`, `02_static_analysis.md`, and `viva_notes_member1.md`. |
+| What was checked | (1) Extracted clean JaCoCo XML totals: overall LINE 257/460 (55.87%), BRANCH 66/108 (61.11%); 4 scoped classes still 100%; `ExpenseController` 0/13 lines (0%) and 0/4 branches (0%), proving HTTP integration tests were excluded. (2) Queried `api/measures/component_tree` under `ExpenseService.java` (returned 0 child components — confirming SonarQube exposes file-level complexity only: `ExpenseService.java` cyclomatic = 45, cognitive = 22, 14 functions). Expanded CFG in `03_mcdc_and_cfg.md` to split short-circuit `&&` (`N5a`, `N5b`) with collapsed `[EXIT]` (`N=11, E=15 -> E-N+2 = 6`), matching `1 + 4 ifs + 1 && = 6`. (3) Verified `git ls-files .sonar-token.txt` and `git grep sqa_` both return empty, and `.gitignore` ignores `.sonar-token.txt` and `.sonar/`. |
+| What was changed | Updated `docs/team/03_mcdc_and_cfg.md` (CFG nodes/edges, `V(G)=6` both ways, removed estimated per-method Sonar figures), `docs/team/02_static_analysis.md` (clean coverage 56.9% overall, `ExpenseController` 0.0% proof, file-level complexity table for `ExpenseService.java`, token security statement), `docs/team/viva_notes_member1.md` (updated Task 4/5 notes and fixed UTF-8 punctuation). |
+
+**Prompt used (paraphrased)**: "Before Task 6: (1) Run `.\mvnw clean test -Dtest="*WhiteBoxTest" jacoco:report` so `target/` is wiped first; report overall totals, 4 scoped classes, and `ExpenseController` coverage near 0%. (2) Show if Sonar gives per-method complexity; if not, remove those figures, show real file-level values for `ExpenseService.java`, and recount the method by hand (`1 + 4 ifs + 1 && = 6`). (3) State clearly which tests fed coverage to Sonar and confirm no Sonar token/password is committed."

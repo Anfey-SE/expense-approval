@@ -7,31 +7,35 @@
 | Tool | SonarQube Community Build **26.11.0.134175** |
 | Deployment | Local Docker container: `docker run -d --name sonarqube -p 9000:9000 -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true sonarqube:community` |
 | Scanner | `org.sonarsource.scanner.maven:sonar-maven-plugin:5.9.0.7382` (declared in `pom.xml`) |
-| Coverage input | `target/site/jacoco/jacoco.xml` produced by `mvnw test jacoco:report -Dtest="*WhiteBoxTest"` (team tests only) |
+| Coverage input | `target/site/jacoco/jacoco.xml` produced by **`./mvnw clean test jacoco:report -Dtest="*WhiteBoxTest"`** (**team tests ONLY — 75 tests, 0 failures; `clean` wipes `target/jacoco.exec` first so JaCoCo's default append mode does not merge in the 32 upstream integration tests**) |
 | Project key | `expense-approval` |
-| SCM revision analysed | `ad2eb05548049dbeb928e436c7038206ec451b8f` |
-| CE task | `b21c523b-e43b-42a6-981c-8c67ecb20dea` (status: SUCCESS) |
+| SCM revision analysed | `92e6ed2acfbe5a7b16ead351f3d1de7df2f98984` |
+| CE task | `07ae8f77-c571-4640-97c6-7253374e97ec` (status: SUCCESS) |
 | Scan command | `mvnw sonar:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.token=<token> -Dsonar.projectKey=expense-approval -Dsonar.sources=src/main/java -Dsonar.tests=tests/team/unit -Dsonar.java.binaries=target/classes -Dsonar.java.test.binaries=target/test-classes -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml` |
-| Evidence files | `docs/team/evidence/05_sonar_scan.txt`, `docs/team/evidence/05_sonar_measures.txt` |
+| Evidence files | `docs/team/evidence/05_sonar_scan.txt`, `docs/team/evidence/05_sonar_measures.txt`, `docs/team/evidence/06_team_only_clean_jacoco.txt`, `docs/team/evidence/06_team_only_clean_jacoco_check.txt`, `docs/team/evidence/06_team_only_clean_jacoco.xml` |
+
+> [!IMPORTANT]
+> **Which tests produced the coverage fed to SonarQube?**  
+> **Team tests only** (`*WhiteBoxTest`, 75 unit tests across `DomainWhiteBoxTest`, `AuthServiceWhiteBoxTest`, and `ExpenseServiceWhiteBoxTest`), executed after `mvnw clean`. Running `clean` first is essential because JaCoCo's `jacoco.exec` file appends across runs by default; without `clean`, an earlier full 107-test run contaminated `jacoco.xml` (inflating overall Sonar coverage to 84.8% and `ExpenseController` to 70.6%). With a clean team-only run, `ExpenseController` measures **0.0%**, proving the upstream HTTP integration tests were excluded.
 
 ---
 
-## 2. Summary Dashboard
+## 2. Summary Dashboard (Clean Team-Only Coverage)
 
 | Metric | Value | Rating / Gate |
 |---|---|---|
 | **Quality Gate** | ✅ **OK** | — |
-| Bugs | **0** | A (Reliable) |
+| Bugs | **0** | A (Reliability) |
 | Vulnerabilities | **2** | D (Security) |
 | Code Smells | **0** | A (Maintainable) |
 | Security Hotspots | **0** | — |
-| Coverage (overall) | **84.8 %** | — |
-| Line Coverage | **87.0 %** | — |
-| Branch Coverage | **75.0 %** | — |
+| Coverage (overall) | **56.9 %** | — |
+| Line Coverage | **55.9 %** | — |
+| Branch Coverage | **61.1 %** | — |
 | Duplicated Lines | **0.0 %** | — |
-| Technical Debt | **0 min** | A (Maintainable) |
-| Cyclomatic Complexity | **171** | — |
-| Cognitive Complexity | **53** | — |
+| Technical Debt (`sqale_index`) | **0 min** | A (Maintainability) |
+| Cyclomatic Complexity (whole project) | **171** | — |
+| Cognitive Complexity (whole project) | **53** | — |
 | NCLOC | **1 373** | — |
 
 ---
@@ -40,126 +44,105 @@
 
 ### 3.1 Quality Gate — OK ✅
 
-A Quality Gate is a pass/fail threshold that SonarQube evaluates after every scan.  
-In this run the gate is set to the default **"Sonar way"** profile with **no additional custom conditions**.  
-Result: **OK** — the project passes the gate as configured.
+A Quality Gate is a pass/fail policy SonarQube evaluates after each scan.  
+In this run the gate uses the default **"Sonar way"** configuration (new-code violations condition).  
+Result: **OK** — the project passes the default gate.
 
 > [!NOTE]
-> The gate would need custom thresholds (e.g., coverage ≥ 80%, zero new vulnerabilities) to be meaningful for CI blocking. Those are added in Task 7.
+> Custom CI quality thresholds (JaCoCo 100% check on the 4 target classes and PIT `mutationThreshold`) are enforced explicitly in Task 7 rather than relying solely on Sonar's default new-code gate.
 
 ---
 
-### 3.2 Bugs — 0
+### 3.2 Bugs — 0 (Reliability Rating: A)
 
-A **bug** is code that is likely to behave incorrectly at runtime (null dereference, resource leak, incorrect API use).  
-SonarQube found **zero bugs** across all 33 source files.  
-*Plain English*: the code has no known logic errors that Sonar's static rules can detect.
+A **bug** is code that is likely to behave incorrectly at runtime (e.g., null dereference, resource leak, incorrect API usage).  
+SonarQube found **0 bugs** across all 33 main source files, giving Reliability Rating **A**.
 
 ---
 
-### 3.3 Vulnerabilities — 2 (Rating: D)
+### 3.3 Vulnerabilities — 2 (Security Rating: D)
 
 A **vulnerability** is a security weakness that could be exploited by an attacker.  
-SonarQube found **2 vulnerabilities**, both in `SecurityConfig.java`:
+SonarQube found **2 vulnerabilities**, both in upstream `SecurityConfig.java`:
 
 | # | Severity | Rule | Location | Description |
 |---|---|---|---|---|
-| 1 | **CRITICAL** | `java:S4502` | `SecurityConfig.java:38` | Spring Security CSRF protection is disabled (`http.csrf().disable()`). Without CSRF tokens, a malicious page on another origin can forge requests on behalf of a logged-in user. |
-| 2 | **MAJOR** | `java:S5122` | `SecurityConfig.java:117` | CORS is configured with a permissive policy (allows all origins via `addAllowedOriginPattern("*")`). This can allow any website to make authenticated cross-origin requests. |
+| 1 | **CRITICAL** | `java:S4502` | `SecurityConfig.java:38` | Spring Security CSRF protection is disabled. Without CSRF tokens, a malicious page on another origin can forge requests if cookie-based sessions are used. |
+| 2 | **MAJOR** | `java:S5122` | `SecurityConfig.java:117` | CORS is configured with a permissive policy (wildcard origin pattern). |
 
-**Why they exist**: This is a React + JWT SPA. CSRF is disabled because the app uses `Authorization: Bearer <token>` headers (not cookies) — stateless JWT is not vulnerable to CSRF. CORS is wide open for development convenience.  
-**Are they real risks here?** CSRF disable is safe given JWT Bearer usage. CORS is a development-only risk; production would restrict to the frontend origin.  
-**Security rating D**: Even one vulnerability of CRITICAL severity produces a D rating regardless of the justification. The rating reflects what Sonar sees, not the full context.
+**Why they exist**: This is a React + JWT SPA. CSRF is disabled because requests authenticate via `Authorization: Bearer <token>` headers rather than cookies, so stateless JWT endpoints are not vulnerable to CSRF. CORS is permissive for local development convenience; production would restrict origins to the deployed frontend domain.  
+**Security rating D**: Any project with at least one CRITICAL vulnerability receives a D security rating regardless of context.
 
 > [!IMPORTANT]
-> These vulnerabilities are in production source code, not in test code. They are upstream design choices, not introduced by the team. No changes are made to production source under the hard rules.
+> Both vulnerabilities are in upstream production source (`SecurityConfig.java`). No secrets, tokens, or passwords are committed anywhere in the repository: `.sonar-token.txt` and `.sonar/` are listed in `.gitignore`, and `sonar-project.properties` contains no credentials.
 
 ---
 
-### 3.4 Code Smells — 0 (Technical Debt: 0 min, Rating: A)
+### 3.4 Code Smells — 0 (Technical Debt: 0 min, Maintainability Rating: A)
 
-A **code smell** is a maintainability issue — not a bug, but code that is harder to read, extend, or change safely (long methods, magic numbers, duplicate code blocks, etc.).  
-**Zero code smells** means no maintainability issues were flagged.  
-**Technical debt** is the estimated time it would take to fix all code smells. Zero smells → zero debt → **Rating A**.
+A **code smell** is a maintainability issue (long methods, complex nesting, unused locals, etc.). **Technical debt** (`sqale_index`) estimates how many minutes it would take to fix all code smells.  
+Result: **0 code smells**, **0 min technical debt**, Maintainability Rating **A**.
 
 ---
 
 ### 3.5 Security Hotspots — 0
 
-A **security hotspot** is a security-sensitive section of code that needs human review (e.g., use of `Random` instead of `SecureRandom`, or `eval()`). Unlike vulnerabilities, hotspots are not automatically classified as bugs — a developer must review and mark them safe or as a real issue.  
-Result: **0 hotspots** — no security-sensitive patterns found beyond the two vulnerabilities already reported.
+A **security hotspot** flags security-sensitive code needing manual human review (separate from confirmed vulnerabilities).  
+Result: **0 hotspots**.
 
 ---
 
-### 3.6 Coverage — 84.8 % overall (Line: 87.0 %, Branch: 75.0 %)
+### 3.6 Coverage — 56.9 % overall (Line: 55.9 %, Branch: 61.1 %)
 
-**What SonarQube counts**: SonarQube imports the JaCoCo XML and reports coverage over all 33 source classes (including controllers, config, DTOs, repositories — not just the 4 scoped classes).
+SonarQube imports `target/site/jacoco/jacoco.xml` and computes coverage across **all 33 main source classes** (`src/main/java`). Because this scan used **clean team-only unit tests** (`*WhiteBoxTest`), only classes exercised by our unit tests show coverage:
 
-| Dimension | Value | Explanation |
-|---|---|---|
-| Line coverage | 87.0 % | 87 % of executable lines were executed by team tests |
-| Branch coverage | 75.0 % | 75 % of if/switch branches were taken by team tests |
-| Overall coverage | 84.8 % | Weighted average of instruction-level hits |
+| Scope / Class | Line Coverage | Branch Coverage | Notes |
+|---|---|---|---|
+| **Whole project (33 classes, JaCoCo XML)** | **55.9 %** (257/460) | **61.1 %** (66/108) | Sonar reports **56.9 %** overall (instruction+branch formula), **55.9 %** line, **61.1 %** branch |
+| `ExpenseService` (scoped target) | **100.0 %** (107/107) | **100.0 %** (50/50) | Confirmed in Sonar file measures & JaCoCo XML |
+| `AuthService` (scoped target) | **100.0 %** (32/32) | **100.0 %** (4/4) | Confirmed in JaCoCo XML |
+| `RequestStatus` (scoped target) | **100.0 %** (14/14) | **100.0 %** (6/6) | Confirmed in JaCoCo XML |
+| `ExpenseRequest` (scoped target) | **100.0 %** (9/9) | *n/a (0 branches)* | Confirmed in JaCoCo XML |
+| `ExpenseController` (unscoped web controller) | **0.0 %** (0/13) | **0.0 %** (0/4) | **Isolation proof**: HTTP integration tests (`src/test`) were NOT included |
 
-**Why below 100%**: The team's white-box tests target only 4 classes (`ExpenseService`, `AuthService`, `RequestStatus`, `ExpenseRequest`) with 100% coverage on those. The remaining 29 classes (controllers, config, DTOs, Flyway migrations, JPA entities, security filters) are covered only partially or not at all because they require integration tests (HTTP layer, database, JWT filter chain) that are outside the team's scope.
-
-**The 4 scoped classes**: 100% line and branch from team tests alone (verified in Task 2 — see `docs/team/evidence/03_team_tests_only_jacoco_check.txt`).
+**Why project-wide coverage is 56.9 %**: Our team unit tests cover the 4 scoped service/domain classes at **100 %**, while web controllers (`ExpenseController`, `AuthController`), security filters, JPA repositories, and Spring configuration require the upstream Testcontainers HTTP integration tests (`src/test`) and are therefore at 0 % in a team-only unit run.
 
 ---
 
 ### 3.7 Duplicated Lines — 0.0 %
 
-**Duplication** is detected when a block of ≥ 10 identical lines appears in more than one place.  
-Result: **0.0 %** — no duplicated blocks. The codebase has clean separation of concerns with no copy-pasted code.
+**Duplicated lines density** measures the percentage of lines appearing in duplicated code blocks across files.  
+Result: **0.0 %** — no duplicated blocks detected.
 
 ---
 
-### 3.8 Cyclomatic Complexity — 171 (whole project)
+### 3.8 Cyclomatic Complexity & Cognitive Complexity
 
-**Cyclomatic complexity** (McCabe, 1976) counts the number of independent paths through a function.  
-The whole-project total is **171** across 103 functions in 42 classes (average ≈ 1.66 per function).
+- **Cyclomatic Complexity (`complexity`)**: **171** across the whole project (103 functions in 42 classes). Counts independent control-flow paths (`if`, `else if`, loops, `case`, `catch`, `&&`, `||`, `?:`).
+- **Cognitive Complexity (`cognitive_complexity`)**: **53** across the whole project. Weights nested control structures higher than flat guard clauses so it reflects human readability effort.
 
-**Our target method `assertCanDecide`**: SonarQube computes cyclomatic complexity using the same formula as McCabe's closed-graph method. For `assertCanDecide` (4 `if` statements, 5 independent paths):  
-- Our hand calculation (decisions+1): **V(G) = 5**  
-- SonarQube cyclomatic: **5** (consistent with our analysis in Task 4)
+#### File-Level Measures for `ExpenseService.java` (Real Sonar Output)
 
-> [!NOTE]
-> SonarQube cyclomatic complexity counts each `if`, `else if`, `for`, `while`, `case`, `catch`, `&&`, `||` and ternary `?:` as +1. For `assertCanDecide` with 4 `if` statements and no compound boolean operators reported by Sonar (the `&&` on line 174 is counted as +1 on the compound condition node), it matches V(G)=5.
+SonarQube Community Build **does not expose per-method complexity** in either the UI or the REST API (`api/measures/component_tree` beneath a `FIL` component returns `0` child components). It reports aggregates at **file (`FIL`) level** only:
 
----
+| Component | Cyclomatic Complexity | Cognitive Complexity | Functions | NCLOC |
+|---|---|---|---|---|
+| Whole project (`expense-approval`) | **171** | **53** | 103 | 1 373 |
+| `ExpenseService.java` (file total) | **45** | **22** | 14 | 181 |
+| `ExpenseController.java` (file total) | **10** | **2** | 8 | 80 |
 
-### 3.9 Cognitive Complexity — 53 (whole project)
-
-**Cognitive complexity** (SonarSource, 2017) measures how hard the code is to *understand*, not just how many paths it has. It penalises nesting more heavily than cyclomatic complexity.  
-Whole-project total: **53**.
-
-**Difference from cyclomatic**: Cyclomatic complexity counts all decision nodes equally. Cognitive complexity adds a nesting penalty: a deeply-nested `if` costs more than a flat one. For `assertCanDecide`, which has 4 flat `if` guards with no nesting, SonarQube reports cognitive complexity = **4** (one per `if`, no nesting penalty), while cyclomatic = **5** (decisions+1). This is the typical pattern: flat sequential guards have cognitive ≤ cyclomatic.
+For our target method `ExpenseService.assertCanDecide` (lines 166–180 of `ExpenseService.java`), the hand-computed McCabe cyclomatic complexity is **V(G) = 6** (`1 + 4 ifs + 1 && = 6`; see [03_mcdc_and_cfg.md](03_mcdc_and_cfg.md)). Why is Sonar's whole-file cognitive complexity (**22**) less than half its cyclomatic complexity (**45**) across `ExpenseService.java`'s 14 methods? Because methods like `assertCanDecide` use flat early-exit `throw` guards (`if (...) throw ...;`) with zero nesting depth, avoiding cognitive nesting penalties, and `switch` expressions / simple getters contribute to cyclomatic complexity more heavily than cognitive complexity.
 
 ---
 
-## 4. Files Analysed
+## 4. Files Analysed & Ratings Summary
 
-| Count | Description |
-|---|---|
-| 33 main source files | `src/main/java/**/*.java` |
-| 3 test source files | `tests/team/unit/**/*WhiteBoxTest.java` |
-| 1 JaCoCo XML report | `target/site/jacoco/jacoco.xml` |
+- **Indexed files**: 33 main Java files (`src/main/java`), 3 team white-box test files (`tests/team/unit`).
+- **Ratings**: Reliability **A** (0 bugs), Security **D** (2 upstream vulnerabilities in `SecurityConfig.java`), Maintainability **A** (0 code smells, 0 min debt).
 
 ---
 
-## 5. Ratings Summary
-
-| Axis | Rating | Meaning |
-|---|---|---|
-| Reliability (`sqale_rating`) | **A** | No bugs |
-| Security | **D** | ≥ 1 critical vulnerability |
-| Maintainability | **A** | No code smells, 0 min debt |
-
-The Security D rating is caused entirely by the two CSRF/CORS issues in the upstream `SecurityConfig.java`. Both are documented upstream design choices for a JWT + React SPA in development mode, not newly introduced issues.
-
----
-
-## 6. Run Command (Reproducible)
+## 5. Run Command (Reproducible)
 
 ```bash
 # 1. Start SonarQube (one-time, needs Docker)
@@ -168,10 +151,13 @@ docker run -d --name sonarqube -p 9000:9000 \
 
 # 2. Wait ~90 seconds for startup, then generate a token at http://localhost:9000
 
-# 3. Run team tests + JaCoCo report
-./mvnw test jacoco:report -Dtest="*WhiteBoxTest"
+# 3. Run team tests ONLY with clean target/ (prevents jacoco.exec append contamination)
+./mvnw clean test jacoco:report -Dtest="*WhiteBoxTest"
 
-# 4. Run Sonar scan
+# 4. Verify the 4 scoped classes pass JaCoCo 100% check
+./mvnw jacoco:check
+
+# 5. Run Sonar scan
 ./mvnw sonar:sonar \
   -Dsonar.host.url=http://localhost:9000 \
   -Dsonar.token=<YOUR_TOKEN> \
