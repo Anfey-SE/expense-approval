@@ -274,10 +274,38 @@
 					</execution>
 				</executions>
 			</plugin>
-		<plugin>
+			<plugin>
 				<groupId>org.sonarsource.scanner.maven</groupId>
 				<artifactId>sonar-maven-plugin</artifactId>
 				<version>5.9.0.7382</version>
+			</plugin>
+			<plugin>
+				<groupId>org.pitest</groupId>
+				<artifactId>pitest-maven</artifactId>
+				<version>1.30.2</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.pitest</groupId>
+						<artifactId>pitest-junit5-plugin</artifactId>
+						<version>1.2.3</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<targetClasses>
+						<param>com.sandy.expense.service.*</param>
+						<param>com.sandy.expense.domain.*</param>
+					</targetClasses>
+					<targetTests>
+						<param>com.sandy.expense.*WhiteBoxTest</param>
+					</targetTests>
+					<outputFormats>
+						<outputFormat>HTML</outputFormat>
+						<outputFormat>XML</outputFormat>
+					</outputFormats>
+					<timestampedReports>false</timestampedReports>
+					<threads>4</threads>
+					<verbose>false</verbose>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
