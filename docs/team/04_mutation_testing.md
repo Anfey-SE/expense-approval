@@ -2,18 +2,31 @@
 
 ## 1. Setup & Scope
 
-Mutation testing runs with `org.pitest:pitest-maven:1.30.2` and `org.pitest:pitest-junit5-plugin:1.2.3`, configured in [`pom.xml`](file:///c:/Users/Z%20Book/expense-approval/pom.xml#L282-L319):
+Mutation testing runs with `org.pitest:pitest-maven:1.30.2` and `org.pitest:pitest-junit5-plugin:1.2.3`, configured in [`pom.xml`](../../pom.xml#L282-L319):
 
 - **Target classes**: `com.sandy.expense.service.*`, `com.sandy.expense.domain.*`
 - **Target tests (team unit suite only)**: `com.sandy.expense.*WhiteBoxTest` (`ExpenseServiceWhiteBoxTest`, `AuthServiceWhiteBoxTest`, `DomainWhiteBoxTest`)
 - **Upstream integration tests (`src/test`)**: excluded from PIT so the mutation score reflects strictly Member 1's unit tests.
 - **No exclusions**: no classes, methods, or lines are excluded from mutation, and no existing test was weakened or removed.
 
+### Running PIT from a Fresh Machine
+
+Because the custom mutator module (`com.sandy:pit-custom-mutators:1.0.0`) is a standalone Maven project under `tools/pit-custom-mutators/`, it must be installed into the local Maven repository before running PIT:
+
+```bash
+./mvnw -f tools/pit-custom-mutators/pom.xml clean install
+./mvnw test-compile org.pitest:pitest-maven:mutationCoverage
+```
+
+*(On Windows PowerShell, use `.\mvnw` instead of `./mvnw`.)*
+
 ---
 
 ## 2. How a PIT Plugin Mutator Works (Plain English)
 
-1. **Discovery (`ServiceLoader`)**: Before running tests, PIT scans its plugin classpath for JARs containing `META-INF/services/org.pitest.mutationtest.engine.gregor.MethodMutatorFactory`. That file lists the fully qualified class names of every custom mutator factory, and PIT also requires `Implementation-Title` and `Implementation-Vendor` entries in the JAR manifest (`MANIFEST.MF`).
+1. **Discovery (`ServiceLoader`) & JAR Manifest**: Before running tests, PIT scans its plugin classpath for JARs containing `META-INF/services/org.pitest.mutationtest.engine.gregor.MethodMutatorFactory`. That file lists the fully qualified class names of every custom mutator factory. When we first ran PIT against the custom mutator JAR without explicit manifest entries, PIT rejected the plugin at startup with:
+   > `PitError: No implementation vendor in manifest of plugin jar for class com.sandy.pit.DropDepartmentCheckMutator`
+   Adding `maven-jar-plugin` with `<manifestEntries>` (`Implementation-Title`, `Implementation-Version`, and `Implementation-Vendor`) in [`tools/pit-custom-mutators/pom.xml`](../../tools/pit-custom-mutators/pom.xml#L30-L47) resolved this.
 2. **Bytecode rewriting (ASM)**: Java source is already compiled to JVM bytecode (`.class` files). PIT uses the ASM library to walk every instruction in each target method through a `MethodVisitor`.
 3. **Mutant generation & toggle (`shouldMutate`)**: Whenever a mutator recognizes a target bytecode pattern (e.g., an `if` jump or static field load), it calls `context.registerMutation(...)` to assign a unique `MutationIdentifier`. During an actual test run for that mutant ID, `context.shouldMutate(id)` returns `true` only for that one mutant, so PIT emits mutated bytecode in memory without modifying source files on disk.
 4. **Killing the mutant**: PIT runs the covering JUnit 5 tests against the mutated class in memory. If at least one test fails (or throws an unexpected error), the mutant is **KILLED**; if all tests still pass, it **SURVIVED**.
@@ -22,16 +35,16 @@ Mutation testing runs with `org.pitest:pitest-maven:1.30.2` and `org.pitest:pite
 
 ## 3. Custom Business-Rule Mutators (`tools/pit-custom-mutators/`)
 
-We built a standalone Maven plugin module at [`tools/pit-custom-mutators/pom.xml`](file:///c:/Users/Z%20Book/expense-approval/tools/pit-custom-mutators/pom.xml) (`com.sandy:pit-custom-mutators:1.0.0`), installed into the local Maven repository before running PIT (and built explicitly before PIT in CI).
+We built a standalone Maven plugin module at [`tools/pit-custom-mutators/pom.xml`](../../tools/pit-custom-mutators/pom.xml) (`com.sandy:pit-custom-mutators:1.0.0`), installed into the local Maven repository before running PIT (building this module explicitly before PIT in CI is planned for Task 7).
 
-SPI registration in [`META-INF/services/org.pitest.mutationtest.engine.gregor.MethodMutatorFactory`](file:///c:/Users/Z%20Book/expense-approval/tools/pit-custom-mutators/src/main/resources/META-INF/services/org.pitest.mutationtest.engine.gregor.MethodMutatorFactory#L1-L2):
+SPI registration in [`META-INF/services/org.pitest.mutationtest.engine.gregor.MethodMutatorFactory`](../../tools/pit-custom-mutators/src/main/resources/META-INF/services/org.pitest.mutationtest.engine.gregor.MethodMutatorFactory#L1-L2):
 ```text
 com.sandy.pit.DropDepartmentCheckMutator
 com.sandy.pit.SwapApproverRoleMutator
 ```
 
 ### Custom Mutator 1 — `DROP_DEPARTMENT_CHECK` (BR2)
-Source: [`DropDepartmentCheckMutator.java`](file:///c:/Users/Z%20Book/expense-approval/tools/pit-custom-mutators/src/main/java/com/sandy/pit/DropDepartmentCheckMutator.java#L16-L77).
+Source: [`DropDepartmentCheckMutator.java`](../../tools/pit-custom-mutators/src/main/java/com/sandy/pit/DropDepartmentCheckMutator.java#L16-L77).
 
 - **Target production rule** (`ExpenseService.java:174`):
   ```java
@@ -50,7 +63,7 @@ Source: [`DropDepartmentCheckMutator.java`](file:///c:/Users/Z%20Book/expense-ap
   ```
 
 ### Custom Mutator 2 — `SWAP_APPROVER_ROLE` (BR3 / BR4)
-Source: [`SwapApproverRoleMutator.java`](file:///c:/Users/Z%20Book/expense-approval/tools/pit-custom-mutators/src/main/java/com/sandy/pit/SwapApproverRoleMutator.java#L15-L61).
+Source: [`SwapApproverRoleMutator.java`](../../tools/pit-custom-mutators/src/main/java/com/sandy/pit/SwapApproverRoleMutator.java#L15-L61).
 
 - **Target production rule** (`RequestStatus.java:21-27`):
   ```java
@@ -85,10 +98,10 @@ All runs below executed strictly against the initial 75 team white-box tests (`*
 
 | Run | Mutator Group(s) | Generated | Killed | Survived | No Coverage | Mutation Score | Evidence |
 |---|---|---:|---:|---:|---:|---:|---|
-| **Reported Baseline** | `DEFAULTS` | 79 | 71 | 8 | 0 | **90%** | [`07_pit_baseline_run.txt`](file:///c:/Users/Z%20Book/expense-approval/docs/team/evidence/07_pit_baseline_run.txt), [`pit-baseline/mutations.xml`](file:///c:/Users/Z%20Book/expense-approval/docs/team/evidence/pit-baseline/mutations.xml) |
-| **Baseline + Custom** | `DEFAULTS`, `DROP_DEPARTMENT_CHECK`, `SWAP_APPROVER_ROLE` | 82 | 74 | 8 | 0 | **90%** | [`07_pit_defaults_custom_run.txt`](file:///c:/Users/Z%20Book/expense-approval/docs/team/evidence/07_pit_defaults_custom_run.txt), [`pit-defaults-custom/mutations.xml`](file:///c:/Users/Z%20Book/expense-approval/docs/team/evidence/pit-defaults-custom/mutations.xml) |
-| **Stronger + Custom** | `STRONGER`, `DROP_DEPARTMENT_CHECK`, `SWAP_APPROVER_ROLE` | 108 | 100 | 8 | 0 | **93%** | [`07_pit_stronger_custom_run.txt`](file:///c:/Users/Z%20Book/expense-approval/docs/team/evidence/07_pit_stronger_custom_run.txt), [`pit-stronger-custom/mutations.xml`](file:///c:/Users/Z%20Book/expense-approval/docs/team/evidence/pit-stronger-custom/mutations.xml) |
-| **Extended (`ALL` + Custom)** | `ALL`, `DROP_DEPARTMENT_CHECK`, `SWAP_APPROVER_ROLE` | 333 | 312 | 19 | 2 | **94%** | [`07_pit_all_custom_run.txt`](file:///c:/Users/Z%20Book/expense-approval/docs/team/evidence/07_pit_all_custom_run.txt), [`pit-all-custom/mutations.xml`](file:///c:/Users/Z%20Book/expense-approval/docs/team/evidence/pit-all-custom/mutations.xml) |
+| **Reported Baseline** | `DEFAULTS` | 79 | 71 | 8 | 0 | **90%** | [`07_pit_baseline_run.txt`](evidence/07_pit_baseline_run.txt), [`pit-baseline/mutations.xml`](evidence/pit-baseline/mutations.xml) |
+| **Baseline + Custom** | `DEFAULTS`, `DROP_DEPARTMENT_CHECK`, `SWAP_APPROVER_ROLE` | 82 | 74 | 8 | 0 | **90%** | [`07_pit_defaults_custom_run.txt`](evidence/07_pit_defaults_custom_run.txt), [`pit-defaults-custom/mutations.xml`](evidence/pit-defaults-custom/mutations.xml) |
+| **Stronger + Custom** | `STRONGER`, `DROP_DEPARTMENT_CHECK`, `SWAP_APPROVER_ROLE` | 108 | 100 | 8 | 0 | **93%** | [`07_pit_stronger_custom_run.txt`](evidence/07_pit_stronger_custom_run.txt), [`pit-stronger-custom/mutations.xml`](evidence/pit-stronger-custom/mutations.xml) |
+| **Extended (`ALL` + Custom)** | `ALL`, `DROP_DEPARTMENT_CHECK`, `SWAP_APPROVER_ROLE` | 333 | 312 | 19 | 2 | **94%** | [`07_pit_all_custom_run.txt`](evidence/07_pit_all_custom_run.txt), [`pit-all-custom/mutations.xml`](evidence/pit-all-custom/mutations.xml) |
 
 - **Why `DEFAULTS` stays the reported baseline (90%)**: PIT's `DEFAULTS` group is the standard benchmark across projects; our custom mutators added 3 business-rule mutations (`DROP_DEPARTMENT_CHECK`: 1/1 killed; `SWAP_APPROVER_ROLE`: 2/2 killed), leaving the score at 74/82 (90%).
 - **Why the extended `ALL + custom` run was executed**: Both `DEFAULTS` and `STRONGER` produced only **8 surviving mutants** (all `VoidMethodCallMutator` setter removals), because our initial 75 white-box tests already killed 100% of `NegateConditionals`, `RemoveConditional`, `SwitchMutator`, and `NullReturnVals` mutants. Running PIT's full `ALL` group adds `NonVoidMethodCallMutator` (getter/argument omissions) and `ConstructorCallMutator`, exposing **21 non-killed mutants (19 `SURVIVED` + 2 `NO_COVERAGE`)** so we can classify and eliminate >= 15 real survivors.
@@ -97,15 +110,15 @@ All runs below executed strictly against the initial 75 team white-box tests (`*
 
 ## 5. Classification of All 21 Non-Killed Mutants (`ALL` + Custom, Before Fix)
 
-Every non-killed mutant from [`docs/team/evidence/pit-all-custom/mutations.xml`](file:///c:/Users/Z%20Book/expense-approval/docs/team/evidence/pit-all-custom/mutations.xml):
+Every non-killed mutant from [`evidence/pit-all-custom/mutations.xml`](evidence/pit-all-custom/mutations.xml):
 
 | # | Class & Method | Line | PIT Status | Mutator | Mutation Description | Classification | Reason |
 |---:|---|---:|---|---|---|---|---|
-| 1 | `ExpenseService.list` | 82 | `NO_COVERAGE` | `ConstructorCallMutator` | removed call to `java/lang/MatchException::<init>` | **Equivalent** | `javac`-emitted unreachable `default` throw for exhaustive `switch (me.getRole())` over 3-value enum `Role`. |
-| 2 | `ExpenseService.assertCanView` | 187 | `NO_COVERAGE` | `ConstructorCallMutator` | removed call to `java/lang/MatchException::<init>` | **Equivalent** | `javac`-emitted unreachable `default` throw for exhaustive `switch (me.getRole())` over 3-value enum `Role`. |
+| 1 | `ExpenseService.list` | 82 | `NO_COVERAGE` | `ConstructorCallMutator` | removed call to `java/lang/MatchException::<init>` | **Equivalent in practice** | `javac` adds an unreachable default branch for the enum switch (`switch (me.getRole())` over the 3-constant `Role` enum). |
+| 2 | `ExpenseService.assertCanView` | 187 | `NO_COVERAGE` | `ConstructorCallMutator` | removed call to `java/lang/MatchException::<init>` | **Equivalent in practice** | `javac` adds an unreachable default branch for the enum switch (`switch (me.getRole())` over the 3-constant `Role` enum). |
 | 3 | `ExpenseService.create` | 53 | `SURVIVED` | `VoidMethodCallMutator` | removed call to `ExpenseRequest::setStatus` | **Equivalent** | `ExpenseRequest.java:69` already initializes `private RequestStatus status = RequestStatus.DRAFT;`, making `setStatus(DRAFT)` a semantic no-op on a new object. |
-| 4 | `ExpenseService.get` | 95 | `SURVIVED` | `NonVoidMethodCallMutator` | removed call to `java/util/List::size` | **Equivalent** | `r.getItems().size()` only forces Hibernate lazy-bag loading; return value is unused and unit tests use eager `ArrayList`s. |
-| 5 | `ExpenseService.get` | 96 | `SURVIVED` | `NonVoidMethodCallMutator` | removed call to `java/util/List::size` | **Equivalent** | `r.getApprovals().size()` only forces Hibernate lazy-bag loading; return value is unused and unit tests use eager `ArrayList`s. |
+| 4 | `ExpenseService.get` | 95 | `SURVIVED` | `NonVoidMethodCallMutator` | removed call to `java/util/List::size` | **Equivalent in practice** | `RequestDetail.of(r)` already reads both lists inside the same transaction, so removing `r.getItems().size()` does not change observable behaviour. |
+| 5 | `ExpenseService.get` | 96 | `SURVIVED` | `NonVoidMethodCallMutator` | removed call to `java/util/List::size` | **Equivalent in practice** | `RequestDetail.of(r)` already reads both lists inside the same transaction, so removing `r.getApprovals().size()` does not change observable behaviour. |
 | 6 | `ExpenseService.create` | 50 | `SURVIVED` | `NonVoidMethodCallMutator` | removed call to `CreateRequest::title` | **Weak assertion** | Existing `create_*` tests asserted currency, description, status, and totalAmount, but never `d.title()`. |
 | 7 | `ExpenseService.create` | 50 | `SURVIVED` | `VoidMethodCallMutator` | removed call to `ExpenseRequest::setTitle` | **Weak assertion** | Same root cause: `d.title()` was never asserted in `create_*` tests (only in `update_*`). |
 | 8 | `ExpenseService.toItem` | 64 | `SURVIVED` | `NonVoidMethodCallMutator` | removed call to `ItemInput::description` | **Weak assertion** | Existing `create_*`/`update_*` tests verified item `amount` and count, never `item.description()`. |
@@ -123,7 +136,7 @@ Every non-killed mutant from [`docs/team/evidence/pit-all-custom/mutations.xml`]
 | 20 | `AuthService.login` | 71 | `SURVIVED` | `NonVoidMethodCallMutator` | removed call to `LoginRequest::email` | **Weak assertion** | Mock `authManager.authenticate(...)` argument was not captured to assert principal equals `req.email()`. |
 | 21 | `AuthService.login` | 71 | `SURVIVED` | `NonVoidMethodCallMutator` | removed call to `LoginRequest::password` | **Weak assertion** | Mock `authManager.authenticate(...)` argument was not captured to assert credentials equals `req.password()`. |
 
-Summary: **5 Equivalent / unreachable** mutants + **16 Weak-assertion killable** mutants (**21 total**, including **19 `SURVIVED`**).
+Summary: **1 Equivalent + 4 Equivalent in practice** mutants + **16 Weak-assertion killable** mutants (**21 total**, including **19 `SURVIVED`**).
 
 ---
 
@@ -131,7 +144,7 @@ Summary: **5 Equivalent / unreachable** mutants + **16 Weak-assertion killable**
 
 Four targeted white-box tests were added without altering or weakening any existing test:
 
-1. [`ExpenseServiceWhiteBoxTest.java#L121-L136`](file:///c:/Users/Z%20Book/expense-approval/tests/team/unit/com/sandy/expense/service/ExpenseServiceWhiteBoxTest.java#L121-L136) (kills #6–#13):
+1. [`ExpenseServiceWhiteBoxTest.java#L121-L136`](../../tests/team/unit/com/sandy/expense/service/ExpenseServiceWhiteBoxTest.java#L121-L136) (kills #6–#13):
    ```java
    @Test
    void create_copiesTitleAndAllItemFields() {
@@ -151,7 +164,7 @@ Four targeted white-box tests were added without altering or weakening any exist
    }
    ```
 
-2. [`ExpenseServiceWhiteBoxTest.java#L483-L489`](file:///c:/Users/Z%20Book/expense-approval/tests/team/unit/com/sandy/expense/service/ExpenseServiceWhiteBoxTest.java#L483-L489) (kills #14):
+2. [`ExpenseServiceWhiteBoxTest.java#L483-L489`](../../tests/team/unit/com/sandy/expense/service/ExpenseServiceWhiteBoxTest.java#L483-L489) (kills #14):
    ```java
    @Test
    void approve_setsApprovalRequestBackReference() {
@@ -162,7 +175,7 @@ Four targeted white-box tests were added without altering or weakening any exist
    }
    ```
 
-3. [`AuthServiceWhiteBoxTest.java#L105-L121`](file:///c:/Users/Z%20Book/expense-approval/tests/team/unit/com/sandy/expense/service/AuthServiceWhiteBoxTest.java#L105-L121) (kills #15–#18):
+3. [`AuthServiceWhiteBoxTest.java#L105-L121`](../../tests/team/unit/com/sandy/expense/service/AuthServiceWhiteBoxTest.java#L105-L121) (kills #15–#18):
    ```java
    @Test
    void register_persistsEmailAndFullName() {
@@ -183,7 +196,7 @@ Four targeted white-box tests were added without altering or weakening any exist
    }
    ```
 
-4. [`AuthServiceWhiteBoxTest.java#L159-L173`](file:///c:/Users/Z%20Book/expense-approval/tests/team/unit/com/sandy/expense/service/AuthServiceWhiteBoxTest.java#L159-L173) (kills #19–#21):
+4. [`AuthServiceWhiteBoxTest.java#L159-L173`](../../tests/team/unit/com/sandy/expense/service/AuthServiceWhiteBoxTest.java#L159-L173) (kills #19–#21):
    ```java
    @Test
    void login_passesEmailAndPasswordToAuthenticationManager() {
@@ -208,8 +221,8 @@ Four targeted white-box tests were added without altering or weakening any exist
 
 | Configuration | Before | After | Remaining Non-Killed | Evidence |
 |---|---:|---:|---|---|
-| **`DEFAULTS` + Custom** (`pom.xml` default) | **74 / 82 (90%)** | **81 / 82 (99%)** | 1 Equivalent (`setStatus` at `ExpenseService.java:53`) | [`07_pit_defaults_custom_after_run.txt`](file:///c:/Users/Z%20Book/expense-approval/docs/team/evidence/07_pit_defaults_custom_after_run.txt), [`pit-defaults-custom-after/mutations.xml`](file:///c:/Users/Z%20Book/expense-approval/docs/team/evidence/pit-defaults-custom-after/mutations.xml) |
-| **`ALL` + Custom** (extended) | **312 / 333 (94%)** | **328 / 333 (98%, 99% strength)** | 3 Equivalent (`setStatus`, `List::size` x2) + 2 `MatchException` `NO_COVERAGE` | [`07_pit_all_custom_after_run.txt`](file:///c:/Users/Z%20Book/expense-approval/docs/team/evidence/07_pit_all_custom_after_run.txt), [`pit-all-custom-after/mutations.xml`](file:///c:/Users/Z%20Book/expense-approval/docs/team/evidence/pit-all-custom-after/mutations.xml) |
+| **`DEFAULTS` + Custom** (`pom.xml` default) | **74 / 82 (90%)** | **81 / 82 (99%)** | 1 Equivalent (`setStatus` at `ExpenseService.java:53`) | [`07_pit_defaults_custom_after_run.txt`](evidence/07_pit_defaults_custom_after_run.txt), [`pit-defaults-custom-after/mutations.xml`](evidence/pit-defaults-custom-after/mutations.xml) |
+| **`ALL` + Custom** (extended) | **312 / 333 (94%)** | **328 / 333 (98%, 99% strength)** | 1 Equivalent (`setStatus`) + 4 Equivalent in practice (`List::size` x2, `MatchException` x2) | [`07_pit_all_custom_after_run.txt`](evidence/07_pit_all_custom_after_run.txt), [`pit-all-custom-after/mutations.xml`](evidence/pit-all-custom-after/mutations.xml) |
 
 Team unit suite after additions: **79 tests, 0 failures, 0 errors**, JaCoCo check passing (**100%** line and branch coverage on all 4 scoped classes).
 
