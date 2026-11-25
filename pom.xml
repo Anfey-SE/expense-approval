@@ -289,6 +289,11 @@
 						<artifactId>pitest-junit5-plugin</artifactId>
 						<version>1.2.3</version>
 					</dependency>
+					<dependency>
+						<groupId>com.sandy</groupId>
+						<artifactId>pit-custom-mutators</artifactId>
+						<version>1.0.0</version>
+					</dependency>
 				</dependencies>
 				<configuration>
 					<targetClasses>
@@ -298,6 +303,11 @@
 					<targetTests>
 						<param>com.sandy.expense.*WhiteBoxTest</param>
 					</targetTests>
+					<mutators>
+						<mutator>DEFAULTS</mutator>
+						<mutator>DROP_DEPARTMENT_CHECK</mutator>
+						<mutator>SWAP_APPROVER_ROLE</mutator>
+					</mutators>
 					<outputFormats>
 						<outputFormat>HTML</outputFormat>
 						<outputFormat>XML</outputFormat>
