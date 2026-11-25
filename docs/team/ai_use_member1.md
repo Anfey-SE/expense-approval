@@ -104,3 +104,34 @@ No missed lines or branches on any of the 4 target classes. The check gate passe
 - **Changed**: Rewrote the EMPTY_REQUEST and assertCanDecide sections in `viva_notes_member1.md` using verbatim text with explicit file and line references.
 - **Changed**: Updated the Viva Failure Prediction section to use real test method names from the source (`approve_managerOtherDepartment_isForbidden_D3_BtoTrue`, `approve_managerOnOwnRequest_isForbidden_D4_true`, `approve_financeOnOwnRequest_isForbidden_D4_true`) rather than invented names.
 - **Saved Evidence**: `docs/team/evidence/03_team_tests_only_jacoco.txt` and `docs/team/evidence/03_team_tests_only_jacoco_check.txt`.
+
+---
+
+## Task 3 â€” System Description and Scope (`docs/team/01_system_and_scope.md`)
+
+| Field | Value |
+|---|---|
+| Tool | Antigravity (Google DeepMind) |
+| Date | 2026-11-25 |
+| Purpose | Write `docs/team/01_system_and_scope.md`: project identity, install commands, DB, roles, requirements, and 4 business rules, all with verbatim code snippets and file+line references |
+| Output | 278-line Markdown document covering project identity, install/start/reset commands, DB schema (Flyway V1+V2), role enforcement (HTTP + service layer), 13 requirements (REQ-A1â€“A4, REQ-E1â€“E8, REQ-AP1â€“AP4), and 4 business rules (BR1â€“BR4) |
+| What was checked | Every code snippet was read verbatim from the real source files (`ExpenseService.java`, `ExpenseDtos.java`, `ExpenseController.java`, `V1__init_schema.sql`, `V2__add_finance_role.sql`, `DataSeeder.java`) with line numbers verified by `Get-Content` and line-range reads. No requirement was invented; each is traceable to a specific method or annotation in the codebase. |
+| What was changed | None â€” doc is a new file. The previous session's fabricated code snippets are not present; all quotes in this document were taken from the live repo. |
+
+**Prompt used (paraphrased)**: "Do Task 3 (docs/team/01_system_and_scope.md). Copy every code snippet verbatim from the real source with file and line numbers. Take requirements only from the real code or README."
+
+---
+
+## Task 4 â€” MC/DC and CFG Analysis (`docs/team/03_mcdc_and_cfg.md`)
+
+| Field | Value |
+|---|---|
+| Tool | Antigravity (Google DeepMind) |
+| Date | 2026-11-25 |
+| Purpose | Write `docs/team/03_mcdc_and_cfg.md`: CFG of `assertCanDecide`, cyclomatic complexity (both Eâˆ’N+2 and decisions+1), full MCC table, MC/DC independence pairs mapped to real test method names, BR2/BR4 decision tables, BR3 state transition table |
+| Output | 317-line Markdown document with ASCII CFG, 9-node/8-edge inventory, V(G)=5 (decisions+1) / V(G)=4 (closed-graph Eâˆ’N+2) with explanation of discrepancy, 7-row MCC table, MC/DC pairs for D1/D2/D3-A/D3-B/D4 each referencing exact test method names and line numbers in `ExpenseServiceWhiteBoxTest.java`, and three tables (BR2 decision, BR4 decision, BR3 state transitions) |
+| What was checked | Source of `assertCanDecide` read verbatim from `ExpenseService.java` lines 162â€“180. Test method names and line numbers verified against `tests/team/unit/com/sandy/expense/service/ExpenseServiceWhiteBoxTest.java`. No test name or line number was inferred; every reference was read from the file. Cyclomatic complexity computed by both formulas and cross-checked; discrepancy explained in the doc. |
+| What was changed | None â€” doc is a new file. |
+
+**Prompt used (paraphrased)**: "For Task 4, draw the CFG of `ExpenseService.assertCanDecide`, list nodes and edges, compute cyclomatic complexity step by step both ways (Eâˆ’N+2 and decisions+1). Build the full MCC table and MC/DC independence pairs, map each pair to the exact test method names. Add a decision table for BR2 and BR4 and a state transition table for BR3."
+

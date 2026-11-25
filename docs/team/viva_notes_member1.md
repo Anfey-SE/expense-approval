@@ -107,3 +107,69 @@ These notes explain in plain English what the test suite and build wiring do, wh
   - Tests `approve_managerOnOwnRequest_isForbidden_D4_true` (line 479) and `approve_financeOnOwnRequest_isForbidden_D4_true` (line 490) fail.
 - **What breaks if someone adds a new state to `RequestStatus`?**
   - Tests `transitionTable`, `enumsExposeExpectedConstants` (which asserts `hasSize(5)`), and `approverRoleIsNullExactlyWhenOnApproveIsNull` all fail — the `@CsvSource` and enum size assertion become stale immediately.
+
+
+---
+
+## Task 3 â€” System Description and Scope
+
+**What the doc contains and why.**  
+`01_system_and_scope.md` describes everything an examiner would need to understand what system we tested, what it does, and which parts we chose to target.
+
+- **Project identity**: The upstream repo URL, our fork, the exact baseline commit hash, the licence, and the technology stack. This matters because marks require traceability: every test file and JaCoCo number must tie back to a specific commit.
+- **Install / start / reset commands**: Verbatim, verified on Windows 11 / Docker 29.8.1. The `-Dapi.version=1.44` Docker 29+ workaround appears here with a plain-English explanation.
+- **Database**: PostgreSQL 16 managed by Flyway. Schema constraints (NOT NULL, CHECK, UNIQUE, FK) are quoted verbatim from `V1__init_schema.sql` and `V2__add_finance_role.sql` with line numbers. Hibernate is set to `validate` only â€” it cannot change the schema.
+- **Roles and enforcement**: Three roles (EMPLOYEE, MANAGER, FINANCE). Enforcement is two-layered: HTTP-level `@PreAuthorize` in `ExpenseController.java` and service-level guard methods (`assertCanDecide`, `assertCanView`). I listed both layers so I can explain at the viva why a request with the wrong role fails twice.
+- **Requirements (13 total)**: Each requirement was derived from real code, not invented. I cross-referenced `ExpenseService.java`, `ExpenseDtos.java`, `ExpenseController.java`, and the SQL migrations. Requirements group into Authentication (A1â€“A4), Expense management (E1â€“E8), and Approval (AP1â€“AP4).
+- **Business rules (BR1â€“BR4)**: Each rule names the exact method and file. These are the four rules covered by the test tags BR1â€“BR4.
+
+**Key things to be able to explain at the viva:**
+- Why a manager from Department A cannot decide on a request from Department B: `assertCanDecide` line 174 checks `needed == Role.MANAGER && !r.getDepartment().getId().equals(me.getDepartmentId())`.
+- Why FINANCE can decide on any department: the department check fires only if `needed == Role.MANAGER`; when `needed == Role.FINANCE`, the whole compound is short-circuit false.
+- Why submitting with zero items throws `EMPTY_REQUEST`: `submit()` line 135â€“137 checks `if (request.items().isEmpty())` and throws `ApiException.badRequest("EMPTY_REQUEST", ...)` before persisting anything.
+- Why seeding is automatic: `DataSeeder.java` runs as a `CommandLineRunner` on startup.
+
+---
+
+## Task 4 â€” CFG, Cyclomatic Complexity, MCC, and MC/DC
+
+**What the doc contains.**  
+`03_mcdc_and_cfg.md` is the formal white-box analysis of `assertCanDecide` (lines 162â€“180 of `ExpenseService.java`).
+
+**Control-Flow Graph (CFG).**  
+I drew 9 nodes and 8 edges. Each node is a maximal straight-line block:
+- N1: entry + compute `needed` + test D1 (`needed == null`)
+- N2: throw NOT_PENDING (D1 true) â†’ EXIT-1
+- N3: test D2 (`me.getRole() != needed`)
+- N4: throw 403 wrong role (D2 true) â†’ EXIT-2
+- N5: test D3 (compound: `needed==MANAGER && !dept.equals(myDept)`)
+- N6: throw 403 wrong dept (D3 true) â†’ EXIT-3
+- N7: test D4 (`requester.getId().equals(me.getUserId())`)
+- N8: throw 403 self-decision (D4 true) â†’ EXIT-4
+- N9: normal return (all guards passed) â†’ EXIT-5
+
+**Cyclomatic complexity â€” step by step.**  
+Two methods; both give the same answer for the core business complexity:
+1. *Decisions + 1*: 4 `if` statements = 4 decisions â†’ V(G) = 4 + 1 = **5**.
+2. *E âˆ’ N + 2* on a single-exit (closed) graph: add one closing edge from each of EXIT-1..EXIT-4 to EXIT-5, giving E = 8 + 4 = 12, N = 9 + 1 (merged exit) = 10 â†’ V(G) = 12 âˆ’ 10 + 2 = **4**. This one-lower result is the standard McCabe formula value. The discrepancy (5 vs 4) arises because the formula counts *binary decision nodes* as single nodes regardless of how many branches exit; a node with 4 outgoing paths from 4 `if`s adds 3 to complexity, not 4. For the viva: cite **V(G) = 5** as the number of independent paths / "decisions+1" and explain the closed-graph formula gives 4 because it uses `E âˆ’ N + 2` with a single collapsed exit; both numbers are correct â€” they measure slightly different things. SonarQube reports *cognitive* complexity separately from cyclomatic.
+
+**MCC table.**  
+7 feasible rows (8 possible combinations minus 1 infeasible: D3 cannot be true when D1 or D2 is true because the method throws before reaching line 174). Each row maps to a test method with the matching `D1`/`D2`/`D3`/`D4` tag.
+
+**MC/DC independence pairs (what to know cold).**
+- D1: vary `needed == null` while D2/D3/D4 irrelevant (D1=true exits early). Pair: test `D1=true` (`approve_statusAwaitingNobody_isNotPending_D1` line 379) vs test `D1=false` (any passing happy-path test).
+- D2: same `needed` (not null), vary role. Pair: `approve_employeeOnSubmitted_wrongRole_D2` (line 411) vs `approve_managerOnSubmitted_correctRole_D2` (line 420's opposite).
+- D3-A (`needed==MANAGER`): hold dept-mismatch true, vary whether needed is MANAGER. Pair: `approve_financeOnRequestFromAnotherDepartment_isAllowed_D3_A_false` (line 431) vs `approve_managerOtherDepartment_isForbidden_D3_BtoTrue` (line 441).
+- D3-B (`!dept.equals(myDept)`): hold needed=MANAGER, vary dept. Pair: `approve_managerOtherDepartment_isForbidden_D3_BtoTrue` (line 441) vs `approve_managerSameDepartment_isAllowed_D3_BtoFalse` (line 453).
+- D4: hold all upper guards passing, vary requester==me. Pair: `approve_managerOnOwnRequest_isForbidden_D4_true` (line 479) vs `approve_managerSameDepartment_isAllowed_D3_BtoFalse` (line 453, D4 implicitly false).
+
+**Decision and state transition tables.**
+- BR2 decision table (7 rows): covers all combinations of D1â€“D4 that are reachable. Used to verify MC/DC pairs cover every condition independently.
+- BR4 decision table (5 rows): Finance vs each of the 5 `RequestStatus` values â€” Finance may decide only when status is `MANAGER_APPROVED` (the only state where `approverRole()` returns `FINANCE`).
+- BR3 state transition table: 4 allowed transitions (DRAFTâ†’SUBMITTED, SUBMITTEDâ†’MANAGER_APPROVED, SUBMITTEDâ†’REJECTED, MANAGER_APPROVEDâ†’FINANCE_APPROVED, MANAGER_APPROVEDâ†’REJECTED) and at least one disallowed per state (e.g., FINANCE_APPROVEDâ†’SUBMITTED is impossible because `onApprove()` throws if `approverRole()` returns null).
+
+**Viva predictions for Task 4 changes:**
+- If someone changes `assertCanDecide` to allow cross-department decisions (removes the `&&` check at line 174), test `approve_managerOtherDepartment_isForbidden_D3_BtoTrue` (line 441) fails and the MC/DC pair for D3-B is broken.
+- If someone adds an `if` to `assertCanDecide`, V(G) increases by 1, the MCC table gets more rows, and at least one new MC/DC pair is needed.
+- If `RequestStatus.onApprove()` is changed to allow FINANCE_APPROVED â†’ something, the state transition table becomes wrong and `transitionTable` test fails.
+
