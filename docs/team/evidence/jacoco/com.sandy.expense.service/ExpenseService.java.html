@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ExpenseService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">expense-approval</a> &gt; <a href="index.source.html" class="el_package">com.sandy.expense.service</a> &gt; <span class="el_source">ExpenseService.java</span></div><h1>ExpenseService.java</h1><pre class="source lang-java linenums">package com.sandy.expense.service;
+
+import com.sandy.expense.domain.Approval;
+import com.sandy.expense.domain.ApprovalAction;
+import com.sandy.expense.domain.ExpenseItem;
+import com.sandy.expense.domain.ExpenseRequest;
+import com.sandy.expense.domain.RequestStatus;
+import com.sandy.expense.domain.Role;
+import com.sandy.expense.domain.User;
+import com.sandy.expense.repo.ExpenseRequestRepository;
+import com.sandy.expense.repo.UserRepository;
+import com.sandy.expense.security.AppUserPrincipal;
+import com.sandy.expense.web.dto.ExpenseDtos.CreateRequest;
+import com.sandy.expense.web.dto.ExpenseDtos.ItemInput;
+import com.sandy.expense.web.dto.ExpenseDtos.RequestDetail;
+import com.sandy.expense.web.dto.ExpenseDtos.RequestSummary;
+import com.sandy.expense.web.dto.PageResponse;
+import com.sandy.expense.web.error.ApiException;
+import java.math.RoundingMode;
+import java.time.Instant;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class ExpenseService {
+
+    private final ExpenseRequestRepository requests;
+    private final UserRepository users;
+
+<span class="fc" id="L32">    public ExpenseService(ExpenseRequestRepository requests, UserRepository users) {</span>
+<span class="fc" id="L33">        this.requests = requests;</span>
+<span class="fc" id="L34">        this.users = users;</span>
+<span class="fc" id="L35">    }</span>
+
+    // ---- create (DRAFT) ----
+
+    @Transactional
+    public RequestDetail create(AppUserPrincipal me, CreateRequest input) {
+<span class="fc" id="L41">        User requester =</span>
+<span class="fc" id="L42">                users.findById(me.getUserId())</span>
+<span class="fc" id="L43">                        .orElseThrow(() -&gt; ApiException.notFound(&quot;User not found&quot;));</span>
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        if (requester.getDepartment() == null) {</span>
+<span class="fc" id="L45">            throw ApiException.badRequest(&quot;NO_DEPARTMENT&quot;, &quot;Your account has no department; ask an admin to assign one&quot;);</span>
+        }
+<span class="fc" id="L47">        ExpenseRequest r = new ExpenseRequest();</span>
+<span class="fc" id="L48">        r.setRequester(requester);</span>
+<span class="fc" id="L49">        r.setDepartment(requester.getDepartment());</span>
+<span class="fc" id="L50">        r.setTitle(input.title());</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        r.setDescription(input.description() == null ? &quot;&quot; : input.description());</span>
+<span class="fc bfc" id="L52" title="All 4 branches covered.">        r.setCurrency(input.currency() == null || input.currency().isBlank() ? &quot;USD&quot; : input.currency().toUpperCase());</span>
+<span class="fc" id="L53">        r.setStatus(RequestStatus.DRAFT);</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        for (ItemInput it : input.items()) {</span>
+<span class="fc" id="L55">            r.addItem(toItem(it));</span>
+        }
+<span class="fc" id="L57">        r.recomputeTotal();</span>
+<span class="fc" id="L58">        requests.save(r);</span>
+<span class="fc" id="L59">        return RequestDetail.of(r);</span>
+    }
+
+    private ExpenseItem toItem(ItemInput it) {
+<span class="fc" id="L63">        ExpenseItem item = new ExpenseItem();</span>
+<span class="fc" id="L64">        item.setDescription(it.description());</span>
+<span class="fc" id="L65">        item.setCategory(it.category());</span>
+        // Pin to the column's scale here rather than letting the driver round on write: otherwise
+        // the object returned in the create/update response carries the raw value and disagrees
+        // with what a subsequent read returns.
+<span class="fc" id="L69">        item.setAmount(it.amount().setScale(2, RoundingMode.HALF_UP));</span>
+<span class="fc" id="L70">        item.setIncurredOn(it.incurredOn());</span>
+<span class="fc" id="L71">        return item;</span>
+    }
+
+    // ---- read (role-scoped) ----
+
+    @Transactional(readOnly = true)
+    public PageResponse&lt;RequestSummary&gt; list(AppUserPrincipal me, RequestStatus status, Pageable pageable) {
+<span class="fc" id="L78">        Page&lt;ExpenseRequest&gt; page =</span>
+<span class="fc bfc" id="L79" title="All 3 branches covered.">                switch (me.getRole()) {</span>
+<span class="fc" id="L80">                    case EMPLOYEE -&gt; requests.forRequester(me.getUserId(), status, pageable);</span>
+<span class="fc" id="L81">                    case MANAGER -&gt; requests.forDepartment(requireDept(me), status, pageable);</span>
+<span class="fc" id="L82">                    case FINANCE -&gt; requests.forAll(status, pageable);</span>
+                };
+<span class="fc" id="L84">        return PageResponse.of(page, RequestSummary::of);</span>
+    }
+
+    @Transactional(readOnly = true)
+    public RequestDetail get(AppUserPrincipal me, Long id) {
+        // Fetches requester + department in the same query (the DTO reads both).
+<span class="fc" id="L90">        ExpenseRequest r =</span>
+<span class="fc" id="L91">                requests.findWithDetailById(id)</span>
+<span class="fc" id="L92">                        .orElseThrow(() -&gt; ApiException.notFound(&quot;Request not found&quot;));</span>
+<span class="fc" id="L93">        assertCanView(me, r);</span>
+        // touch lazy collections inside the tx
+<span class="fc" id="L95">        r.getItems().size();</span>
+<span class="fc" id="L96">        r.getApprovals().size();</span>
+<span class="fc" id="L97">        return RequestDetail.of(r);</span>
+    }
+
+    // ---- update (owner, DRAFT only) ----
+
+    @Transactional
+    public RequestDetail update(AppUserPrincipal me, Long id, CreateRequest input) {
+<span class="fc" id="L104">        ExpenseRequest r = load(id);</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        if (!r.getRequester().getId().equals(me.getUserId())) {</span>
+<span class="fc" id="L106">            throw ApiException.forbidden(&quot;You can only edit your own requests&quot;);</span>
+        }
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        if (r.getStatus() != RequestStatus.DRAFT) {</span>
+<span class="fc" id="L109">            throw ApiException.conflict(&quot;NOT_EDITABLE&quot;, &quot;Only DRAFT requests can be edited&quot;);</span>
+        }
+<span class="fc" id="L111">        r.setTitle(input.title());</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        r.setDescription(input.description() == null ? &quot;&quot; : input.description());</span>
+<span class="fc bfc" id="L113" title="All 4 branches covered.">        if (input.currency() != null &amp;&amp; !input.currency().isBlank()) {</span>
+<span class="fc" id="L114">            r.setCurrency(input.currency().toUpperCase());</span>
+        }
+<span class="fc" id="L116">        r.getItems().clear();</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        for (ItemInput it : input.items()) {</span>
+<span class="fc" id="L118">            r.addItem(toItem(it));</span>
+        }
+<span class="fc" id="L120">        r.recomputeTotal();</span>
+<span class="fc" id="L121">        return RequestDetail.of(r);</span>
+    }
+
+    // ---- transitions ----
+
+    @Transactional
+    public RequestDetail submit(AppUserPrincipal me, Long id) {
+<span class="fc" id="L128">        ExpenseRequest r = load(id);</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        if (!r.getRequester().getId().equals(me.getUserId())) {</span>
+<span class="fc" id="L130">            throw ApiException.forbidden(&quot;You can only submit your own requests&quot;);</span>
+        }
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        if (r.getStatus() != RequestStatus.DRAFT) {</span>
+<span class="fc" id="L133">            throw ApiException.conflict(&quot;NOT_SUBMITTABLE&quot;, &quot;Only DRAFT requests can be submitted&quot;);</span>
+        }
+<span class="fc bfc" id="L135" title="All 2 branches covered.">        if (r.getItems().isEmpty()) {</span>
+<span class="fc" id="L136">            throw ApiException.badRequest(&quot;EMPTY_REQUEST&quot;, &quot;Add at least one line item before submitting&quot;);</span>
+        }
+<span class="fc" id="L138">        transition(r, me, ApprovalAction.SUBMIT, RequestStatus.SUBMITTED, &quot;&quot;);</span>
+<span class="fc" id="L139">        r.setSubmittedAt(Instant.now());</span>
+<span class="fc" id="L140">        return RequestDetail.of(r);</span>
+    }
+
+    @Transactional
+    public RequestDetail approve(AppUserPrincipal me, Long id, String comment) {
+<span class="fc" id="L145">        ExpenseRequest r = load(id);</span>
+<span class="fc" id="L146">        assertCanDecide(me, r);</span>
+<span class="fc" id="L147">        RequestStatus next = r.getStatus().onApprove();</span>
+<span class="fc" id="L148">        transition(r, me, ApprovalAction.APPROVE, next, comment);</span>
+<span class="fc" id="L149">        return RequestDetail.of(r);</span>
+    }
+
+    @Transactional
+    public RequestDetail reject(AppUserPrincipal me, Long id, String comment) {
+<span class="fc" id="L154">        ExpenseRequest r = load(id);</span>
+<span class="fc" id="L155">        assertCanDecide(me, r);</span>
+<span class="fc" id="L156">        transition(r, me, ApprovalAction.REJECT, RequestStatus.REJECTED, comment);</span>
+<span class="fc" id="L157">        return RequestDetail.of(r);</span>
+    }
+
+    // ---- helpers: authorization + state machine ----
+
+    /**
+     * Whoever decides on a request must (1) hold the role that owns the request's current stage,
+     * (2) for a MANAGER, be in the same department, and (3) never be the requester themselves.
+     */
+    private void assertCanDecide(AppUserPrincipal me, ExpenseRequest r) {
+<span class="fc" id="L167">        Role needed = r.getStatus().approverRole();</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        if (needed == null) {</span>
+<span class="fc" id="L169">            throw ApiException.conflict(&quot;NOT_PENDING&quot;, &quot;This request is not awaiting a decision&quot;);</span>
+        }
+<span class="fc bfc" id="L171" title="All 2 branches covered.">        if (me.getRole() != needed) {</span>
+<span class="fc" id="L172">            throw ApiException.forbidden(&quot;This stage must be decided by a &quot; + needed);</span>
+        }
+<span class="fc bfc" id="L174" title="All 4 branches covered.">        if (needed == Role.MANAGER &amp;&amp; !r.getDepartment().getId().equals(me.getDepartmentId())) {</span>
+<span class="fc" id="L175">            throw ApiException.forbidden(&quot;You can only decide on requests in your own department&quot;);</span>
+        }
+<span class="fc bfc" id="L177" title="All 2 branches covered.">        if (r.getRequester().getId().equals(me.getUserId())) {</span>
+<span class="fc" id="L178">            throw ApiException.forbidden(&quot;You cannot decide on your own request&quot;);</span>
+        }
+<span class="fc" id="L180">    }</span>
+
+    private void assertCanView(AppUserPrincipal me, ExpenseRequest r) {
+<span class="fc" id="L183">        boolean ok =</span>
+<span class="fc bfc" id="L184" title="All 3 branches covered.">                switch (me.getRole()) {</span>
+<span class="fc" id="L185">                    case EMPLOYEE -&gt; r.getRequester().getId().equals(me.getUserId());</span>
+<span class="fc" id="L186">                    case MANAGER -&gt; r.getDepartment().getId().equals(me.getDepartmentId());</span>
+<span class="fc" id="L187">                    case FINANCE -&gt; true;</span>
+                };
+<span class="fc bfc" id="L189" title="All 2 branches covered.">        if (!ok) {</span>
+            // 404 rather than 403 so we don't leak the existence of other departments' requests.
+<span class="fc" id="L191">            throw ApiException.notFound(&quot;Request not found&quot;);</span>
+        }
+<span class="fc" id="L193">    }</span>
+
+    /** Apply a state change and append an immutable approval-trail record. */
+    private void transition(
+            ExpenseRequest r, AppUserPrincipal me, ApprovalAction action, RequestStatus to, String comment) {
+<span class="fc" id="L198">        Approval a = new Approval();</span>
+<span class="fc" id="L199">        a.setRequest(r);</span>
+<span class="fc" id="L200">        a.setActor(users.getReferenceById(me.getUserId()));</span>
+<span class="fc" id="L201">        a.setAction(action);</span>
+<span class="fc" id="L202">        a.setFromStatus(r.getStatus());</span>
+<span class="fc" id="L203">        a.setToStatus(to);</span>
+<span class="fc bfc" id="L204" title="All 2 branches covered.">        a.setComment(comment == null ? &quot;&quot; : comment);</span>
+<span class="fc" id="L205">        r.getApprovals().add(a);</span>
+<span class="fc" id="L206">        r.setStatus(to);</span>
+<span class="fc" id="L207">    }</span>
+
+    private ExpenseRequest load(Long id) {
+<span class="fc" id="L210">        return requests.findById(id).orElseThrow(() -&gt; ApiException.notFound(&quot;Request not found&quot;));</span>
+    }
+
+    private Long requireDept(AppUserPrincipal me) {
+<span class="fc bfc" id="L214" title="All 2 branches covered.">        if (me.getDepartmentId() == null) {</span>
+<span class="fc" id="L215">            throw ApiException.badRequest(&quot;NO_DEPARTMENT&quot;, &quot;Your account has no department&quot;);</span>
+        }
+<span class="fc" id="L217">        return me.getDepartmentId();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

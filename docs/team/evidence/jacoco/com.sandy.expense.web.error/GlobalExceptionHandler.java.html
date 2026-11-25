@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GlobalExceptionHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">expense-approval</a> &gt; <a href="index.source.html" class="el_package">com.sandy.expense.web.error</a> &gt; <span class="el_source">GlobalExceptionHandler.java</span></div><h1>GlobalExceptionHandler.java</h1><pre class="source lang-java linenums">package com.sandy.expense.web.error;
+
+import java.time.Instant;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+/** Turns exceptions into a uniform {code, message, timestamp, [fields]} JSON envelope. */
+@RestControllerAdvice
+<span class="fc" id="L22">public class GlobalExceptionHandler {</span>
+
+<span class="fc" id="L24">    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);</span>
+
+    private static Map&lt;String, Object&gt; body(String code, String message) {
+<span class="fc" id="L27">        return Map.of(&quot;code&quot;, code, &quot;message&quot;, message, &quot;timestamp&quot;, Instant.now().toString());</span>
+    }
+
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleApi(ApiException ex) {
+<span class="fc" id="L32">        return ResponseEntity.status(ex.getStatus()).body(body(ex.getCode(), ex.getMessage()));</span>
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleValidation(MethodArgumentNotValidException ex) {
+<span class="nc" id="L37">        Map&lt;String, String&gt; fields =</span>
+<span class="nc" id="L38">                ex.getBindingResult().getFieldErrors().stream()</span>
+<span class="nc" id="L39">                        .collect(</span>
+<span class="nc" id="L40">                                Collectors.toMap(</span>
+<span class="nc" id="L41">                                        f -&gt; f.getField(),</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">                                        f -&gt; f.getDefaultMessage() == null ? &quot;invalid&quot; : f.getDefaultMessage(),</span>
+<span class="nc" id="L43">                                        (a, b) -&gt; a));</span>
+<span class="nc" id="L44">        Map&lt;String, Object&gt; b =</span>
+<span class="nc" id="L45">                Map.of(</span>
+<span class="nc" id="L46">                        &quot;code&quot;, &quot;VALIDATION_ERROR&quot;,</span>
+<span class="nc" id="L47">                        &quot;message&quot;, &quot;Request validation failed&quot;,</span>
+<span class="nc" id="L48">                        &quot;timestamp&quot;, Instant.now().toString(),</span>
+<span class="nc" id="L49">                        &quot;fields&quot;, fields);</span>
+<span class="nc" id="L50">        return ResponseEntity.badRequest().body(b);</span>
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleDenied(AccessDeniedException ex) {
+<span class="fc" id="L55">        return ResponseEntity.status(HttpStatus.FORBIDDEN)</span>
+<span class="fc" id="L56">                .body(body(&quot;FORBIDDEN&quot;, &quot;You do not have permission to perform this action&quot;));</span>
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleAuth(AuthenticationException ex) {
+<span class="nc" id="L61">        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)</span>
+<span class="nc" id="L62">                .body(body(&quot;UNAUTHORIZED&quot;, &quot;Invalid credentials&quot;));</span>
+    }
+
+    /**
+     * Lost the optimistic-lock race: another approver committed a decision on this request first.
+     * 409 tells the client its view is stale and it should reload rather than retry blindly.
+     */
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleConcurrentUpdate(
+            ObjectOptimisticLockingFailureException ex) {
+<span class="nc" id="L72">        return ResponseEntity.status(HttpStatus.CONFLICT)</span>
+<span class="nc" id="L73">                .body(</span>
+<span class="nc" id="L74">                        body(</span>
+<span class="nc" id="L75">                                &quot;CONCURRENT_UPDATE&quot;,</span>
+<span class="nc" id="L76">                                &quot;Someone else updated this request first — reload and try again&quot;));</span>
+    }
+
+    /** Malformed or empty JSON body — a client error (400), not a server fault. */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleUnreadable(HttpMessageNotReadableException ex) {
+<span class="nc" id="L82">        return ResponseEntity.badRequest().body(body(&quot;MALFORMED_JSON&quot;, &quot;Request body is not valid JSON&quot;));</span>
+    }
+
+    /** e.g. ?status=BOGUS — an unparseable query/path parameter. */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+<span class="nc" id="L88">        return ResponseEntity.badRequest()</span>
+<span class="nc" id="L89">                .body(body(&quot;BAD_PARAMETER&quot;, &quot;Invalid value for parameter '&quot; + ex.getName() + &quot;'&quot;));</span>
+    }
+
+    /** A constraint the bean validation layer didn't catch (e.g. a too-long value). */
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleIntegrity(DataIntegrityViolationException ex) {
+<span class="nc" id="L95">        log.warn(&quot;Data integrity violation&quot;, ex);</span>
+<span class="nc" id="L96">        return ResponseEntity.status(HttpStatus.CONFLICT)</span>
+<span class="nc" id="L97">                .body(body(&quot;DATA_INTEGRITY&quot;, &quot;The request conflicts with existing data&quot;));</span>
+    }
+
+    /**
+     * Catch-all. Without this, anything unhandled falls through to Spring's default error page,
+     * which returns a different JSON shape — so the &quot;uniform envelope&quot; guarantee would quietly not
+     * hold. Logs the real cause server-side and returns a generic message (no internals leaked).
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleUnexpected(Exception ex) {
+<span class="nc" id="L107">        log.error(&quot;Unhandled exception&quot;, ex);</span>
+<span class="nc" id="L108">        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="nc" id="L109">                .body(body(&quot;INTERNAL_ERROR&quot;, &quot;Something went wrong&quot;));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
