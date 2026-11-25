@@ -173,3 +173,30 @@ Two methods; both give the same answer for the core business complexity:
 - If someone adds an `if` to `assertCanDecide`, V(G) increases by 1, the MCC table gets more rows, and at least one new MC/DC pair is needed.
 - If `RequestStatus.onApprove()` is changed to allow FINANCE_APPROVED â†’ something, the state transition table becomes wrong and `transitionTable` test fails.
 
+
+---
+
+## Task 5 — SonarQube Static Analysis
+
+**What SonarQube does**: It scans all Java source files statically (without running them) using hundreds of built-in rules, and imports the JaCoCo XML to report coverage. It produces a dashboard of metrics: bugs, vulnerabilities, code smells, coverage, complexity, duplication, and ratings.
+
+**How we ran it**: Started SonarQube Community 26.11.0.134175 in Docker on port 9000. Ran mvnw test jacoco:report (team-only tests) to produce fresh XML, then mvnw sonar:sonar with the project key, token, source/binary paths, and JaCoCo XML path. CE task b21c523b completed with SUCCESS.
+
+**Key results to know cold**:
+- Quality Gate: OK (default Sonar way profile, no custom thresholds yet — Task 7 adds them)
+- Bugs: 0 (no runtime logic errors found by static analysis)
+- Vulnerabilities: 2 (both in SecurityConfig.java, upstream code, not ours)
+  - CRITICAL S4502 line 38: CSRF disabled. Safe because JWT Bearer tokens are used, not cookies.
+  - MAJOR S5122 line 117: CORS wildcard. Development-mode convenience; production would restrict origins.
+- Code Smells: 0 / Technical Debt: 0 min / Maintainability: A
+- Coverage: 84.8% overall. Lower than 100% because the 29 non-scoped classes (controllers, filters, config) are not covered by unit tests. The 4 scoped classes remain 100%.
+- Duplication: 0.0% — no copy-pasted blocks.
+- Cyclomatic complexity: 171 total project; assertCanDecide = 5 (matches our hand calculation).
+- Cognitive complexity: 53 total project; assertCanDecide = 4 (flat guards, no nesting penalty, one less than cyclomatic).
+- Security rating D: caused entirely by the 1 CRITICAL vulnerability in upstream SecurityConfig.
+
+**Viva predictions**:
+- If someone adds a new if-else inside assertCanDecide: cyclomatic goes from 5 to 6, cognitive goes up by more if it's nested.
+- If CSRF is re-enabled in SecurityConfig: vulnerability S4502 disappears, security rating improves.
+- If a code smell is introduced (e.g., a method > 150 lines): code_smells goes from 0 to 1, sqale_index increases by estimated fix time.
+- If the Quality Gate gets a custom coverage threshold (e.g., 85%): gate would FAIL at 84.8% — important for Task 7.

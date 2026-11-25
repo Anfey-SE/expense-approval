@@ -135,3 +135,18 @@ No missed lines or branches on any of the 4 target classes. The check gate passe
 
 **Prompt used (paraphrased)**: "For Task 4, draw the CFG of `ExpenseService.assertCanDecide`, list nodes and edges, compute cyclomatic complexity step by step both ways (Eâˆ’N+2 and decisions+1). Build the full MCC table and MC/DC independence pairs, map each pair to the exact test method names. Add a decision table for BR2 and BR4 and a state transition table for BR3."
 
+
+---
+
+## Task 5 — SonarQube Static Analysis (docs/team/02_static_analysis.md)
+
+| Field | Value |
+|---|---|
+| Tool | Antigravity (Google DeepMind) |
+| Date | 2026-11-25 |
+| Purpose | Run SonarQube Community scan on the project, capture all metrics (bugs, vulnerabilities, code smells, hotspots, coverage, complexity, duplication, ratings, tech debt, quality gate), and write docs/team/02_static_analysis.md explaining each metric in plain words |
+| Output | SonarQube Community Build 26.11.0.134175 running on Docker port 9000. sonar-maven-plugin 5.9.0.7382 added to pom.xml. Scan completed (CE task b21c523b, SUCCESS). All metrics captured via REST API and saved to docs/team/evidence/05_sonar_measures.txt and 05_sonar_scan.txt. 02_static_analysis.md written (220 lines). |
+| What was checked | Metrics pulled live from http://localhost:9000/api/measures/component and /api/issues/search after CE task reported SUCCESS. No numbers were fabricated — every value in the doc comes from the API responses captured in evidence files. The two vulnerabilities (S4502 and S5122) were verified against their actual rule IDs and descriptions from the SonarQube UI. |
+| What was changed | pom.xml: added sonar-maven-plugin 5.9.0.7382 and a sonar profile with standard properties. sonar-project.properties written (for reference). .sonar-token.txt written (gitignored). |
+
+**Prompts used (paraphrased)**: "Do Task 5 (SonarQube). Start SonarQube in Docker, run sonar:sonar feeding the JaCoCo XML. Capture complexity, duplication, smells, bugs, vulnerabilities, coverage, tech debt, ratings. Explain each metric in plain words in docs/team/02_static_analysis.md."
