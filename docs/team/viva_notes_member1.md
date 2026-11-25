@@ -41,29 +41,69 @@ These notes explain in plain English what the test suite and build wiring do, wh
   - Asserts authentication failure returns HTTP 401 with code `BAD_CREDENTIALS` and ensures no JWT token is generated.
 
 #### C. Expense Service (`ExpenseService`)
-- **HTTP Unreachable Branch Justification (`EMPTY_REQUEST`)**:
-  - In `ExpenseService.submit(id, user)`:
-    ```java
-    if (req.getItems().isEmpty()) {
-        throw new ApiException(HttpStatus.BAD_REQUEST, "EMPTY_REQUEST", "Cannot submit request without items");
-    }
-    ```
-  - Through the HTTP REST layer, `@NotEmpty` on the DTO `CreateRequest.items` triggers Bean Validation (400 Bad Request) at the Web layer, so an HTTP request with empty items never reaches `ExpenseService.submit()`.
-  - However, in modular architecture or service-level unit testing, a draft request might be manipulated directly. `ExpenseServiceWhiteBoxTest.submit_emptyItems_throwsEmptyRequest` explicitly asserts this service guard, ensuring 100% branch and line coverage for the method.
-- **BR2 Decision Logic (`assertCanDecide`)**:
-  - Decision condition requires:
-    1. Caller role must match `status.approverRole()`.
-    2. Caller must not be the submitter (`!request.getUser().getId().equals(decider.getId())`).
-    3. If decider is `MANAGER`, decider department must match request department (`decider.getDepartment().getId().equals(request.getDepartment().getId())`).
-  - Tested with dedicated white-box tests covering every permutation of matching and non-matching departments, roles, self-approvals, and terminal stages.
+- **HTTP-unreachable branch — verbatim source and test** (`EMPTY_REQUEST`):
+
+  Source: `ExpenseService.java` lines 135–137
+  (file: [`src/main/java/com/sandy/expense/service/ExpenseService.java`](file:///c:/Users/Z%20Book/expense-approval/src/main/java/com/sandy/expense/service/ExpenseService.java#L135-L137))
+  ```java
+  if (r.getItems().isEmpty()) {
+      throw ApiException.badRequest("EMPTY_REQUEST", "Add at least one line item before submitting");
+  }
+  ```
+  This guard lives inside `submit(AppUserPrincipal me, Long id)` at lines 127–141 of `ExpenseService.java`.
+
+  Through the HTTP REST layer the matching DTO has `@NotEmpty` on `items` (declared in `ExpenseDtos.CreateRequest`), so Bean Validation rejects the request at the web layer with HTTP 400 before the method is ever called with an empty list. The service-level guard is therefore unreachable via HTTP but is reachable when `ExpenseService` is exercised directly (e.g. a draft request whose items have been cleared programmatically, or future callers that bypass the DTO).
+
+  Team test that covers this branch:
+  `tests/team/unit/com/sandy/expense/service/ExpenseServiceWhiteBoxTest.java` lines 352–364
+  (file: [`ExpenseServiceWhiteBoxTest.java`](file:///c:/Users/Z%20Book/expense-approval/tests/team/unit/com/sandy/expense/service/ExpenseServiceWhiteBoxTest.java#L352-L364))
+  ```java
+  @Test
+  void submit_draftWithNoItems_isRejected_BR1() {
+      // Unreachable through the HTTP API (@NotEmpty on CreateRequest.items) but reachable at the
+      // service boundary: defensive branch, documented in the equivalent-branch notes.
+      ExpenseRequest r = request(33L, alice, eng, RequestStatus.DRAFT);
+      when(requests.findById(33L)).thenReturn(Optional.of(r));
+      assertThatThrownBy(() -> service.submit(principal(alice), 33L))
+              .isInstanceOf(ApiException.class)
+              .extracting(e -> ((ApiException) e).getCode())
+              .isEqualTo("EMPTY_REQUEST");
+      assertThat(r.getStatus()).isEqualTo(RequestStatus.DRAFT);
+      assertThat(r.getApprovals()).isEmpty();
+  }
+  ```
+
+- **BR2 Decision Logic (`assertCanDecide`)** — verbatim source lines 166–180 of `ExpenseService.java`:
+  ```java
+  private void assertCanDecide(AppUserPrincipal me, ExpenseRequest r) {
+      Role needed = r.getStatus().approverRole();
+      if (needed == null) {
+          throw ApiException.conflict("NOT_PENDING", "This request is not awaiting a decision");
+      }
+      if (me.getRole() != needed) {
+          throw ApiException.forbidden("This stage must be decided by a " + needed);
+      }
+      if (needed == Role.MANAGER && !r.getDepartment().getId().equals(me.getDepartmentId())) {
+          throw ApiException.forbidden("You can only decide on requests in your own department");
+      }
+      if (r.getRequester().getId().equals(me.getUserId())) {
+          throw ApiException.forbidden("You cannot decide on your own request");
+      }
+  }
+  ```
+  Decision conditions (D1–D4 in the test suite tags):
+  - **D1** `needed == null`: terminal states (DRAFT, FINANCE_APPROVED, REJECTED) await nobody.
+  - **D2** `me.getRole() != needed`: role mismatch; employee cannot decide on SUBMITTED.
+  - **D3** `needed == Role.MANAGER && !dept.equals(myDept)`: compound — both conditions independent for MC/DC.
+  - **D4** `requester.getId().equals(me.getUserId())`: self-decision forbidden regardless of role.
 
 ---
 
 ### 3. Viva Failure Prediction Guide
 - **What breaks if someone removes the Manager department check in `assertCanDecide`?**
-  - Test `decide_managerDifferentDepartment_isForbidden` fails immediately (`FORBIDDEN` expected, but would pass if check was dropped).
-  - In mutation testing (Task 6), this will kill the mutation replacing the department check.
-- **What breaks if someone allows an Employee to approve their own request?**
-  - Test `decide_selfDecision_isForbidden` fails.
+  - Tests `approve_managerOtherDepartment_isForbidden_D3_BtoTrue` (line 441) and `reject_managerOtherDepartment_isForbidden` (line 533) fail — `FORBIDDEN` expected, would pass through without the check.
+  - In mutation testing (Task 6), this will kill the mutation replacing the department equality check.
+- **What breaks if someone allows a user to approve their own request?**
+  - Tests `approve_managerOnOwnRequest_isForbidden_D4_true` (line 479) and `approve_financeOnOwnRequest_isForbidden_D4_true` (line 490) fail.
 - **What breaks if someone adds a new state to `RequestStatus`?**
-  - Tests `transitionTable`, `enumsExposeExpectedConstants` (size check), and `approverRoleIsNullExactlyWhenOnApproveIsNull` fail.
+  - Tests `transitionTable`, `enumsExposeExpectedConstants` (which asserts `hasSize(5)`), and `approverRoleIsNullExactlyWhenOnApproveIsNull` all fail — the `@CsvSource` and enum size assertion become stale immediately.
