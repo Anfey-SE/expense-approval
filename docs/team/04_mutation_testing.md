@@ -13,12 +13,19 @@ Mutation testing runs with `org.pitest:pitest-maven:1.30.2` and `org.pitest:pite
 
 Because the custom mutator module (`com.sandy:pit-custom-mutators:1.0.0`) is a standalone Maven project under `tools/pit-custom-mutators/`, it must be installed into the local Maven repository before running PIT:
 
+**Linux / macOS:**
 ```bash
 ./mvnw -f tools/pit-custom-mutators/pom.xml clean install
 ./mvnw test-compile org.pitest:pitest-maven:mutationCoverage
 ```
 
-*(On Windows PowerShell, use `.\mvnw` instead of `./mvnw`.)*
+**Windows (PowerShell / cmd):**
+```powershell
+.\mvnw.cmd -f tools/pit-custom-mutators/pom.xml clean install
+.\mvnw.cmd test-compile org.pitest:pitest-maven:mutationCoverage
+```
+
+Clean-cache verification (executed against an empty Maven local repository) is saved in [`08a_clean_cache_mutator_install.txt`](evidence/08a_clean_cache_mutator_install.txt) and [`08b_clean_cache_pit.txt`](evidence/08b_clean_cache_pit.txt).
 
 ---
 
