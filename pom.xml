@@ -197,6 +197,8 @@
 								<include>com.sandy.expense.service.ExpenseService</include>
 								<include>com.sandy.expense.service.AuthService</include>
 								<include>com.sandy.expense.domain.RequestStatus</include>
+								<include>com.sandy.expense.security.JwtService</include>
+								<include>com.sandy.expense.security.AppUserPrincipal</include>
 							</includes>
 							<limits>
 								<limit>
