@@ -1,0 +1,143 @@
+name: SQE Quality Gate CI
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  quality-gate:
+    name: quality-gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      # -- 1. Build custom PIT mutators ------------------------------------
+      - name: Build and install custom PIT mutators
+        run: ./mvnw -f tools/pit-custom-mutators/pom.xml clean install --no-transfer-progress
+
+      # -- 2. Team tests + JaCoCo report + check (team-only coverage) -----
+      - name: Run team tests with JaCoCo report and 100 % check
+        run: >
+          ./mvnw clean test jacoco:report jacoco:check
+          -Dtest="*WhiteBoxTest"
+          --no-transfer-progress
+        # pom.xml passes -Dapi.version=1.44 via maven-surefire-plugin for
+        # Docker >= 29 compatibility (Testcontainers).
+        # JaCoCo jacoco.xml now contains ONLY team-test coverage.
+
+      # -- 3. Full test suite (upstream + team) WITHOUT JaCoCo ------------
+      - name: Run full test suite (upstream + team, JaCoCo skipped)
+        run: >
+          ./mvnw test
+          -Djacoco.skip=true
+          --no-transfer-progress
+
+      # -- 4. SonarQube container (pinned to 26.11.0.134175) --------------
+      - name: Start SonarQube 26.11.0 container
+        # Image digest is SonarQube Community 26.11.0.134175 (same as local analysis)
+        run: |
+          docker run -d \
+            --name sonarqube \
+            -p 9000:9000 \
+            -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true \
+            sonarqube:community@sha256:7b2296713a92b8ea0dd7a083a25faadc59376c9a1e6daf2744a89711c54ea1ba
+
+          echo "Waiting for SonarQube to become UP..."
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:9000/api/system/status | grep -q '"status":"UP"'; then
+              echo "SonarQube is UP."
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "SonarQube failed to start within 300 seconds."
+          docker logs sonarqube
+          exit 1
+
+      # -- 5. Custom quality gate with overall-code conditions ------------
+      #  A fresh SonarQube instance ships with the "Sonar way" gate that
+      #  checks ONLY new-code conditions. Because the first CI scan has no
+      #  baseline, those conditions pass trivially.  We therefore create a
+      #  custom gate with OVERALL-code thresholds derived from the measured
+      #  values recorded in docs/team/02_static_analysis.md (section 2):
+      #
+      #   bugs           = 0   -> error if > 0
+      #   vulnerabilities = 2   -> error if > 2  (both are upstream)
+      #   code_smells     = 0   -> error if > 0
+      #   coverage        = 56.9 %  -> error if < 50 %  (margin for fluctuation)
+      #   duplicated_lines_density = 0.0 %  -> error if > 3 %
+      - name: Create custom quality gate and set as default
+        run: |
+          set -euo pipefail
+          SQ="http://localhost:9000"
+
+          # Create the gate
+          curl -sf -u admin:admin -X POST \
+            "$SQ/api/qualitygates/create?name=SQE-CI"
+          echo "Created quality gate SQE-CI."
+
+          # Add overall-code conditions
+          curl -sf -u admin:admin -X POST \
+            "$SQ/api/qualitygates/create_condition?gateName=SQE-CI&metric=bugs&op=GT&error=0"
+          curl -sf -u admin:admin -X POST \
+            "$SQ/api/qualitygates/create_condition?gateName=SQE-CI&metric=vulnerabilities&op=GT&error=2"
+          curl -sf -u admin:admin -X POST \
+            "$SQ/api/qualitygates/create_condition?gateName=SQE-CI&metric=code_smells&op=GT&error=0"
+          curl -sf -u admin:admin -X POST \
+            "$SQ/api/qualitygates/create_condition?gateName=SQE-CI&metric=coverage&op=LT&error=50"
+          curl -sf -u admin:admin -X POST \
+            "$SQ/api/qualitygates/create_condition?gateName=SQE-CI&metric=duplicated_lines_density&op=GT&error=3"
+
+          # Set as default so the first scan (which creates the project) uses it
+          curl -sf -u admin:admin -X POST \
+            "$SQ/api/qualitygates/set_as_default?name=SQE-CI"
+          echo "Quality gate SQE-CI set as default."
+
+      # -- 6. SonarQube scan with quality gate wait -----------------------
+      - name: Run SonarQube scan and enforce quality gate
+        run: |
+          set -euo pipefail
+          SQ="http://localhost:9000"
+
+          # Generate a one-time token for the scan
+          TOKEN=$(curl -sf -u admin:admin -X POST \
+            "$SQ/api/user_tokens/generate?name=ci-scan" \
+            | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
+
+          ./mvnw sonar:sonar -Psonar \
+            -Dsonar.host.url="$SQ" \
+            -Dsonar.token="$TOKEN" \
+            -Dsonar.qualitygate.wait=true \
+            --no-transfer-progress
+
+      # -- 7. PIT mutation testing (DEFAULTS + custom, threshold 95 %) ----
+      - name: Run PIT mutation testing (threshold 95 %)
+        run: >
+          ./mvnw test-compile
+          org.pitest:pitest-maven:mutationCoverage
+          -DmutationThreshold=95
+          --no-transfer-progress
+
+      # -- 8. Upload reports ------------------------------------------------
+      - name: Upload JaCoCo and PIT reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-reports
+          path: |
+            target/site/jacoco/
+            target/pit-reports/
