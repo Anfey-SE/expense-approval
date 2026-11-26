@@ -181,7 +181,9 @@ Test class: [`ExpenseDtosValidationWhiteBoxTest.java`](../../tests/team/unit/com
 
 | Record | Tests |
 |--------|-------|
-| `CreateRequest` (title, description, currency, items) | 18 |
+| `CreateRequest` (title, description, currency, items) | 23 |
 | `ItemInput` (description, category, amount, incurredOn) | 19 |
 | `DecisionInput` (comment) | 4 |
-| **Total** | **41** |
+| **Total** | **46** |
+
+History: baseline 41; PR #5 added 5 currency tests (`currency_numeric123_isInvalid`, `currency_symbols_isInvalid`, `currency_alphanumericUS1_isInvalid`, `currency_lowercaseUsd_isValid`, `currency_uppercaseUSD_isValid`).

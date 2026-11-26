@@ -243,12 +243,12 @@ SonarQube does **not** expose per-method complexity (API stops at file level); f
 - Verified every allowed transition (7 total) and at least one disallowed transition from each of the 5 states are covered by `ExpenseServiceWhiteBoxTest` — no new tests needed.
 
 **Task C (`07_boundary_tests.md` & `ExpenseDtosValidationWhiteBoxTest.java`)**:
-- Added **41 unit-level boundary and equivalence-class tests** using Jakarta Bean Validation `Validator` directly (no Spring context, no database), testing one invalid value per test (below, at, and above each constraint in `ExpenseDtos.java`).
-- Covers `CreateRequest` (title, description, currency, items count: 18 tests), `ItemInput` (description, category, amount, incurredOn: 19 tests), and `DecisionInput` (comment: 4 tests).
-- **Test-level note**: Member 2 tests the same limits through the HTTP API (integration level); these 41 tests are unit-level only and counted at the unit level only.
+- Added **46 unit-level boundary and equivalence-class tests** (baseline 41; PR #5 added 5 currency tests) using Jakarta Bean Validation `Validator` directly (no Spring context, no database), testing one invalid value per test (below, at, and above each constraint in `ExpenseDtos.java`).
+- Covers `CreateRequest` (title, description, currency, items count: 23 tests), `ItemInput` (description, category, amount, incurredOn: 19 tests), and `DecisionInput` (comment: 4 tests).
+- **Test-level note**: Member 2 tests the same limits through the HTTP API (integration level); these 46 tests are unit-level only and counted at the unit level only.
 
 **Verification totals**:
-- Team unit tests (`-Dtest="*WhiteBoxTest"`): **120** (`DomainWhiteBoxTest`: 15, `AuthServiceWhiteBoxTest`: 11, `ExpenseServiceWhiteBoxTest`: 53, `ExpenseDtosValidationWhiteBoxTest`: 41), 0 failures, 0 errors.
+- Team unit tests (`-Dtest="*WhiteBoxTest"`): **125** (`DomainWhiteBoxTest`: 15, `AuthServiceWhiteBoxTest`: 11, `ExpenseServiceWhiteBoxTest`: 53, `ExpenseDtosValidationWhiteBoxTest`: 46), 0 failures, 0 errors.
 - JaCoCo 100% check on the 4 scoped classes: **passed** (`All coverage checks have been met.`).
 - PIT (`DEFAULTS` + custom, threshold 95): **81/82 killed (99%), BUILD SUCCESS** (unchanged because PIT targets `service.*` and `domain.*`, while `ExpenseDtos` is in `web.dto`).
 
