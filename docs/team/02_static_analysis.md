@@ -10,6 +10,7 @@
 | Coverage input | `target/site/jacoco/jacoco.xml` produced by **`./mvnw clean test jacoco:report -Dtest="*WhiteBoxTest"`** (**team tests ONLY — 75 tests, 0 failures; `clean` wipes `target/jacoco.exec` first so JaCoCo's default append mode does not merge in the 32 upstream integration tests**) |
 | Project key | `expense-approval` |
 | SCM revision analysed | `92e6ed2acfbe5a7b16ead351f3d1de7df2f98984` |
+| Scan date | `2026-11-25T18:06:04+05:00` (see `05_sonar_measures.txt`) |
 | CE task | `07ae8f77-c571-4640-97c6-7253374e97ec` (status: SUCCESS) |
 | Scan command | `mvnw sonar:sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.token=<token> -Dsonar.projectKey=expense-approval -Dsonar.sources=src/main/java -Dsonar.tests=tests/team/unit -Dsonar.java.binaries=target/classes -Dsonar.java.test.binaries=target/test-classes -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml` |
 | Evidence files | `docs/team/evidence/05_sonar_scan.txt`, `docs/team/evidence/05_sonar_measures.txt`, `docs/team/evidence/06_team_only_clean_jacoco.txt`, `docs/team/evidence/06_team_only_clean_jacoco_check.txt`, `docs/team/evidence/06_team_only_clean_jacoco.xml` |
@@ -21,6 +22,9 @@
 ---
 
 ## 2. Summary Dashboard (Clean Team-Only Coverage)
+
+> [!NOTE]
+> Every SonarQube number below was measured at commit `92e6ed2acfbe5a7b16ead351f3d1de7df2f98984` on `2026-11-25T18:06:04+05:00` (with 75 team unit tests). **Final numbers will be re-measured after all PRs are merged.**
 
 | Metric | Value | Rating / Gate |
 |---|---|---|

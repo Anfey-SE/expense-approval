@@ -225,3 +225,27 @@ No missed lines or branches on any of the 4 target classes. The check gate passe
 | What was changed | Added `docs/team/issues/ui_no_edit_form.md`, `docs/team/uc/UC1_submit_draft.md`, `docs/team/uc/UC2_create_draft.md`, `tests/team/e2e/*`, `docs/team/evidence/uc/run1.txt`, `docs/team/evidence/uc/run2.txt`, and updated `docs/team/ai_use_member1.md` and `docs/team/viva_notes_member1.md`. |
 
 **Prompts used (paraphrased)**: "Inspect the real app for UC1/UC2, record the missing edit UI as an observation, write UC1 (submit draft) and UC2 (create draft) specs with M/A1/A2/E1/E2 flows, automate all 10 flows in Playwright (`workers: 1`), run twice, save evidence, and recommend how to wire CI without editing `quality-gate`."
+
+---
+
+## Prompt Part 4 — Consistency Audit, Hand-Off Notes, PDF Section & Prompt Archive (`member1/final-docs`)
+
+| Field | Value |
+|---|---|
+| Tool | Antigravity (Google DeepMind) |
+| Date | 2026-11-27 |
+| Purpose | Audit all `docs/team/` numbers and evidence links, update `05_handoff_notes.md`, write `Member1_PDF_Section.md`, archive the exact prompt files in `docs/team/prompts/`, and document both AI tools honestly. |
+| Output | Verified 0 missing evidence files and 5 PR/run URLs; identified and corrected `07_boundary_tests.md` (`41 → 46`, baseline 41 + 5 PR #5 currency tests) and `viva_notes_member1.md` (`120 → 125`); added Sonar scan commit/date and re-measurement note to `02_static_analysis.md`; updated `05_handoff_notes.md` (with verified PIT `81/82 = 99%` run); created `Member1_PDF_Section.md`; archived prompt files under `docs/team/prompts/`. |
+| What was checked | Ran Python audit script across all 16 markdown files in `docs/team/`; ran PIT (`mvnw -f tools/pit-custom-mutators/pom.xml clean install` + `mvnw test-compile org.pitest:pitest-maven:mutationCoverage "-DmutationThreshold=95"`) confirming `81/82 (99%)` after all merges. |
+| What was changed | Updated `02_static_analysis.md`, `05_handoff_notes.md`, `07_boundary_tests.md`, `viva_notes_member1.md`, `ai_use_member1.md`; created `Member1_PDF_Section.md` and `docs/team/prompts/*`. |
+
+---
+
+## Summary of Both AI Tools Used (Honesty & Attribution)
+
+| Tool | Role & Purpose | Output Used | What Member 1 Checked or Changed |
+|---|---|---|---|
+| **Antigravity** (Google DeepMind) | Code editing, test generation (white-box unit, DTO boundary, Playwright E2E), Maven/JaCoCo/Sonar/PIT/Playwright execution, documentation, and consistency checks | Unit tests (`tests/team/unit/`), Playwright suite (`tests/team/e2e/`), custom PIT mutators (`tools/pit-custom-mutators/`), CI workflow (`.github/workflows/ci.yml`), and `docs/team/*.md` | Checked all code quotes against real line numbers, ran every test/build/CI command directly, caught and corrected initial hallucinations/mismatches (e.g. `EMPTY_REQUEST`, decision path count `7`, `09_blocked_and_fix_pr.md` log line verification, `07_boundary_tests.md` `41 → 46`). |
+| **Claude** (Anthropic chat assistant) | Used by Member 1 in chat to draft the structured Antigravity prompts, review Antigravity's reports, catch gaps/inconsistencies, and explain SQE concepts | Prompt specifications archived in [`docs/team/prompts/`](prompts/) (`ANTIGRAVITY_PROMPT_MEMBER1.md`, `ANTIGRAVITY_PROMPT_PART2.md`, `ANTIGRAVITY_PROMPT_PART3_USE_CASES.md`, `ANTIGRAVITY_PROMPT_4_5_AND_FOLLOWUP_MESSAGES.md`) | Reviewed every prompt against course requirements and repo state before sending to Antigravity; verified Antigravity's outputs against raw logs and GitHub Actions runs. |
+
+Smaller follow-up corrections typed in chat are not archived as files.
