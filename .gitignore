@@ -39,3 +39,7 @@ build/
 .env.local
 # frontend/.env.production holds only an empty VITE_API_URL (same-origin) and is safe to track.
 !frontend/.env.production
+
+# SonarQube local token (never commit secrets)
+.sonar-token.txt
+.sonar/

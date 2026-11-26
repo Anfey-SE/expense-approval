@@ -1,0 +1,29 @@
+﻿=== MEASURES ===
+coverage = 84.8
+complexity = 171
+reliability_rating = 1.0
+code_smells = 0
+duplicated_lines_density = 0.0
+functions = 103
+security_rating = 4.0
+classes = 42
+statements = 353
+quality_gate_details = {"level":"OK","conditions":[],"ignoredConditions":false}
+security_hotspots = 0
+sqale_index = 0
+sqale_rating = 1.0
+alert_status = OK
+bugs = 0
+branch_coverage = 75.0
+cognitive_complexity = 53
+ncloc = 1373
+vulnerabilities = 2
+line_coverage = 87.0
+lines = 1794
+
+=== ISSUES (2 total) ===
+VULNERABILITY | MAJOR | java:S5122 | SecurityConfig.java:117 | Make sure that enabling CORS is safe here.
+VULNERABILITY | CRITICAL | java:S4502 | SecurityConfig.java:38 | Make sure disabling Spring Security's CSRF protection is safe here.
+
+=== HOTSPOTS () ===
+ | : | 

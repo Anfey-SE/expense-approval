@@ -1,0 +1,205 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------------< com.sandy:expense-approval >---------------------
+[INFO] Building expense-approval 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.5.0:resources (default-resources) @ expense-approval ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ expense-approval ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.5.0:testResources (default-testResources) @ expense-approval ---
+[INFO] skip non existing resourceDirectory C:\Users\Z Book\expense-approval\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ expense-approval ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ expense-approval ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.sandy.expense.domain.RequestStatusTest
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.190 s -- in com.sandy.expense.domain.RequestStatusTest
+[INFO] Running com.sandy.expense.integration.ApiSecurityIntegrationTest
+16:16:09.297 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.sandy.expense.integration.ApiSecurityIntegrationTest]: ApiSecurityIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+16:16:09.401 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+16:16:09.404 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+16:16:09.464 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.21.4
+16:16:09.719 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Loaded org.testcontainers.dockerclient.NpipeSocketClientProviderStrategy from ~/.testcontainers.properties, will try it first
+16:16:10.031 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with local Npipe socket (npipe:////./pipe/docker_engine)
+16:16:10.031 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is localhost
+16:16:10.054 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker: 
+  Server Version: 29.8.1
+  API Version: 1.56
+  Operating System: Docker Desktop
+  Total Memory: 7762 MB
+  Labels: 
+    com.docker.desktop.address=npipe://\\.\pipe\docker_cli
+16:16:10.193 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Creating container for image: testcontainers/ryuk:0.12.0
+16:16:10.334 [main] INFO org.testcontainers.utility.RegistryAuthLocator -- Credential helper/store (docker-credential-desktop) does not have credentials for https://index.docker.io/v1/
+16:16:10.531 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 is starting: 39eb0b27e1054a6475776cb40dccecdbe15de73e822484bed864785ba212d0e6
+16:16:11.189 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 started in PT0.9956206S
+16:16:11.261 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+16:16:11.261 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+16:16:11.263 [main] INFO org.testcontainers.DockerClientFactory -- ?? Docker server version should be at least 1.6.0
+16:16:11.265 [main] INFO tc.postgres:16-alpine -- Creating container for image: postgres:16-alpine
+16:16:11.380 [main] INFO tc.postgres:16-alpine -- Container postgres:16-alpine is starting: 3891a2a1fc46a07eecb315a5755f4747bea1c6eb5b5e3ba8ee82681257b06f5b
+16:16:13.129 [main] INFO tc.postgres:16-alpine -- Container postgres:16-alpine started in PT1.8641461S
+16:16:13.132 [main] INFO tc.postgres:16-alpine -- Container is started (JDBC URL: jdbc:postgresql://localhost:64167/test?loggerLevel=OFF)
+16:16:13.335 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.sandy.expense.ExpenseApprovalApplication for test class com.sandy.expense.integration.ApiSecurityIntegrationTest
+16:16:13.548 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.sandy.expense.integration.ApiSecurityIntegrationTest]: ApiSecurityIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+16:16:13.548 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.sandy.expense.integration.HttpIntegrationTest]: HttpIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+16:16:13.550 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.sandy.expense.integration.PostgresIntegrationTest]: PostgresIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+16:16:13.567 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.sandy.expense.ExpenseApprovalApplication for test class com.sandy.expense.integration.ApiSecurityIntegrationTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.0)
+
+2026-11-25T16:16:14.728+05:00  INFO 26256 --- [expense-approval] [           main] c.s.e.i.ApiSecurityIntegrationTest       : Starting ApiSecurityIntegrationTest using Java 21.0.13.1 with PID 26256 (started by Z Book in C:\Users\Z Book\expense-approval)
+2026-11-25T16:16:14.731+05:00  INFO 26256 --- [expense-approval] [           main] c.s.e.i.ApiSecurityIntegrationTest       : The following 1 profile is active: "test"
+2026-11-25T16:16:16.858+05:00  INFO 26256 --- [expense-approval] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-11-25T16:16:17.077+05:00  INFO 26256 --- [expense-approval] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 195 ms. Found 4 JPA repository interfaces.
+2026-11-25T16:16:19.066+05:00  INFO 26256 --- [expense-approval] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:64167/test?loggerLevel=OFF (PostgreSQL 16.15)
+2026-11-25T16:16:19.148+05:00  INFO 26256 --- [expense-approval] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-11-25T16:16:19.154+05:00  INFO 26256 --- [expense-approval] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 2 migrations (execution time 00:00.025s)
+2026-11-25T16:16:19.178+05:00  INFO 26256 --- [expense-approval] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-11-25T16:16:19.262+05:00  INFO 26256 --- [expense-approval] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-11-25T16:16:19.283+05:00  INFO 26256 --- [expense-approval] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - init schema"
+2026-11-25T16:16:19.369+05:00  INFO 26256 --- [expense-approval] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - optimistic locking and fixes"
+2026-11-25T16:16:19.405+05:00  INFO 26256 --- [expense-approval] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 2 migrations to schema "public", now at version v2 (execution time 00:00.074s)
+2026-11-25T16:16:19.582+05:00  INFO 26256 --- [expense-approval] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-11-25T16:16:19.640+05:00  INFO 26256 --- [expense-approval] [           main] org.hibernate.orm.core                   : HHH000001: Hibernate ORM core version 7.4.1.Final
+2026-11-25T16:16:20.147+05:00  INFO 26256 --- [expense-approval] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-11-25T16:16:20.185+05:00  INFO 26256 --- [expense-approval] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-11-25T16:16:20.217+05:00  INFO 26256 --- [expense-approval] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5f606ab6
+2026-11-25T16:16:20.219+05:00  INFO 26256 --- [expense-approval] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-11-25T16:16:20.298+05:00  INFO 26256 --- [expense-approval] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:64167/test?loggerLevel=OFF]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 16.15
+	Default catalog/schema: test/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-11-25T16:16:21.860+05:00  INFO 26256 --- [expense-approval] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-11-25T16:16:22.005+05:00  INFO 26256 --- [expense-approval] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-11-25T16:16:22.234+05:00  INFO 26256 --- [expense-approval] [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-11-25T16:16:22.774+05:00  WARN 26256 --- [expense-approval] [           main] com.sandy.expense.security.JwtService    : APP_JWT_SECRET is not set — generating a random signing key for this process. Tokens will be invalidated on restart. Set APP_JWT_SECRET in any real deployment.
+2026-11-25T16:16:23.014+05:00  INFO 26256 --- [expense-approval] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name appUserDetailsService
+2026-11-25T16:16:27.235+05:00  INFO 26256 --- [expense-approval] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-11-25T16:16:27.235+05:00  INFO 26256 --- [expense-approval] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-25T16:16:27.287+05:00  INFO 26256 --- [expense-approval] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-11-25T16:16:27.315+05:00  INFO 26256 --- [expense-approval] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 80 ms
+2026-11-25T16:16:27.645+05:00  INFO 26256 --- [expense-approval] [           main] c.s.e.i.ApiSecurityIntegrationTest       : Started ApiSecurityIntegrationTest in 13.943 seconds (process running for 19.789)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build as described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (C:\Users\Z Book\.m2\repository\net\bytebuddy\byte-buddy-agent\1.18.10\byte-buddy-agent-1.18.10.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 22.28 s -- in com.sandy.expense.integration.ApiSecurityIntegrationTest
+[INFO] Running com.sandy.expense.integration.ApplicationContextTest
+2026-11-25T16:16:31.384+05:00  INFO 26256 --- [expense-approval] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.sandy.expense.integration.ApplicationContextTest]: ApplicationContextTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-25T16:16:31.401+05:00  INFO 26256 --- [expense-approval] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.sandy.expense.ExpenseApprovalApplication for test class com.sandy.expense.integration.ApplicationContextTest
+2026-11-25T16:16:31.403+05:00  INFO 26256 --- [expense-approval] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.sandy.expense.integration.ApplicationContextTest]: ApplicationContextTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-25T16:16:31.403+05:00  INFO 26256 --- [expense-approval] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.sandy.expense.integration.PostgresIntegrationTest]: PostgresIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-25T16:16:31.419+05:00  INFO 26256 --- [expense-approval] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.sandy.expense.ExpenseApprovalApplication for test class com.sandy.expense.integration.ApplicationContextTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.0)
+
+2026-11-25T16:16:31.485+05:00  INFO 26256 --- [expense-approval] [           main] c.s.e.i.ApplicationContextTest           : Starting ApplicationContextTest using Java 21.0.13.1 with PID 26256 (started by Z Book in C:\Users\Z Book\expense-approval)
+2026-11-25T16:16:31.485+05:00  INFO 26256 --- [expense-approval] [           main] c.s.e.i.ApplicationContextTest           : The following 1 profile is active: "test"
+2026-11-25T16:16:32.154+05:00  INFO 26256 --- [expense-approval] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-11-25T16:16:32.197+05:00  INFO 26256 --- [expense-approval] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 40 ms. Found 4 JPA repository interfaces.
+2026-11-25T16:16:32.584+05:00  INFO 26256 --- [expense-approval] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:64167/test?loggerLevel=OFF (PostgreSQL 16.15)
+2026-11-25T16:16:32.642+05:00  INFO 26256 --- [expense-approval] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 2 migrations (execution time 00:00.027s)
+2026-11-25T16:16:32.686+05:00  INFO 26256 --- [expense-approval] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 2
+2026-11-25T16:16:32.690+05:00  INFO 26256 --- [expense-approval] [           main] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+2026-11-25T16:16:32.750+05:00  INFO 26256 --- [expense-approval] [           main] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-11-25T16:16:32.805+05:00  INFO 26256 --- [expense-approval] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-11-25T16:16:32.805+05:00  INFO 26256 --- [expense-approval] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-11-25T16:16:32.832+05:00  INFO 26256 --- [expense-approval] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@1701ef19
+2026-11-25T16:16:32.833+05:00  INFO 26256 --- [expense-approval] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-11-25T16:16:32.858+05:00  INFO 26256 --- [expense-approval] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:64167/test?loggerLevel=OFF]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 16.15
+	Default catalog/schema: test/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-11-25T16:16:33.056+05:00  INFO 26256 --- [expense-approval] [           main] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-11-25T16:16:33.106+05:00  INFO 26256 --- [expense-approval] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-11-25T16:16:33.198+05:00  WARN 26256 --- [expense-approval] [           main] com.sandy.expense.security.JwtService    : APP_JWT_SECRET is not set — generating a random signing key for this process. Tokens will be invalidated on restart. Set APP_JWT_SECRET in any real deployment.
+2026-11-25T16:16:33.232+05:00  INFO 26256 --- [expense-approval] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name appUserDetailsService
+2026-11-25T16:16:33.865+05:00  INFO 26256 --- [expense-approval] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 1 endpoint beneath base path '/actuator'
+2026-11-25T16:16:33.897+05:00  INFO 26256 --- [expense-approval] [           main] c.s.e.i.ApplicationContextTest           : Started ApplicationContextTest in 2.466 seconds (process running for 26.043)
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.610 s -- in com.sandy.expense.integration.ApplicationContextTest
+[INFO] Running com.sandy.expense.integration.ApprovalWorkflowIntegrationTest
+2026-11-25T16:16:33.996+05:00  INFO 26256 --- [expense-approval] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.sandy.expense.integration.ApprovalWorkflowIntegrationTest]: ApprovalWorkflowIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-25T16:16:34.016+05:00  INFO 26256 --- [expense-approval] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.sandy.expense.ExpenseApprovalApplication for test class com.sandy.expense.integration.ApprovalWorkflowIntegrationTest
+2026-11-25T16:16:34.016+05:00  INFO 26256 --- [expense-approval] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.sandy.expense.integration.ApprovalWorkflowIntegrationTest]: ApprovalWorkflowIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-25T16:16:34.016+05:00  INFO 26256 --- [expense-approval] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.sandy.expense.integration.HttpIntegrationTest]: HttpIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-25T16:16:34.016+05:00  INFO 26256 --- [expense-approval] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.sandy.expense.integration.PostgresIntegrationTest]: PostgresIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-25T16:16:34.034+05:00  INFO 26256 --- [expense-approval] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.sandy.expense.ExpenseApprovalApplication for test class com.sandy.expense.integration.ApprovalWorkflowIntegrationTest
+2026-11-25T16:16:34.495+05:00  WARN 26256 --- [expense-approval] [           main] o.h.v.i.m.a.CascadingMetaDataBuilder     : HV000271: Using `@Valid` on a container (java.util.List) is deprecated. You should apply the annotation on the type argument(s). Affected element: items
+2026-11-25T16:16:34.505+05:00  WARN 26256 --- [expense-approval] [           main] o.h.v.i.m.a.CascadingMetaDataBuilder     : HV000271: Using `@Valid` on a container (java.util.List) is deprecated. You should apply the annotation on the type argument(s). Affected element: CreateRequest#items()
+2026-11-25T16:16:34.505+05:00  WARN 26256 --- [expense-approval] [           main] o.h.v.i.m.a.CascadingMetaDataBuilder     : HV000271: Using `@Valid` on a container (java.util.List) is deprecated. You should apply the annotation on the type argument(s). Affected element: CreateRequest#com.sandy.expense.web.dto.ExpenseDtos$CreateRequest(String, String, String, List)
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.375 s -- in com.sandy.expense.integration.ApprovalWorkflowIntegrationTest
+[INFO] Running com.sandy.expense.integration.OptimisticLockingTest
+2026-11-25T16:16:35.373+05:00  INFO 26256 --- [expense-approval] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.sandy.expense.integration.OptimisticLockingTest]: OptimisticLockingTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-25T16:16:35.385+05:00  INFO 26256 --- [expense-approval] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.sandy.expense.ExpenseApprovalApplication for test class com.sandy.expense.integration.OptimisticLockingTest
+2026-11-25T16:16:35.385+05:00  INFO 26256 --- [expense-approval] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.sandy.expense.integration.OptimisticLockingTest]: OptimisticLockingTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-25T16:16:35.390+05:00  INFO 26256 --- [expense-approval] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.sandy.expense.integration.PostgresIntegrationTest]: PostgresIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-25T16:16:35.398+05:00  INFO 26256 --- [expense-approval] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.sandy.expense.ExpenseApprovalApplication for test class com.sandy.expense.integration.OptimisticLockingTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.637 s -- in com.sandy.expense.integration.OptimisticLockingTest
+[INFO] Running com.sandy.expense.integration.RoleScopedListingIntegrationTest
+2026-11-25T16:16:36.012+05:00  INFO 26256 --- [expense-approval] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.sandy.expense.integration.RoleScopedListingIntegrationTest]: RoleScopedListingIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-25T16:16:36.029+05:00  INFO 26256 --- [expense-approval] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.sandy.expense.ExpenseApprovalApplication for test class com.sandy.expense.integration.RoleScopedListingIntegrationTest
+2026-11-25T16:16:36.029+05:00  INFO 26256 --- [expense-approval] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.sandy.expense.integration.RoleScopedListingIntegrationTest]: RoleScopedListingIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-25T16:16:36.029+05:00  INFO 26256 --- [expense-approval] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.sandy.expense.integration.HttpIntegrationTest]: HttpIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-25T16:16:36.035+05:00  INFO 26256 --- [expense-approval] [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.sandy.expense.integration.PostgresIntegrationTest]: PostgresIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-25T16:16:36.045+05:00  INFO 26256 --- [expense-approval] [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.sandy.expense.ExpenseApprovalApplication for test class com.sandy.expense.integration.RoleScopedListingIntegrationTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.127 s -- in com.sandy.expense.integration.RoleScopedListingIntegrationTest
+[INFO] Running com.sandy.expense.service.AuthServiceTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.564 s -- in com.sandy.expense.service.AuthServiceTest
+[INFO] Running com.sandy.expense.service.ExpenseServiceTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.320 s -- in com.sandy.expense.service.ExpenseServiceTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 32, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  36.676 s
+[INFO] Finished at: 2026-11-25T16:16:40+05:00
+[INFO] ------------------------------------------------------------------------

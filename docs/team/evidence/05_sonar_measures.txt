@@ -1,0 +1,63 @@
+﻿=== SonarQube Community Build 26.11.0.134175 ===
+Project: expense-approval  |  Scan date: 2026-11-25T18:06:04+05:00
+SCM revision: 92e6ed2acfbe5a7b16ead351f3d1de7df2f98984
+CE task: 07ae8f77-c571-4640-97c6-7253374e97ec  |  CE status: SUCCESS
+Coverage source: mvnw clean test jacoco:report -Dtest="*WhiteBoxTest" (75 team tests ONLY; clean target/ so no append contamination)
+Quality Gate: OK (alert_status=OK)
+
+=== PROJECT MEASURES ===
+ncloc                    = 1373   (non-comment lines of code)
+lines                    = 1794   (total lines incl. comments/blanks)
+statements               = 353
+functions                = 103
+classes                  = 42
+
+coverage                 = 56.9 %
+line_coverage            = 55.9 %
+branch_coverage          = 61.1 %
+
+bugs                     = 0
+vulnerabilities          = 2
+code_smells              = 0
+security_hotspots        = 0
+
+complexity               = 171   (cyclomatic, whole project)
+cognitive_complexity     = 53    (whole project)
+
+duplicated_lines_density = 0.0 %
+sqale_index              = 0 min  (technical debt)
+sqale_rating             = A (1.0)
+reliability_rating       = A (1.0)
+security_rating          = D (4.0)
+
+=== FILE-LEVEL MEASURES: ExpenseService.java ===
+(api/measures/component_tree under FIL returns 0 children -> SonarQube exposes file-level metrics only, no per-method complexity)
+ncloc                    = 181
+functions                = 14
+complexity               = 45
+cognitive_complexity     = 22
+coverage                 = 100.0 %
+line_coverage            = 100.0 %
+branch_coverage          = 100.0 %
+
+=== FILE-LEVEL MEASURES: ExpenseController.java (clean team-only isolation proof) ===
+ncloc                    = 80
+functions                = 8
+complexity               = 10
+cognitive_complexity     = 2
+coverage                 = 0.0 %
+line_coverage            = 0.0 %
+branch_coverage          = 0.0 %
+
+=== VULNERABILITIES (2) ===
+1. CRITICAL | java:S4502 | SecurityConfig.java:38
+   Make sure disabling Spring Security's CSRF protection is safe here.
+
+2. MAJOR    | java:S5122 | SecurityConfig.java:117
+   Make sure that enabling CORS is safe here.
+
+=== CODE SMELLS ===
+0
+
+=== BUGS ===
+0

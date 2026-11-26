@@ -1,0 +1,10 @@
+'java' is not recognized as an internal or external command,
+operable program or batch file.
+Docker version 29.8.1, build 4a63305
+v24.19.0
+git version 2.55.0.windows.3
+commit 66fcf0fafa463461c676825f5fe60c4304359450
+Author: Anfey-SE <https://github.com/Anfey-SE>
+Date:   Wed Nov 25 16:08:27 2026 +0500
+
+    Add Member 1 white-box unit tests (draft, not yet compiled)

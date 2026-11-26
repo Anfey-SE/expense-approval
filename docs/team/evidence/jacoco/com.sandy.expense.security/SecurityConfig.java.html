@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">expense-approval</a> &gt; <a href="index.source.html" class="el_package">com.sandy.expense.security</a> &gt; <span class="el_source">SecurityConfig.java</span></div><h1>SecurityConfig.java</h1><pre class="source lang-java linenums">package com.sandy.expense.security;
+
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.util.List;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+@Configuration
+@EnableMethodSecurity // enables @PreAuthorize on service/controller methods
+public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtFilter;
+
+<span class="fc" id="L32">    public SecurityConfig(JwtAuthenticationFilter jwtFilter) {</span>
+<span class="fc" id="L33">        this.jwtFilter = jwtFilter;</span>
+<span class="fc" id="L34">    }</span>
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+<span class="fc" id="L38">        http.csrf(AbstractHttpConfigurer::disable) // stateless JWT API, no cookies -&gt; no CSRF</span>
+<span class="fc" id="L39">                .cors(cors -&gt; {}) // use the CorsConfigurationSource bean below</span>
+<span class="fc" id="L40">                .sessionManagement(sm -&gt; sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))</span>
+<span class="fc" id="L41">                .authorizeHttpRequests(auth -&gt; auth</span>
+                        // Only login and register are public. /api/auth/me must be authenticated:
+                        // as part of the permitAll group it was reached with a null principal and
+                        // blew up with a 500 — and it's the call the SPA makes on every page load.
+<span class="fc" id="L45">                        .requestMatchers(&quot;/api/auth/login&quot;, &quot;/api/auth/register&quot;)</span>
+<span class="fc" id="L46">                        .permitAll()</span>
+<span class="fc" id="L47">                        .requestMatchers(&quot;/actuator/health&quot;, &quot;/error&quot;)</span>
+<span class="fc" id="L48">                        .permitAll()</span>
+                        // The SPA shell + its static assets are public (just JS/HTML); the data
+                        // API under /api/** stays protected. The React app calls /api/auth/me and
+                        // redirects to /login itself when unauthenticated.
+<span class="fc" id="L52">                        .requestMatchers(</span>
+<span class="fc" id="L53">                                HttpMethod.GET,</span>
+<span class="fc" id="L54">                                &quot;/&quot;,</span>
+<span class="fc" id="L55">                                &quot;/index.html&quot;,</span>
+<span class="fc" id="L56">                                &quot;/login&quot;,</span>
+<span class="fc" id="L57">                                &quot;/requests/**&quot;,</span>
+<span class="fc" id="L58">                                &quot;/assets/**&quot;,</span>
+<span class="fc" id="L59">                                &quot;/favicon.ico&quot;,</span>
+<span class="fc" id="L60">                                &quot;/vite.svg&quot;)</span>
+<span class="fc" id="L61">                        .permitAll()</span>
+<span class="fc" id="L62">                        .anyRequest()</span>
+<span class="fc" id="L63">                        .authenticated())</span>
+                // Without these, Spring Security falls back to Http403ForbiddenEntryPoint (because
+                // httpBasic and formLogin are disabled): a missing or expired token produced a 403
+                // with an empty body. That's the wrong status — the client should be told to
+                // re-authenticate, not that it's forbidden — and the SPA keys its &quot;session expired,
+                // go to login&quot; handling off 401, so it never fired. These also keep the
+                // {code, message, timestamp} envelope intact for failures that happen in the filter
+                // chain, before @RestControllerAdvice can see them.
+<span class="fc" id="L71">                .exceptionHandling(ex -&gt; ex.authenticationEntryPoint(</span>
+<span class="fc" id="L72">                                (req, res, e) -&gt; writeError(res, 401, &quot;UNAUTHORIZED&quot;,</span>
+<span class="fc" id="L73">                                        &quot;Authentication required — sign in again&quot;))</span>
+<span class="fc" id="L74">                        .accessDeniedHandler(</span>
+<span class="pc" id="L75">                                (req, res, e) -&gt; writeError(res, 403, &quot;FORBIDDEN&quot;,</span>
+<span class="pc" id="L76">                                        &quot;You do not have permission to perform this action&quot;)))</span>
+<span class="fc" id="L77">                .httpBasic(AbstractHttpConfigurer::disable)</span>
+<span class="fc" id="L78">                .formLogin(AbstractHttpConfigurer::disable)</span>
+<span class="fc" id="L79">                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);</span>
+<span class="fc" id="L80">        return http.build();</span>
+    }
+
+    /** Same envelope shape as GlobalExceptionHandler, written directly from the filter chain. */
+    private static void writeError(HttpServletResponse res, int status, String code, String message)
+            throws IOException {
+<span class="fc" id="L86">        res.setStatus(status);</span>
+<span class="fc" id="L87">        res.setContentType(MediaType.APPLICATION_JSON_VALUE);</span>
+<span class="fc" id="L88">        res.setCharacterEncoding(StandardCharsets.UTF_8.name());</span>
+<span class="fc" id="L89">        res.getWriter()</span>
+<span class="fc" id="L90">                .write(&quot;{\&quot;code\&quot;:\&quot;%s\&quot;,\&quot;message\&quot;:\&quot;%s\&quot;,\&quot;timestamp\&quot;:\&quot;%s\&quot;}&quot;</span>
+<span class="fc" id="L91">                        .formatted(code, message, Instant.now()));</span>
+<span class="fc" id="L92">    }</span>
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+<span class="fc" id="L96">        return new BCryptPasswordEncoder();</span>
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration cfg)
+            throws Exception {
+        // Uses the auto-configured DaoAuthenticationProvider (AppUserDetailsService + BCrypt).
+<span class="fc" id="L103">        return cfg.getAuthenticationManager();</span>
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+<span class="fc" id="L108">        CorsConfiguration c = new CorsConfiguration();</span>
+        // Auth is a Bearer header, never a cookie, so credentials stay off and a wildcard origin
+        // can't be used to ride an ambient session — a caller still needs a token they obtained
+        // some other way. Kept permissive so the demo works from any host it's deployed to.
+        //
+        // Why this matters even though the SPA is same-origin: Vite emits its bundles as
+        // &lt;script type=&quot;module&quot; crossorigin&gt;, and the crossorigin attribute makes the browser send
+        // an Origin header and apply CORS rules to those requests. A fixed localhost allow-list
+        // therefore had the API reject the app's own JS/CSS in production, blanking the page.
+<span class="fc" id="L117">        c.setAllowedOriginPatterns(List.of(&quot;*&quot;));</span>
+<span class="fc" id="L118">        c.setAllowedMethods(List.of(&quot;GET&quot;, &quot;POST&quot;, &quot;PUT&quot;, &quot;PATCH&quot;, &quot;DELETE&quot;, &quot;OPTIONS&quot;));</span>
+<span class="fc" id="L119">        c.setAllowedHeaders(List.of(&quot;Authorization&quot;, &quot;Content-Type&quot;));</span>
+<span class="fc" id="L120">        UrlBasedCorsConfigurationSource src = new UrlBasedCorsConfigurationSource();</span>
+<span class="fc" id="L121">        src.registerCorsConfiguration(&quot;/**&quot;, c);</span>
+<span class="fc" id="L122">        return src;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

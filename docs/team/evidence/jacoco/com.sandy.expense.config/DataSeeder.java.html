@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DataSeeder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">expense-approval</a> &gt; <a href="index.source.html" class="el_package">com.sandy.expense.config</a> &gt; <span class="el_source">DataSeeder.java</span></div><h1>DataSeeder.java</h1><pre class="source lang-java linenums">package com.sandy.expense.config;
+
+import com.sandy.expense.domain.Department;
+import com.sandy.expense.domain.Role;
+import com.sandy.expense.domain.User;
+import com.sandy.expense.repo.DepartmentRepository;
+import com.sandy.expense.repo.UserRepository;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * Seeds departments and demo accounts on first boot so the app is usable immediately.
+ * All demo users share the password &quot;password123&quot;. No-op once any user exists.
+ */
+@Component
+public class DataSeeder implements CommandLineRunner {
+
+    private final DepartmentRepository departments;
+    private final UserRepository users;
+    private final PasswordEncoder encoder;
+
+<span class="fc" id="L24">    public DataSeeder(DepartmentRepository departments, UserRepository users, PasswordEncoder encoder) {</span>
+<span class="fc" id="L25">        this.departments = departments;</span>
+<span class="fc" id="L26">        this.users = users;</span>
+<span class="fc" id="L27">        this.encoder = encoder;</span>
+<span class="fc" id="L28">    }</span>
+
+    @Override
+    @Transactional
+    public void run(String... args) {
+<span class="fc bfc" id="L33" title="All 2 branches covered.">        if (users.count() &gt; 0) {</span>
+<span class="fc" id="L34">            return;</span>
+        }
+<span class="fc" id="L36">        Department eng = departments.save(new Department(&quot;Engineering&quot;));</span>
+<span class="fc" id="L37">        Department sales = departments.save(new Department(&quot;Sales&quot;));</span>
+<span class="fc" id="L38">        Department finance = departments.save(new Department(&quot;Finance&quot;));</span>
+
+<span class="fc" id="L40">        seedUser(&quot;alice@acme.com&quot;, &quot;Alice Employee&quot;, Role.EMPLOYEE, eng);</span>
+<span class="fc" id="L41">        seedUser(&quot;bob@acme.com&quot;, &quot;Bob Manager&quot;, Role.MANAGER, eng);</span>
+<span class="fc" id="L42">        seedUser(&quot;carol@acme.com&quot;, &quot;Carol Employee&quot;, Role.EMPLOYEE, sales);</span>
+<span class="fc" id="L43">        seedUser(&quot;dave@acme.com&quot;, &quot;Dave Manager&quot;, Role.MANAGER, sales);</span>
+<span class="fc" id="L44">        seedUser(&quot;fiona@acme.com&quot;, &quot;Fiona Finance&quot;, Role.FINANCE, finance);</span>
+<span class="fc" id="L45">    }</span>
+
+    private void seedUser(String email, String fullName, Role role, Department dept) {
+<span class="fc" id="L48">        User u = new User();</span>
+<span class="fc" id="L49">        u.setEmail(email);</span>
+<span class="fc" id="L50">        u.setPasswordHash(encoder.encode(&quot;password123&quot;));</span>
+<span class="fc" id="L51">        u.setFullName(fullName);</span>
+<span class="fc" id="L52">        u.setRole(role);</span>
+<span class="fc" id="L53">        u.setDepartment(dept);</span>
+<span class="fc" id="L54">        users.save(u);</span>
+<span class="fc" id="L55">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

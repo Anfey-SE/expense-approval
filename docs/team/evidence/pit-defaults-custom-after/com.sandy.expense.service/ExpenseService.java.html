@@ -1,0 +1,4238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+</head>
+<body>
+
+
+<h1>ExpenseService.java</h1>
+
+<table class="src">
+
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_1'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package com.sandy.expense.service;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_2'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_3'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import com.sandy.expense.domain.Approval;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_4'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import com.sandy.expense.domain.ApprovalAction;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_5'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import com.sandy.expense.domain.ExpenseItem;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_6'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import com.sandy.expense.domain.ExpenseRequest;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_7'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import com.sandy.expense.domain.RequestStatus;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_8'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import com.sandy.expense.domain.Role;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_9'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import com.sandy.expense.domain.User;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_10'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import com.sandy.expense.repo.ExpenseRequestRepository;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_11'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import com.sandy.expense.repo.UserRepository;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_12'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import com.sandy.expense.security.AppUserPrincipal;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_13'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import com.sandy.expense.web.dto.ExpenseDtos.CreateRequest;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_14'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import com.sandy.expense.web.dto.ExpenseDtos.ItemInput;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_15'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import com.sandy.expense.web.dto.ExpenseDtos.RequestDetail;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_16'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import com.sandy.expense.web.dto.ExpenseDtos.RequestSummary;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_17'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import com.sandy.expense.web.dto.PageResponse;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_18'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import com.sandy.expense.web.error.ApiException;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_19'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.math.RoundingMode;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_20'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.time.Instant;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_21'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.data.domain.Page;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_22'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.data.domain.Pageable;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_23'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.stereotype.Service;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_24'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import org.springframework.transaction.annotation.Transactional;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_25'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_26'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>@Service</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_27'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>public class ExpenseService {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_28'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_29'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private final ExpenseRequestRepository requests;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_30'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private final UserRepository users;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_31'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_32'/>
+32
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_32'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    public ExpenseService(ExpenseRequestRepository requests, UserRepository users) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_33'/>
+33
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_33'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        this.requests = requests;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_34'/>
+34
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_34'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        this.users = users;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_35'/>
+35
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_35'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_36'/>
+36
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_36'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_37'/>
+37
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_37'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    // ---- create (DRAFT) ----</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_38'/>
+38
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_38'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_39'/>
+39
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_39'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Transactional</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_40'/>
+40
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_40'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public RequestDetail create(AppUserPrincipal me, CreateRequest input) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_41'/>
+41
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_41'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        User requester =</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_42'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                users.findById(me.getUserId())</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_43'/>
+43
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_43'>1</a>
+<span>
+
+1. lambda$0 : replaced return value with null for com/sandy/expense/service/ExpenseService::lambda$0 &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                        .orElseThrow(() -&#62; ApiException.notFound(&#34;User not found&#34;));</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_44'/>
+44
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_44'>1</a>
+<span>
+
+1. create : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (requester.getDepartment() == null) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_45'/>
+45
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_45'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            throw ApiException.badRequest(&#34;NO_DEPARTMENT&#34;, &#34;Your account has no department; ask an admin to assign one&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_46'/>
+46
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_46'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_47'/>
+47
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_47'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ExpenseRequest r = new ExpenseRequest();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_48'/>
+48
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_48'>1</a>
+<span>
+
+1. create : removed call to com/sandy/expense/domain/ExpenseRequest::setRequester &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        r.setRequester(requester);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_49'/>
+49
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_49'>1</a>
+<span>
+
+1. create : removed call to com/sandy/expense/domain/ExpenseRequest::setDepartment &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        r.setDepartment(requester.getDepartment());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_50'/>
+50
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_50'>1</a>
+<span>
+
+1. create : removed call to com/sandy/expense/domain/ExpenseRequest::setTitle &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        r.setTitle(input.title());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_51'/>
+51
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_51'>2</a>
+<span>
+
+1. create : removed call to com/sandy/expense/domain/ExpenseRequest::setDescription &rarr; KILLED<br/>
+
+2. create : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        r.setDescription(input.description() == null ? &#34;&#34; : input.description());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_52'/>
+52
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_52'>3</a>
+<span>
+
+1. create : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+2. create : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+3. create : removed call to com/sandy/expense/domain/ExpenseRequest::setCurrency &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        r.setCurrency(input.currency() == null || input.currency().isBlank() ? &#34;USD&#34; : input.currency().toUpperCase());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_53'/>
+53
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_53'>1</a>
+<span>
+
+1. create : removed call to com/sandy/expense/domain/ExpenseRequest::setStatus &rarr; SURVIVED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        r.setStatus(RequestStatus.DRAFT);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_54'/>
+54
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_54'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        for (ItemInput it : input.items()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_55'/>
+55
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_55'>1</a>
+<span>
+
+1. create : removed call to com/sandy/expense/domain/ExpenseRequest::addItem &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            r.addItem(toItem(it));</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_56'/>
+56
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_56'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_57'/>
+57
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_57'>1</a>
+<span>
+
+1. create : removed call to com/sandy/expense/domain/ExpenseRequest::recomputeTotal &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        r.recomputeTotal();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_58'/>
+58
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_58'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        requests.save(r);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_59'/>
+59
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_59'>1</a>
+<span>
+
+1. create : replaced return value with null for com/sandy/expense/service/ExpenseService::create &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return RequestDetail.of(r);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_60'/>
+60
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_60'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_61'/>
+61
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_61'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_62'/>
+62
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_62'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private ExpenseItem toItem(ItemInput it) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_63'/>
+63
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_63'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ExpenseItem item = new ExpenseItem();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_64'/>
+64
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_64'>1</a>
+<span>
+
+1. toItem : removed call to com/sandy/expense/domain/ExpenseItem::setDescription &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        item.setDescription(it.description());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_65'/>
+65
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_65'>1</a>
+<span>
+
+1. toItem : removed call to com/sandy/expense/domain/ExpenseItem::setCategory &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        item.setCategory(it.category());</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_66'/>
+66
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_66'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // Pin to the column&#39;s scale here rather than letting the driver round on write: otherwise</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_67'/>
+67
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_67'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // the object returned in the create/update response carries the raw value and disagrees</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_68'/>
+68
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_68'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // with what a subsequent read returns.</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_69'/>
+69
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_69'>1</a>
+<span>
+
+1. toItem : removed call to com/sandy/expense/domain/ExpenseItem::setAmount &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        item.setAmount(it.amount().setScale(2, RoundingMode.HALF_UP));</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_70'/>
+70
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_70'>1</a>
+<span>
+
+1. toItem : removed call to com/sandy/expense/domain/ExpenseItem::setIncurredOn &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        item.setIncurredOn(it.incurredOn());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_71'/>
+71
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_71'>1</a>
+<span>
+
+1. toItem : replaced return value with null for com/sandy/expense/service/ExpenseService::toItem &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return item;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_72'/>
+72
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_72'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_73'/>
+73
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_73'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_74'/>
+74
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_74'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    // ---- read (role-scoped) ----</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_75'/>
+75
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_75'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_76'/>
+76
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_76'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Transactional(readOnly = true)</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_77'/>
+77
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_77'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public PageResponse&#60;RequestSummary&#62; list(AppUserPrincipal me, RequestStatus status, Pageable pageable) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_78'/>
+78
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_78'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        Page&#60;ExpenseRequest&#62; page =</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_79'/>
+79
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_79'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                switch (me.getRole()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_80'/>
+80
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_80'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                    case EMPLOYEE -&#62; requests.forRequester(me.getUserId(), status, pageable);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_81'/>
+81
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_81'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                    case MANAGER -&#62; requests.forDepartment(requireDept(me), status, pageable);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_82'/>
+82
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_82'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                    case FINANCE -&#62; requests.forAll(status, pageable);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_83'/>
+83
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_83'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                };</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_84'/>
+84
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_84'>1</a>
+<span>
+
+1. list : replaced return value with null for com/sandy/expense/service/ExpenseService::list &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return PageResponse.of(page, RequestSummary::of);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_85'/>
+85
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_85'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_86'/>
+86
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_86'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_87'/>
+87
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_87'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Transactional(readOnly = true)</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_88'/>
+88
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_88'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public RequestDetail get(AppUserPrincipal me, Long id) {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_89'/>
+89
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_89'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // Fetches requester + department in the same query (the DTO reads both).</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_90'/>
+90
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_90'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ExpenseRequest r =</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_91'/>
+91
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_91'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                requests.findWithDetailById(id)</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_92'/>
+92
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_92'>1</a>
+<span>
+
+1. lambda$2 : replaced return value with null for com/sandy/expense/service/ExpenseService::lambda$2 &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>                        .orElseThrow(() -&#62; ApiException.notFound(&#34;Request not found&#34;));</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_93'/>
+93
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_93'>1</a>
+<span>
+
+1. get : removed call to com/sandy/expense/service/ExpenseService::assertCanView &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        assertCanView(me, r);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_94'/>
+94
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_94'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // touch lazy collections inside the tx</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_95'/>
+95
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_95'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        r.getItems().size();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_96'/>
+96
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_96'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        r.getApprovals().size();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_97'/>
+97
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_97'>1</a>
+<span>
+
+1. get : replaced return value with null for com/sandy/expense/service/ExpenseService::get &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return RequestDetail.of(r);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_98'/>
+98
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_98'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_99'/>
+99
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_99'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_100'/>
+100
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_100'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    // ---- update (owner, DRAFT only) ----</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_101'/>
+101
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_101'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_102'/>
+102
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_102'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Transactional</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_103'/>
+103
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_103'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public RequestDetail update(AppUserPrincipal me, Long id, CreateRequest input) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_104'/>
+104
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_104'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ExpenseRequest r = load(id);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_105'/>
+105
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_105'>1</a>
+<span>
+
+1. update : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (!r.getRequester().getId().equals(me.getUserId())) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_106'/>
+106
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_106'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            throw ApiException.forbidden(&#34;You can only edit your own requests&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_107'/>
+107
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_107'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_108'/>
+108
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_108'>1</a>
+<span>
+
+1. update : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (r.getStatus() != RequestStatus.DRAFT) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_109'/>
+109
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_109'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            throw ApiException.conflict(&#34;NOT_EDITABLE&#34;, &#34;Only DRAFT requests can be edited&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_110'/>
+110
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_110'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_111'/>
+111
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_111'>1</a>
+<span>
+
+1. update : removed call to com/sandy/expense/domain/ExpenseRequest::setTitle &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        r.setTitle(input.title());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_112'/>
+112
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_112'>2</a>
+<span>
+
+1. update : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+2. update : removed call to com/sandy/expense/domain/ExpenseRequest::setDescription &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        r.setDescription(input.description() == null ? &#34;&#34; : input.description());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_113'/>
+113
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_113'>2</a>
+<span>
+
+1. update : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+2. update : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (input.currency() != null &#38;&#38; !input.currency().isBlank()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_114'/>
+114
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_114'>1</a>
+<span>
+
+1. update : removed call to com/sandy/expense/domain/ExpenseRequest::setCurrency &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            r.setCurrency(input.currency().toUpperCase());</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_115'/>
+115
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_115'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_116'/>
+116
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_116'>1</a>
+<span>
+
+1. update : removed call to java/util/List::clear &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        r.getItems().clear();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_117'/>
+117
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_117'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        for (ItemInput it : input.items()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_118'/>
+118
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_118'>1</a>
+<span>
+
+1. update : removed call to com/sandy/expense/domain/ExpenseRequest::addItem &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            r.addItem(toItem(it));</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_119'/>
+119
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_119'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_120'/>
+120
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_120'>1</a>
+<span>
+
+1. update : removed call to com/sandy/expense/domain/ExpenseRequest::recomputeTotal &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        r.recomputeTotal();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_121'/>
+121
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_121'>1</a>
+<span>
+
+1. update : replaced return value with null for com/sandy/expense/service/ExpenseService::update &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return RequestDetail.of(r);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_122'/>
+122
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_122'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_123'/>
+123
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_123'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_124'/>
+124
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_124'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    // ---- transitions ----</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_125'/>
+125
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_125'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_126'/>
+126
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_126'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Transactional</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_127'/>
+127
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_127'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public RequestDetail submit(AppUserPrincipal me, Long id) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_128'/>
+128
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_128'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ExpenseRequest r = load(id);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_129'/>
+129
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_129'>1</a>
+<span>
+
+1. submit : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (!r.getRequester().getId().equals(me.getUserId())) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_130'/>
+130
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_130'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            throw ApiException.forbidden(&#34;You can only submit your own requests&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_131'/>
+131
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_131'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_132'/>
+132
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_132'>1</a>
+<span>
+
+1. submit : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (r.getStatus() != RequestStatus.DRAFT) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_133'/>
+133
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_133'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            throw ApiException.conflict(&#34;NOT_SUBMITTABLE&#34;, &#34;Only DRAFT requests can be submitted&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_134'/>
+134
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_134'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_135'/>
+135
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_135'>1</a>
+<span>
+
+1. submit : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (r.getItems().isEmpty()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_136'/>
+136
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_136'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            throw ApiException.badRequest(&#34;EMPTY_REQUEST&#34;, &#34;Add at least one line item before submitting&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_137'/>
+137
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_137'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_138'/>
+138
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_138'>1</a>
+<span>
+
+1. submit : removed call to com/sandy/expense/service/ExpenseService::transition &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        transition(r, me, ApprovalAction.SUBMIT, RequestStatus.SUBMITTED, &#34;&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_139'/>
+139
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_139'>1</a>
+<span>
+
+1. submit : removed call to com/sandy/expense/domain/ExpenseRequest::setSubmittedAt &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        r.setSubmittedAt(Instant.now());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_140'/>
+140
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_140'>1</a>
+<span>
+
+1. submit : replaced return value with null for com/sandy/expense/service/ExpenseService::submit &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return RequestDetail.of(r);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_141'/>
+141
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_141'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_142'/>
+142
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_142'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_143'/>
+143
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_143'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Transactional</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_144'/>
+144
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_144'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public RequestDetail approve(AppUserPrincipal me, Long id, String comment) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_145'/>
+145
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_145'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ExpenseRequest r = load(id);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_146'/>
+146
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_146'>1</a>
+<span>
+
+1. approve : removed call to com/sandy/expense/service/ExpenseService::assertCanDecide &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        assertCanDecide(me, r);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_147'/>
+147
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_147'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        RequestStatus next = r.getStatus().onApprove();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_148'/>
+148
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_148'>1</a>
+<span>
+
+1. approve : removed call to com/sandy/expense/service/ExpenseService::transition &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        transition(r, me, ApprovalAction.APPROVE, next, comment);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_149'/>
+149
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_149'>1</a>
+<span>
+
+1. approve : replaced return value with null for com/sandy/expense/service/ExpenseService::approve &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return RequestDetail.of(r);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_150'/>
+150
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_150'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_151'/>
+151
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_151'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_152'/>
+152
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_152'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    @Transactional</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_153'/>
+153
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_153'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    public RequestDetail reject(AppUserPrincipal me, Long id, String comment) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_154'/>
+154
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_154'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        ExpenseRequest r = load(id);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_155'/>
+155
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_155'>1</a>
+<span>
+
+1. reject : removed call to com/sandy/expense/service/ExpenseService::assertCanDecide &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        assertCanDecide(me, r);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_156'/>
+156
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_156'>1</a>
+<span>
+
+1. reject : removed call to com/sandy/expense/service/ExpenseService::transition &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        transition(r, me, ApprovalAction.REJECT, RequestStatus.REJECTED, comment);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_157'/>
+157
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_157'>1</a>
+<span>
+
+1. reject : replaced return value with null for com/sandy/expense/service/ExpenseService::reject &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return RequestDetail.of(r);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_158'/>
+158
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_158'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_159'/>
+159
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_159'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_160'/>
+160
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_160'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    // ---- helpers: authorization + state machine ----</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_161'/>
+161
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_161'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_162'/>
+162
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_162'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_163'/>
+163
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_163'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * Whoever decides on a request must (1) hold the role that owns the request&#39;s current stage,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_164'/>
+164
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_164'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     * (2) for a MANAGER, be in the same department, and (3) never be the requester themselves.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_165'/>
+165
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_165'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>     */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_166'/>
+166
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_166'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private void assertCanDecide(AppUserPrincipal me, ExpenseRequest r) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_167'/>
+167
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_167'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        Role needed = r.getStatus().approverRole();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_168'/>
+168
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_168'>1</a>
+<span>
+
+1. assertCanDecide : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (needed == null) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_169'/>
+169
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_169'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            throw ApiException.conflict(&#34;NOT_PENDING&#34;, &#34;This request is not awaiting a decision&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_170'/>
+170
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_170'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_171'/>
+171
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_171'>1</a>
+<span>
+
+1. assertCanDecide : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (me.getRole() != needed) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_172'/>
+172
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_172'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            throw ApiException.forbidden(&#34;This stage must be decided by a &#34; + needed);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_173'/>
+173
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_173'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_174'/>
+174
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_174'>3</a>
+<span>
+
+1. assertCanDecide : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+2. assertCanDecide : BR2 custom mutator: dropped department check in assertCanDecide &rarr; KILLED<br/>
+
+3. assertCanDecide : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (needed == Role.MANAGER &#38;&#38; !r.getDepartment().getId().equals(me.getDepartmentId())) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_175'/>
+175
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_175'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            throw ApiException.forbidden(&#34;You can only decide on requests in your own department&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_176'/>
+176
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_176'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_177'/>
+177
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_177'>1</a>
+<span>
+
+1. assertCanDecide : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (r.getRequester().getId().equals(me.getUserId())) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_178'/>
+178
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_178'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            throw ApiException.forbidden(&#34;You cannot decide on your own request&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_179'/>
+179
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_179'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_180'/>
+180
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_180'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_181'/>
+181
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_181'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_182'/>
+182
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_182'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private void assertCanView(AppUserPrincipal me, ExpenseRequest r) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_183'/>
+183
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_183'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        boolean ok =</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_184'/>
+184
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_184'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                switch (me.getRole()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_185'/>
+185
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_185'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                    case EMPLOYEE -&#62; r.getRequester().getId().equals(me.getUserId());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_186'/>
+186
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_186'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                    case MANAGER -&#62; r.getDepartment().getId().equals(me.getDepartmentId());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_187'/>
+187
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_187'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>                    case FINANCE -&#62; true;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_188'/>
+188
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_188'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>                };</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_189'/>
+189
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_189'>1</a>
+<span>
+
+1. assertCanView : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (!ok) {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_190'/>
+190
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_190'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            // 404 rather than 403 so we don&#39;t leak the existence of other departments&#39; requests.</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_191'/>
+191
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_191'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            throw ApiException.notFound(&#34;Request not found&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_192'/>
+192
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_192'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_193'/>
+193
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_193'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_194'/>
+194
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_194'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_195'/>
+195
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_195'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    /** Apply a state change and append an immutable approval-trail record. */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_196'/>
+196
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_196'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private void transition(</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_197'/>
+197
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_197'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            ExpenseRequest r, AppUserPrincipal me, ApprovalAction action, RequestStatus to, String comment) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_198'/>
+198
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_198'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        Approval a = new Approval();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_199'/>
+199
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_199'>1</a>
+<span>
+
+1. transition : removed call to com/sandy/expense/domain/Approval::setRequest &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        a.setRequest(r);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_200'/>
+200
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_200'>1</a>
+<span>
+
+1. transition : removed call to com/sandy/expense/domain/Approval::setActor &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        a.setActor(users.getReferenceById(me.getUserId()));</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_201'/>
+201
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_201'>1</a>
+<span>
+
+1. transition : removed call to com/sandy/expense/domain/Approval::setAction &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        a.setAction(action);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_202'/>
+202
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_202'>1</a>
+<span>
+
+1. transition : removed call to com/sandy/expense/domain/Approval::setFromStatus &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        a.setFromStatus(r.getStatus());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_203'/>
+203
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_203'>1</a>
+<span>
+
+1. transition : removed call to com/sandy/expense/domain/Approval::setToStatus &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        a.setToStatus(to);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_204'/>
+204
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_204'>2</a>
+<span>
+
+1. transition : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+2. transition : removed call to com/sandy/expense/domain/Approval::setComment &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        a.setComment(comment == null ? &#34;&#34; : comment);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_205'/>
+205
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_205'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        r.getApprovals().add(a);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_206'/>
+206
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_206'>1</a>
+<span>
+
+1. transition : removed call to com/sandy/expense/domain/ExpenseRequest::setStatus &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        r.setStatus(to);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_207'/>
+207
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_207'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_208'/>
+208
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_208'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_209'/>
+209
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_209'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private ExpenseRequest load(Long id) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_210'/>
+210
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_210'>2</a>
+<span>
+
+1. lambda$3 : replaced return value with null for com/sandy/expense/service/ExpenseService::lambda$3 &rarr; KILLED<br/>
+
+2. load : replaced return value with null for com/sandy/expense/service/ExpenseService::load &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return requests.findById(id).orElseThrow(() -&#62; ApiException.notFound(&#34;Request not found&#34;));</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_211'/>
+211
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_211'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_212'/>
+212
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_212'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_213'/>
+213
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_213'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    private Long requireDept(AppUserPrincipal me) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_214'/>
+214
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_214'>1</a>
+<span>
+
+1. requireDept : removed conditional - replaced equality check with false &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (me.getDepartmentId() == null) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_215'/>
+215
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_215'></a>
+<span>
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            throw ApiException.badRequest(&#34;NO_DEPARTMENT&#34;, &#34;Your account has no department&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_216'/>
+216
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_216'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_217'/>
+217
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_217'>1</a>
+<span>
+
+1. requireDept : replaced Long return value with 0L for com/sandy/expense/service/ExpenseService::requireDept &rarr; KILLED<br/>
+
+</span>
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        return me.getDepartmentId();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_218'/>
+218
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_218'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@7c8df667_219'/>
+219
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_219'></a>
+<span>
+</span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_43'>43</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_43'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>lambda$0<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_userNotFound_throwsNotFound()]</span></span> replaced return value with null for com/sandy/expense/service/ExpenseService::lambda$0 &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_44'>44</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_44'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>create<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_userWithoutDepartment_throwsNoDepartment()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_48'>48</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_48'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>create<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_blankCurrency_defaultsToUsd()]</span></span> removed call to com/sandy/expense/domain/ExpenseRequest::setRequester &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_49'>49</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_49'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>create<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_blankCurrency_defaultsToUsd()]</span></span> removed call to com/sandy/expense/domain/ExpenseRequest::setDepartment &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_50'>50</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_50'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>create<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_copiesTitleAndAllItemFields()]</span></span> removed call to com/sandy/expense/domain/ExpenseRequest::setTitle &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_51'>51</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_51'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>create<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_lowercaseCurrency_isUppercased_andDescriptionKept()]</span></span> removed call to com/sandy/expense/domain/ExpenseRequest::setDescription &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>create<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_nullCurrencyAndDescription_defaultsToUsdAndEmpty()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_52'>52</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_52'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>create<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_blankCurrency_defaultsToUsd()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>create<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_lowercaseCurrency_isUppercased_andDescriptionKept()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>create<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_lowercaseCurrency_isUppercased_andDescriptionKept()]</span></span> removed call to com/sandy/expense/domain/ExpenseRequest::setCurrency &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_53'>53</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_53'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>create<br/><b>Killed by : </b>none</span></span> removed call to com/sandy/expense/domain/ExpenseRequest::setStatus &rarr; SURVIVED</span>
+<a title="Click to view covering tests" class="view-covered-by-tests" onClick="document.getElementById('MutationIdentifier-[location=Location-[clazz=com.sandy.expense.service.ExpenseService,-method=create,-methodDesc=(Lcom/sandy/expense/security/AppUserPrincipal;Lcom/sandy/expense/web/dto/ExpenseDtos$CreateRequest;)Lcom/sandy/expense/web/dto/ExpenseDtos$RequestDetail;],-indexes=[92],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display=(document.getElementById('MutationIdentifier-[location=Location-[clazz=com.sandy.expense.service.ExpenseService,-method=create,-methodDesc=(Lcom/sandy/expense/security/AppUserPrincipal;Lcom/sandy/expense/web/dto/ExpenseDtos$CreateRequest;)Lcom/sandy/expense/web/dto/ExpenseDtos$RequestDetail;],-indexes=[92],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]').style.display == 'block')?'none':'block';">Covering tests</a>
+<div class="covered-tests" id="MutationIdentifier-[location=Location-[clazz=com.sandy.expense.service.ExpenseService,-method=create,-methodDesc=(Lcom/sandy/expense/security/AppUserPrincipal;Lcom/sandy/expense/web/dto/ExpenseDtos$CreateRequest;)Lcom/sandy/expense/web/dto/ExpenseDtos$RequestDetail;],-indexes=[92],-mutator=org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator]" style="display:none;">Covered by tests:
+<ul>
+<li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_blankCurrency_defaultsToUsd()]</li> <li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_amountIsRoundedHalfUpToTwoDecimals_andTotalIsSum()]</li> <li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_nullCurrencyAndDescription_defaultsToUsdAndEmpty()]</li> <li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_lowercaseCurrency_isUppercased_andDescriptionKept()]</li> <li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_copiesTitleAndAllItemFields()]</li> 
+</ul>
+</div></div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_55'>55</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_55'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>create<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_amountIsRoundedHalfUpToTwoDecimals_andTotalIsSum()]</span></span> removed call to com/sandy/expense/domain/ExpenseRequest::addItem &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_57'>57</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_57'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>create<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_amountIsRoundedHalfUpToTwoDecimals_andTotalIsSum()]</span></span> removed call to com/sandy/expense/domain/ExpenseRequest::recomputeTotal &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_59'>59</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_59'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>create<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_blankCurrency_defaultsToUsd()]</span></span> replaced return value with null for com/sandy/expense/service/ExpenseService::create &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_64'>64</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_64'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>toItem<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_copiesTitleAndAllItemFields()]</span></span> removed call to com/sandy/expense/domain/ExpenseItem::setDescription &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_65'>65</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_65'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>toItem<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_copiesTitleAndAllItemFields()]</span></span> removed call to com/sandy/expense/domain/ExpenseItem::setCategory &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_69'>69</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_69'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>toItem<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_blankCurrency_defaultsToUsd()]</span></span> removed call to com/sandy/expense/domain/ExpenseItem::setAmount &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_70'>70</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_70'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>toItem<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_copiesTitleAndAllItemFields()]</span></span> removed call to com/sandy/expense/domain/ExpenseItem::setIncurredOn &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_71'>71</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_71'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>toItem<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_blankCurrency_defaultsToUsd()]</span></span> replaced return value with null for com/sandy/expense/service/ExpenseService::toItem &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_84'>84</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_84'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>list<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:list_finance_seesEverything()]</span></span> replaced return value with null for com/sandy/expense/service/ExpenseService::list &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_92'>92</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_92'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>lambda$2<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:get_missingRequest_throwsNotFound()]</span></span> replaced return value with null for com/sandy/expense/service/ExpenseService::lambda$2 &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_93'>93</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_93'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>get<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:get_managerOtherDepartment_getsNotFound()]</span></span> removed call to com/sandy/expense/service/ExpenseService::assertCanView &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_97'>97</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_97'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>get<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:get_employeeOwner_canView()]</span></span> replaced return value with null for com/sandy/expense/service/ExpenseService::get &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_105'>105</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_105'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>update<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:update_notOwner_isForbidden()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_108'>108</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_108'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>update<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:update_requestNotDraft_isConflict_andRequestUnchanged()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_111'>111</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_111'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>update<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:update_nullCurrency_keepsExistingCurrency_andClearsDescription()]</span></span> removed call to com/sandy/expense/domain/ExpenseRequest::setTitle &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_112'>112</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_112'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>update<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:update_nullCurrency_keepsExistingCurrency_andClearsDescription()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>update<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:update_blankCurrency_keepsExistingCurrency()]</span></span> removed call to com/sandy/expense/domain/ExpenseRequest::setDescription &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_113'>113</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_113'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>update<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:update_newCurrency_isUppercased()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>update<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:update_newCurrency_isUppercased()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_114'>114</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_114'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>update<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:update_newCurrency_isUppercased()]</span></span> removed call to com/sandy/expense/domain/ExpenseRequest::setCurrency &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_116'>116</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_116'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>update<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:update_nullCurrency_keepsExistingCurrency_andClearsDescription()]</span></span> removed call to java/util/List::clear &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_118'>118</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_118'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>update<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:update_nullCurrency_keepsExistingCurrency_andClearsDescription()]</span></span> removed call to com/sandy/expense/domain/ExpenseRequest::addItem &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_120'>120</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_120'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>update<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:update_nullCurrency_keepsExistingCurrency_andClearsDescription()]</span></span> removed call to com/sandy/expense/domain/ExpenseRequest::recomputeTotal &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_121'>121</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_121'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>update<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:update_blankCurrency_keepsExistingCurrency()]</span></span> replaced return value with null for com/sandy/expense/service/ExpenseService::update &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_129'>129</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_129'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>submit<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:submit_notOwner_isForbidden()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_132'>132</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_132'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>submit<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[test-template:submit_anyNonDraftStatus_isConflict(com.sandy.expense.domain.RequestStatus)]/[test-template-invocation:#4]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_135'>135</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_135'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>submit<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:submit_draftWithNoItems_isRejected_BR1()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_138'>138</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_138'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>submit<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:submit_success_movesToSubmitted_writesOneSubmitTrailRow()]</span></span> removed call to com/sandy/expense/service/ExpenseService::transition &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_139'>139</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_139'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>submit<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:submit_success_movesToSubmitted_writesOneSubmitTrailRow()]</span></span> removed call to com/sandy/expense/domain/ExpenseRequest::setSubmittedAt &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_140'>140</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_140'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>submit<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:submit_success_movesToSubmitted_writesOneSubmitTrailRow()]</span></span> replaced return value with null for com/sandy/expense/service/ExpenseService::submit &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_146'>146</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_146'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>approve<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_managerOnManagerApproved_wrongRole_D2()]</span></span> removed call to com/sandy/expense/service/ExpenseService::assertCanDecide &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_148'>148</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_148'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>approve<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_financeOnRequestFromAnotherDepartment_isAllowed_D3_A_false()]</span></span> removed call to com/sandy/expense/service/ExpenseService::transition &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_149'>149</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_149'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>approve<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_financeOnRequestFromAnotherDepartment_isAllowed_D3_A_false()]</span></span> replaced return value with null for com/sandy/expense/service/ExpenseService::approve &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_155'>155</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_155'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>reject<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[test-template:reject_statusAwaitingNobody_isNotPending_D1(com.sandy.expense.domain.RequestStatus)]/[test-template-invocation:#1]</span></span> removed call to com/sandy/expense/service/ExpenseService::assertCanDecide &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_156'>156</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_156'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>reject<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:reject_twice_secondAttemptIsNotPending_andTrailHasExactlyOneRow()]</span></span> removed call to com/sandy/expense/service/ExpenseService::transition &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_157'>157</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_157'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>reject<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:reject_financeOnManagerApproved_setsRejected()]</span></span> replaced return value with null for com/sandy/expense/service/ExpenseService::reject &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_168'>168</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_168'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>assertCanDecide<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[test-template:reject_statusAwaitingNobody_isNotPending_D1(com.sandy.expense.domain.RequestStatus)]/[test-template-invocation:#1]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_171'>171</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_171'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>assertCanDecide<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_managerOnManagerApproved_wrongRole_D2()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_174'>174</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_174'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>assertCanDecide<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:reject_managerOtherDepartment_isForbidden()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>assertCanDecide<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:reject_managerOtherDepartment_isForbidden()]</span></span> BR2 custom mutator: dropped department check in assertCanDecide &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b>assertCanDecide<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:reject_managerOtherDepartment_isForbidden()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_177'>177</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_177'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>assertCanDecide<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_managerOnOwnRequest_isForbidden_D4_true()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_189'>189</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_189'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>assertCanView<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:get_managerOtherDepartment_getsNotFound()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_199'>199</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_199'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>transition<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_setsApprovalRequestBackReference()]</span></span> removed call to com/sandy/expense/domain/Approval::setRequest &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_200'>200</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_200'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>transition<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_financeOnRequestFromAnotherDepartment_isAllowed_D3_A_false()]</span></span> removed call to com/sandy/expense/domain/Approval::setActor &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_201'>201</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_201'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>transition<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_financeOnRequestFromAnotherDepartment_isAllowed_D3_A_false()]</span></span> removed call to com/sandy/expense/domain/Approval::setAction &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_202'>202</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_202'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>transition<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_financeOnRequestFromAnotherDepartment_isAllowed_D3_A_false()]</span></span> removed call to com/sandy/expense/domain/Approval::setFromStatus &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_203'>203</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_203'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>transition<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_financeOnRequestFromAnotherDepartment_isAllowed_D3_A_false()]</span></span> removed call to com/sandy/expense/domain/Approval::setToStatus &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_204'>204</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_204'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>transition<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_nullComment_isStoredAsEmptyString()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>transition<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:reject_managerOnSubmitted_setsRejected_withReason()]</span></span> removed call to com/sandy/expense/domain/Approval::setComment &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_206'>206</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_206'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>transition<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_financeOnRequestFromAnotherDepartment_isAllowed_D3_A_false()]</span></span> removed call to com/sandy/expense/domain/ExpenseRequest::setStatus &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_210'>210</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_210'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>lambda$3<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_missingRequest_throwsNotFound()]</span></span> replaced return value with null for com/sandy/expense/service/ExpenseService::lambda$3 &rarr; KILLED</span>
+</div> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>load<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[test-template:reject_statusAwaitingNobody_isNotPending_D1(com.sandy.expense.domain.RequestStatus)]/[test-template-invocation:#2]</span></span> replaced return value with null for com/sandy/expense/service/ExpenseService::load &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_214'>214</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_214'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>requireDept<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:list_managerWithoutDepartment_throwsNoDepartment()]</span></span> removed conditional - replaced equality check with false &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@7c8df667_217'>217</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@7c8df667_217'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>requireDept<br/><b>Killed by : </b>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:list_manager_usesDepartmentScope_withStatusFilter()]</span></span> replaced Long return value with 0L for com/sandy/expense/service/ExpenseService::requireDept &rarr; KILLED</span>
+</div> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+
+<li class='mutator'>CONDITIONALS_BOUNDARY</li>
+
+<li class='mutator'>DROP_DEPARTMENT_CHECK</li>
+
+<li class='mutator'>EMPTY_RETURNS</li>
+
+<li class='mutator'>FALSE_RETURNS</li>
+
+<li class='mutator'>INCREMENTS</li>
+
+<li class='mutator'>INVERT_NEGS</li>
+
+<li class='mutator'>MATH</li>
+
+<li class='mutator'>NULL_RETURNS</li>
+
+<li class='mutator'>PRIMITIVE_RETURNS</li>
+
+<li class='mutator'>REMOVE_CONDITIONALS_EQUAL_ELSE</li>
+
+<li class='mutator'>REMOVE_CONDITIONALS_ORDER_ELSE</li>
+
+<li class='mutator'>SWAP_APPROVER_ROLE</li>
+
+<li class='mutator'>TRUE_RETURNS</li>
+
+<li class='mutator'>VOID_METHOD_CALLS</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_managerOnManagerApproved_wrongRole_D2()] (3 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[test-template:approve_statusAwaitingNobody_isNotPending_D1(com.sandy.expense.domain.RequestStatus)]/[test-template-invocation:#3] (4 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[test-template:approve_statusAwaitingNobody_isNotPending_D1(com.sandy.expense.domain.RequestStatus)]/[test-template-invocation:#2] (4 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_managerOtherDepartment_isForbidden_D3_BtoTrue()] (4 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_managerOnOwnRequest_isForbidden_D4_true()] (4 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_financeOnOwnRequest_isForbidden_D4_true()] (5 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_managerPrincipalWithoutDepartment_isForbidden()] (7 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[test-template:approve_statusAwaitingNobody_isNotPending_D1(com.sandy.expense.domain.RequestStatus)]/[test-template-invocation:#1] (6 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_financeOnRequestFromAnotherDepartment_isAllowed_D3_A_false()] (3 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_setsApprovalRequestBackReference()] (4 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_managerSameDepartment_isAllowed_D3_BtoFalse()] (2 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_nullComment_isStoredAsEmptyString()] (5 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:fullHappyPath_draftToFinanceApproved_hasThreeTrailRowsInOrder()] (12 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_employeeOnSubmitted_wrongRole_D2()] (87 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_blankCurrency_defaultsToUsd()] (1 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_amountIsRoundedHalfUpToTwoDecimals_andTotalIsSum()] (2 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_nullCurrencyAndDescription_defaultsToUsdAndEmpty()] (2 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_lowercaseCurrency_isUppercased_andDescriptionKept()] (4 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_copiesTitleAndAllItemFields()] (3 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[test-template:reject_statusAwaitingNobody_isNotPending_D1(com.sandy.expense.domain.RequestStatus)]/[test-template-invocation:#1] (2 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[test-template:reject_statusAwaitingNobody_isNotPending_D1(com.sandy.expense.domain.RequestStatus)]/[test-template-invocation:#2] (2 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[test-template:reject_statusAwaitingNobody_isNotPending_D1(com.sandy.expense.domain.RequestStatus)]/[test-template-invocation:#3] (2 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:reject_managerOtherDepartment_isForbidden()] (3 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:reject_financeOnManagerApproved_setsRejected()] (4 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:reject_twice_secondAttemptIsNotPending_andTrailHasExactlyOneRow()] (3 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:reject_managerOnSubmitted_setsRejected_withReason()] (10 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:submit_success_movesToSubmitted_writesOneSubmitTrailRow()] (4 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:update_blankCurrency_keepsExistingCurrency()] (2 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:update_newCurrency_isUppercased()] (2 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:update_nullCurrency_keepsExistingCurrency_andClearsDescription()] (3 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_userNotFound_throwsNotFound()] (11 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:list_manager_usesDepartmentScope_withStatusFilter()] (18 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:create_userWithoutDepartment_throwsNoDepartment()] (6 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:get_employeeOwner_canView()] (1 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:get_managerSameDepartment_canView()] (3 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:get_finance_canViewAnyDepartment()] (5 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:update_requestNotDraft_isConflict_andRequestUnchanged()] (3 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:update_notOwner_isForbidden()] (5 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:list_finance_seesEverything()] (2 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:list_employee_usesRequesterScope()] (3 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[test-template:submit_anyNonDraftStatus_isConflict(com.sandy.expense.domain.RequestStatus)]/[test-template-invocation:#4] (2 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:submit_notOwner_isForbidden()] (2 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[test-template:submit_anyNonDraftStatus_isConflict(com.sandy.expense.domain.RequestStatus)]/[test-template-invocation:#3] (2 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[test-template:submit_anyNonDraftStatus_isConflict(com.sandy.expense.domain.RequestStatus)]/[test-template-invocation:#1] (3 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[test-template:submit_anyNonDraftStatus_isConflict(com.sandy.expense.domain.RequestStatus)]/[test-template-invocation:#2] (4 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:submit_draftWithNoItems_isRejected_BR1()] (7 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:get_missingRequest_throwsNotFound()] (5 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:list_managerWithoutDepartment_throwsNoDepartment()] (5 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:get_managerOtherDepartment_getsNotFound()] (4 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:get_employeeNotOwner_getsNotFoundNotForbidden()] (4 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:approve_missingRequest_throwsNotFound()] (2 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:submit_missingRequest_throwsNotFound()] (4 ms)</li><li>com.sandy.expense.service.ExpenseServiceWhiteBoxTest.[engine:junit-jupiter]/[class:com.sandy.expense.service.ExpenseServiceWhiteBoxTest]/[method:update_missingRequest_throwsNotFound()] (6 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='https://pitest.org'>PIT</a> 1.30.2 <a href='https://github.com/sponsors/hcoles'>support</a>
+
+</body>
+</html>

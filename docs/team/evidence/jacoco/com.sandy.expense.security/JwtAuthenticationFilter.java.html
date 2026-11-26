@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JwtAuthenticationFilter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">expense-approval</a> &gt; <a href="index.source.html" class="el_package">com.sandy.expense.security</a> &gt; <span class="el_source">JwtAuthenticationFilter.java</span></div><h1>JwtAuthenticationFilter.java</h1><pre class="source lang-java linenums">package com.sandy.expense.security;
+
+import com.sandy.expense.domain.Role;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import org.springframework.lang.NonNull;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+/**
+ * Verifies the Bearer token on each request and, if valid, populates the SecurityContext with an
+ * {@link AppUserPrincipal} built straight from the token claims — no database lookup per request.
+ */
+@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private final JwtService jwt;
+
+<span class="fc" id="L26">    public JwtAuthenticationFilter(JwtService jwt) {</span>
+<span class="fc" id="L27">        this.jwt = jwt;</span>
+<span class="fc" id="L28">    }</span>
+
+    @Override
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain chain)
+            throws ServletException, IOException {
+
+<span class="fc" id="L37">        String header = request.getHeader(&quot;Authorization&quot;);</span>
+<span class="pc bpc" id="L38" title="1 of 4 branches missed.">        if (header != null &amp;&amp; header.startsWith(&quot;Bearer &quot;)) {</span>
+<span class="fc" id="L39">            Claims claims = jwt.parse(header.substring(7));</span>
+<span class="pc bpc" id="L40" title="1 of 4 branches missed.">            if (claims != null &amp;&amp; SecurityContextHolder.getContext().getAuthentication() == null) {</span>
+<span class="fc" id="L41">                AppUserPrincipal principal = principalFrom(claims);</span>
+<span class="fc" id="L42">                var auth =</span>
+<span class="fc" id="L43">                        new UsernamePasswordAuthenticationToken(</span>
+<span class="fc" id="L44">                                principal, null, principal.getAuthorities());</span>
+<span class="fc" id="L45">                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));</span>
+<span class="fc" id="L46">                SecurityContextHolder.getContext().setAuthentication(auth);</span>
+            }
+        }
+<span class="fc" id="L49">        chain.doFilter(request, response);</span>
+<span class="fc" id="L50">    }</span>
+
+    private AppUserPrincipal principalFrom(Claims claims) {
+<span class="fc" id="L53">        Long userId = Long.valueOf(claims.getSubject());</span>
+<span class="fc" id="L54">        String email = claims.get(&quot;email&quot;, String.class);</span>
+<span class="fc" id="L55">        Role role = Role.valueOf(claims.get(&quot;role&quot;, String.class));</span>
+<span class="fc" id="L56">        Object dept = claims.get(&quot;dept&quot;);</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        Long departmentId = (dept instanceof Number n) ? n.longValue() : null;</span>
+<span class="fc" id="L58">        return new AppUserPrincipal(userId, email, null, role, departmentId);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
