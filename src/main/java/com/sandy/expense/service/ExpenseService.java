@@ -171,9 +171,6 @@ public class ExpenseService {
         if (me.getRole() != needed) {
             throw ApiException.forbidden("This stage must be decided by a " + needed);
         }
-        if (needed == Role.MANAGER && !r.getDepartment().getId().equals(me.getDepartmentId())) {
-            throw ApiException.forbidden("You can only decide on requests in your own department");
-        }
         if (r.getRequester().getId().equals(me.getUserId())) {
             throw ApiException.forbidden("You cannot decide on your own request");
         }
