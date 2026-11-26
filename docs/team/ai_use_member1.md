@@ -210,3 +210,18 @@ No missed lines or branches on any of the 4 target classes. The check gate passe
 | What was changed | Created `docs/team/issues/currency_validation.md` and `ExpenseDtos.java` / `ExpenseDtosValidationWhiteBoxTest.java` changes (merged via PR #5); created `docs/team/09_blocked_and_fix_pr.md`; staged `docs/team/evidence/10_*`, `11_*`, `12_*` and updated `docs/team/ai_use_member1.md`. |
 
 **Prompts used (paraphrased)**: "Do the blocked PR (`demo/blocked-drop-department-check`), the fix PR (`fix/currency-validation`: failing test commit 1, `@Pattern` fix + 4 tests commit 2), and archive the `10_`, `11_`, `12_` evidence and `docs/team/09_blocked_and_fix_pr.md` on `docs/evidence-blocked-and-fix-pr`."
+
+---
+
+## Prompt Part 3 — Use Cases UC1 & UC2 + Playwright E2E Automation (`docs/team/uc/`, `tests/team/e2e/`)
+
+| Field | Value |
+|---|---|
+| Tool | Antigravity (Google DeepMind) |
+| Date | 2026-11-26 |
+| Purpose | Inspect the real React UI and Spring Boot API, write use case specifications (`UC1_submit_draft.md`, `UC2_create_draft.md`), record the missing edit UI observation (`docs/team/issues/ui_no_edit_form.md`), and automate all 10 flows in Playwright (`tests/team/e2e/`) with display + independent postcondition assertions. |
+| Output | (1) `docs/team/issues/ui_no_edit_form.md`: recorded that `PUT /api/requests/{id}` exists in `ExpenseController.java` L64-70 but has no frontend edit form (covered by Member 2 at API level). (2) `docs/team/uc/UC1_submit_draft.md` (5 flows: `UC1_M`, `UC1_A1`, `UC1_A2`, `UC1_E1`, `UC1_E2`) and `docs/team/uc/UC2_create_draft.md` (5 flows: `UC2_M`, `UC2_A1`, `UC2_A2`, `UC2_E1`, `UC2_E2`). (3) `tests/team/e2e/` (`package.json`, `playwright.config.ts` with `workers: 1` Chromium, `.gitignore`, `tests/helpers.ts`, `tests/uc1-submit.spec.ts`, `tests/uc2-create.spec.ts`). (4) Ran all 10 tests twice against the live app (`localhost:5173` + `localhost:8081`): **10 passed (15.9s)** in `docs/team/evidence/uc/run1.txt` and **10 passed (15.4s)** in `docs/team/evidence/uc/run2.txt`. |
+| What was checked | Inspected `App.tsx`, `Login.tsx`, `NewRequest.tsx`, `RequestDetail.tsx`, `RequestList.tsx`, `api.ts`, `auth.tsx`, `types.ts`, `ui.tsx`, `ExpenseController.java`, `ExpenseService.java`, `ExpenseDtos.java`, and `GlobalExceptionHandler.java`. Confirmed that `<label>` tags in the UI are sibling elements without `for` attributes, so `fieldByLabel` scopes to `label` → parent `div` → `input/textarea/select` without modifying upstream frontend code. Confirmed live error div text for currency `"123"` is `"Request validation failed"`. |
+| What was changed | Added `docs/team/issues/ui_no_edit_form.md`, `docs/team/uc/UC1_submit_draft.md`, `docs/team/uc/UC2_create_draft.md`, `tests/team/e2e/*`, `docs/team/evidence/uc/run1.txt`, `docs/team/evidence/uc/run2.txt`, and updated `docs/team/ai_use_member1.md` and `docs/team/viva_notes_member1.md`. |
+
+**Prompts used (paraphrased)**: "Inspect the real app for UC1/UC2, record the missing edit UI as an observation, write UC1 (submit draft) and UC2 (create draft) specs with M/A1/A2/E1/E2 flows, automate all 10 flows in Playwright (`workers: 1`), run twice, save evidence, and recommend how to wire CI without editing `quality-gate`."
