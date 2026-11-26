@@ -262,3 +262,12 @@ SonarQube does **not** expose per-method complexity (API stops at file level); f
   1. `approve_managerOtherDepartment_isForbidden_D3_BtoTrue` — expects `approve()` by Sales manager `dave` on Engineering request to throw `ApiException`, but `approve()` succeeds instead.
   2. `approve_managerPrincipalWithoutDepartment_isForbidden` — expects `approve()` by a manager principal with `departmentId = null` to throw `ApiException`, but without the guard it reaches `transition()`, where `users.getReferenceById(77L)` returns `null` (not stubbed) and `ApprovalView.of` throws `NullPointerException`.
   3. `reject_managerOtherDepartment_isForbidden` — expects `reject()` by Sales manager `dave` on Engineering request to throw `ApiException`, but `reject()` succeeds instead.
+
+---
+
+## Prompt Part 3 — Use Cases UC1 & UC2 + Playwright E2E Tests
+
+- **Why UC1 and UC2 are split as Submit vs Create**: After inspecting `NewRequest.tsx` and `RequestDetail.tsx`, the frontend has a create form (`/requests/new`) and a detail/submit page (`/requests/:id`), but **no edit form** (`PUT /api/requests/{id}` exists in `ExpenseController.java` L64-70 and is covered by Member 2 via API tests; recorded in `docs/team/issues/ui_no_edit_form.md`).
+- **Dual assertions (Display + Postcondition)**: Every Playwright test checks both what the UI renders immediately (status badge, line items, total, error div, hidden/disabled buttons) and an independent postcondition after the action (page reload, `GET /api/requests/{id}` with the browser's JWT, or verifying the request list does not contain a rejected/unsubmitted draft).
+- **Why `fieldByLabel` scopes via parent `div`**: In `Login.tsx` and `NewRequest.tsx`, `<label>` elements sit next to `<input>` without `htmlFor`/`id` wiring, and `NewRequest.tsx` has duplicate `"Description"` labels (one for the request, one per item row). Scoping `label` → parent `..` → `input, textarea, select` inside the card or `.grid2` item row avoids editing upstream frontend code.
+- **Currency `"123"` error text (`UC2_E2`)**: `GlobalExceptionHandler` returns `{"code":"VALIDATION_ERROR","message":"Request validation failed","fields":{"currency":"currency must be 3 letters"}}`. `NewRequest.tsx` L44 renders `err.message`, so the `.error` div displays `"Request validation failed"`.
