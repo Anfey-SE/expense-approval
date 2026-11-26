@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
@@ -37,7 +38,9 @@ public final class ExpenseDtos {
     public record CreateRequest(
             @NotBlank @Size(max = 200) String title,
             @Size(max = 2000) String description,
-            @Size(min = 3, max = 3) String currency,
+            @Size(min = 3, max = 3)
+                    @Pattern(regexp = "[A-Za-z]{3}", message = "currency must be 3 letters")
+                    String currency,
             @NotEmpty(message = "at least one line item is required")
                     @Size(max = 100, message = "a request cannot have more than 100 line items")
                     @Valid

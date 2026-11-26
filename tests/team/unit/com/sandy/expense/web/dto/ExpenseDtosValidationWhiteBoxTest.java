@@ -141,6 +141,31 @@ class ExpenseDtosValidationWhiteBoxTest {
         assertInvalid(new CreateRequest("T", null, "ABCD", List.of(validItem())), "currency");
     }
 
+    @Test
+    void currency_numeric123_isInvalid() {
+        assertInvalid(new CreateRequest("T", null, "123", List.of(validItem())), "currency");
+    }
+
+    @Test
+    void currency_symbols_isInvalid() {
+        assertInvalid(new CreateRequest("T", null, "@@@", List.of(validItem())), "currency");
+    }
+
+    @Test
+    void currency_alphanumericUS1_isInvalid() {
+        assertInvalid(new CreateRequest("T", null, "US1", List.of(validItem())), "currency");
+    }
+
+    @Test
+    void currency_lowercaseUsd_isValid() {
+        assertValid(new CreateRequest("T", null, "usd", List.of(validItem())));
+    }
+
+    @Test
+    void currency_uppercaseUSD_isValid() {
+        assertValid(new CreateRequest("T", null, "USD", List.of(validItem())));
+    }
+
     // ================================================================
     // CreateRequest -- items: @NotEmpty @Size(max = 100) @Valid
     // ================================================================
