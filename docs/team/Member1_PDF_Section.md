@@ -24,7 +24,7 @@ Evidence: [`docs/team/evidence/05_sonar_measures.txt`](evidence/05_sonar_measure
 | Duplication | **0.0%** | No duplicated blocks |
 | Cyclomatic / Cognitive Complexity | **171 / 53** (project) | `ExpenseService.java` file-level: **45 / 22** |
 
-**Hand-calculated vs Sonar complexity**: SonarQube exposes complexity at **file level only** (`ExpenseService.java` = 45 cyclomatic, 22 cognitive). Hand-calculation on `ExpenseService.assertCanDecide` gives $V(G) = 15 - 11 + 2 = 6$ (and $1 + 4\text{ ifs} + 1\text{ }\&\& = 6$).
+**Hand-calculated vs Sonar complexity**: SonarQube exposes complexity at **file level only** (`ExpenseService.java` = 45 cyclomatic, 22 cognitive). Hand-calculation on `ExpenseService.assertCanDecide` gives `V(G) = E - N + 2 = 15 - 11 + 2 = 6`, and `predicates + 1 = 4 ifs + 1 && + 1 = 6`.
 Evidence: [`docs/team/03_mcdc_and_cfg.md`](03_mcdc_and_cfg.md), [`docs/team/evidence/05_sonar_measures.txt`](evidence/05_sonar_measures.txt).
 
 ---
@@ -46,7 +46,7 @@ Evidence: [`docs/team/03_mcdc_and_cfg.md`](03_mcdc_and_cfg.md), [`docs/team/evid
 - **Custom business-rule mutators** (`tools/pit-custom-mutators/`):
   1. `DROP_DEPARTMENT_CHECK` (BR2): drops manager department equality check in `assertCanDecide` (**1/1 killed**).
   2. `SWAP_APPROVER_ROLE` (BR3/BR4): swaps `Role.MANAGER` and `Role.FINANCE` in `RequestStatus.approverRole()` (**2/2 killed**).
-- **Surviving mutants**: 16 weak-assertion survivors killed; remaining 5 in `ALL` (1 in `DEFAULTS`) are equivalent/unreachable (`setStatus(DRAFT)` redundant with field default, Hibernate lazy-touch `.size()`, `javac` `MatchException` switch defaults).
+- **Surviving mutants**: **21** survivors/no-coverage mutants were analysed in the extended run (`ALL` + custom): **16** were killed by new assertion-strengthening tests, and **5** remain equivalent/unreachable (1 in `DEFAULTS`: `setStatus(DRAFT)` redundant with field default; plus Hibernate lazy-touch `.size()` and `javac` `MatchException` switch defaults). See [`docs/team/04_mutation_testing.md`](04_mutation_testing.md) for the full survivor table.
   Evidence: [`docs/team/04_mutation_testing.md`](04_mutation_testing.md), [`docs/team/evidence/07_pit_defaults_custom_after_run.txt`](evidence/07_pit_defaults_custom_after_run.txt), [`docs/team/evidence/07_pit_all_custom_after_run.txt`](evidence/07_pit_all_custom_after_run.txt).
 
 ---
@@ -72,26 +72,26 @@ Workflow [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) enforces:
 Automated in [`tests/team/e2e/`](../../tests/team/e2e/) (Chromium, `workers: 1`). Every test asserts both displayed UI and an independent postcondition (reload, API `GET`, or list check).
 Evidence: [`docs/team/uc/UC1_submit_draft.md`](uc/UC1_submit_draft.md), [`docs/team/uc/UC2_create_draft.md`](uc/UC2_create_draft.md), [`docs/team/evidence/uc/run1.txt`](evidence/uc/run1.txt), [`docs/team/evidence/uc/run2.txt`](evidence/uc/run2.txt), [`docs/team/evidence/uc/mutation_check_currency.txt`](evidence/uc/mutation_check_currency.txt).
 
-| UC | Flow | Test Name | Result |
-|---|---|---|---|
-| UC1 Submit | M | `UC1_M_submit_draft` | Passed (2/2 runs) |
-| UC1 Submit | A1 | `UC1_A1_submit_three_items` | Passed (2/2 runs) |
-| UC1 Submit | A2 | `UC1_A2_draft_not_submitted` | Passed (2/2 runs) |
-| UC1 Submit | E1 | `UC1_E1_button_gone_after_submit` | Passed (2/2 runs) |
-| UC1 Submit | E2 | `UC1_E2_cross_user_access_denied` | Passed (2/2 runs) |
-| UC2 Create | M | `UC2_M_create_draft_one_item` | Passed (2/2 runs) |
-| UC2 Create | A1 | `UC2_A1_add_remove_items` | Passed (2/2 runs) |
-| UC2 Create | A2 | `UC2_A2_remove_button_disabled` | Passed (2/2 runs) |
-| UC2 Create | E1 | `UC2_E1_blank_title` | Passed (2/2 runs) |
-| UC2 Create | E2 | `UC2_E2_invalid_currency` | Passed (2/2 runs); failed when `@Pattern` removed |
+| UC | Flow | Test Name | Postcondition Assertion | Result |
+|---|---|---|---|---|
+| UC1 Submit | M | `UC1_M_submit_draft` | `uc1-submit.spec.ts` L25–29 (`page.reload()`, status + button gone + trail) | Passed (2/2 runs) |
+| UC1 Submit | A1 | `UC1_A1_submit_three_items` | `uc1-submit.spec.ts` L58–62 (`page.reload()`, status + total + trail) | Passed (2/2 runs) |
+| UC1 Submit | A2 | `UC1_A2_draft_not_submitted` | `uc1-submit.spec.ts` L78–82 (`page.reload()`, still `draft` + button visible) | Passed (2/2 runs) |
+| UC1 Submit | E1 | `UC1_E1_button_gone_after_submit` | `uc1-submit.spec.ts` L103–106 (`page.reload()`, button count 0) | Passed (2/2 runs) |
+| UC1 Submit | E2 | `UC1_E2_cross_user_access_denied` | `uc1-submit.spec.ts` L130–133 (`page.goto("/")`, absent from Carol's list) | Passed (2/2 runs) |
+| UC2 Create | M | `UC2_M_create_draft_one_item` | `uc2-create.spec.ts` L31–41 (API `GET /api/requests/{id}`) | Passed (2/2 runs) |
+| UC2 Create | A1 | `UC2_A1_add_remove_items` | `uc2-create.spec.ts` L76–84 (API `GET /api/requests/{id}`) | Passed (2/2 runs) |
+| UC2 Create | A2 | `UC2_A2_remove_button_disabled` | `uc2-create.spec.ts` L105–108 (`page.goto("/")`, absent from list) | Passed (2/2 runs) |
+| UC2 Create | E1 | `UC2_E1_blank_title` | `uc2-create.spec.ts` L128–131 (`page.goto("/")`, absent from list) | Passed (2/2 runs) |
+| UC2 Create | E2 | `UC2_E2_invalid_currency` | `uc2-create.spec.ts` L153–156 (`page.goto("/")`, absent from list) | Passed (2/2 runs); failed when `@Pattern` removed |
 
 ---
 
 ## 7. Findings (Defects & Observations)
 
-1. **Defect (Fixed in PR #5)**: `CreateRequest.currency` lacked `@Pattern(regexp = "[A-Za-z]{3}")`, accepting `"123"` ([`docs/team/issues/currency_validation.md`](issues/currency_validation.md)).
-2. **Defect (Open, Minor UX)**: `NewRequest.tsx` displays generic `"Request validation failed"` instead of field-level `"currency must be 3 letters"` ([`docs/team/issues/ui_generic_validation_error.md`](issues/ui_generic_validation_error.md)).
-3. **Observation**: `PUT /api/requests/{id}` exists in `ExpenseController.java`, but no edit form exists in the React UI (covered by Member 2 at API level; [`docs/team/issues/ui_no_edit_form.md`](issues/ui_no_edit_form.md)).
+1. **Issue #4 (closed, Fixed in PR #5)**: `CreateRequest.currency` lacked `@Pattern(regexp = "[A-Za-z]{3}")`, accepting `"123"` ([`docs/team/issues/currency_validation.md`](issues/currency_validation.md)).
+2. **Issue #8 (open, bug — Minor UX)**: `NewRequest.tsx` displays generic `"Request validation failed"` instead of field-level `"currency must be 3 letters"` ([`docs/team/issues/ui_generic_validation_error.md`](issues/ui_generic_validation_error.md)).
+3. **Issue #9 (open, enhancement/observation)**: `PUT /api/requests/{id}` exists in `ExpenseController.java`, but no edit form exists in the React UI (covered by Member 2 at API level; [`docs/team/issues/ui_no_edit_form.md`](issues/ui_no_edit_form.md)).
 
 ---
 
