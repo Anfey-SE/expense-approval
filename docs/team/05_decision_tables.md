@@ -62,13 +62,12 @@ Because the checks are sequential `if` guards, **earlier failures short-circuit 
 | Path | Stage | C1 | C2 | C3 dept OK? | C4 not self? | Outcome | Test method |
 |------|-------|----|----|-------------|--------------|---------|-------------|
 | P1 | DRAFT / FIN_APP / REJECTED | F | -- | -- | -- | `NOT_PENDING` (409) | `approve_statusAwaitingNobody_isNotPending_D1`, `reject_statusAwaitingNobody_isNotPending_D1` |
-| P2 | SUBMITTED | T | F | -- | -- | Forbidden: wrong role | `approve_employeeOnSubmitted_wrongRole_D2` |
-| P3 | MANAGER_APPROVED | T | F | -- | -- | Forbidden: wrong role | `approve_managerOnManagerApproved_wrongRole_D2` |
-| P4 | SUBMITTED (MGR) | T | T | F (wrong dept) | -- | Forbidden: wrong dept | `approve_managerOtherDepartment_isForbidden_D3_BtoTrue` |
-| P5 | SUBMITTED (MGR) | T | T | T (same dept) | F (is self) | Forbidden: self-decision | `approve_managerOnOwnRequest_isForbidden_D4_true` |
-| P6 | SUBMITTED (MGR) | T | T | T (same dept) | T | **ALLOWED -> MANAGER_APPROVED** | `approve_managerSameDepartment_isAllowed_D3_BtoFalse` |
-| P7 | MGR_APPROVED (FIN) | T | T | n/a (A=false) | F (is self) | Forbidden: self-decision | `approve_financeOnOwnRequest_isForbidden_D4_true` |
-| P8 | MGR_APPROVED (FIN) | T | T | n/a (A=false) | T | **ALLOWED -> FINANCE_APPROVED** | `approve_financeOnRequestFromAnotherDepartment_isAllowed_D3_A_false` |
+| P2 | SUBMITTED / MANAGER_APPROVED | T | F | -- | -- | Forbidden: wrong role | `approve_employeeOnSubmitted_wrongRole_D2`, `approve_managerOnManagerApproved_wrongRole_D2` |
+| P3 | SUBMITTED (MGR) | T | T | F (wrong dept) | -- | Forbidden: wrong dept | `approve_managerOtherDepartment_isForbidden_D3_BtoTrue`, `approve_managerPrincipalWithoutDepartment_isForbidden` |
+| P4 | SUBMITTED (MGR) | T | T | T (same dept) | F (is self) | Forbidden: self-decision | `approve_managerOnOwnRequest_isForbidden_D4_true` |
+| P5 | SUBMITTED (MGR) | T | T | T (same dept) | T | **ALLOWED -> MANAGER_APPROVED** | `approve_managerSameDepartment_isAllowed_D3_BtoFalse` |
+| P6 | MGR_APPROVED (FIN) | T | T | n/a (A=false) | F (is self) | Forbidden: self-decision | `approve_financeOnOwnRequest_isForbidden_D4_true` |
+| P7 | MGR_APPROVED (FIN) | T | T | n/a (A=false) | T | **ALLOWED -> FINANCE_APPROVED** | `approve_financeOnRequestFromAnotherDepartment_isAllowed_D3_A_false` |
 
 ### Why some combinations are impossible
 
@@ -183,6 +182,6 @@ public RequestDetail update(AppUserPrincipal me, Long id, CreateRequest input) {
 
 | Business rule | Conditions | Theoretical rows | Reachable paths | Tests covering them |
 |---------------|------------|-------------------|-----------------|---------------------|
-| `assertCanDecide` (BR2/BR4) | 4 (C1-C4) | 16 | 8 (7 unique outcomes) | 13 test methods (approve + reject variants) |
+| `assertCanDecide` (BR2/BR4) | 4 (C1-C4) | 16 | 7 | 13 test methods (approve + reject variants) |
 | `submit` (BR1/BR3) | 3 (C1-C3) | 8 | 4 | 4 test methods (incl. parameterised x4 statuses) |
 | `update` | 2 (C1-C2) | 4 | 3 | 4 test methods |

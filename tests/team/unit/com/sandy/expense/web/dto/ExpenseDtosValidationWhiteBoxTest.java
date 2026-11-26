@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
  * <p>See {@code docs/team/07_boundary_tests.md} for the full equivalence-class listing and the
  * mapping of every test to its class and boundary.
  */
-class ExpenseDtosValidationTest {
+class ExpenseDtosValidationWhiteBoxTest {
 
     private static Validator validator;
 

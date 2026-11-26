@@ -76,7 +76,7 @@ public record DecisionInput(@Size(max = 500) String comment) {}                 
 ## 3. Boundary test matrix
 
 Each test validates exactly **one invalid value** (all other fields are valid).
-Test class: [`ExpenseDtosValidationTest.java`](../../tests/team/unit/com/sandy/expense/web/dto/ExpenseDtosValidationTest.java)
+Test class: [`ExpenseDtosValidationWhiteBoxTest.java`](../../tests/team/unit/com/sandy/expense/web/dto/ExpenseDtosValidationWhiteBoxTest.java)
 
 ### CreateRequest -- title
 
