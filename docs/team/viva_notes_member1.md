@@ -228,3 +228,26 @@ SonarQube does **not** expose per-method complexity (API stops at file level); f
 **Viva failure predictions**:
 - If someone drops the department check in `assertCanDecide` (exact fault modeled by `DROP_DEPARTMENT_CHECK`): `approve_managerOtherDepartment_isForbidden_D3_BtoTrue` and `reject_managerOtherDepartment_isForbidden` immediately fail.
 - If someone swaps `Role.MANAGER` and `Role.FINANCE` in `RequestStatus.approverRole()` (modeled by `SWAP_APPROVER_ROLE`): `DomainWhiteBoxTest.transitionTable` and `approve_managerSameDepartment_isAllowed_D3_BtoFalse` / `approve_financeOnRequestFromAnotherDepartment_isAllowed_D3_A_false` immediately fail.
+
+---
+
+## Prompt Part 2 — Decision Tables, State Transitions, and Boundary Tests
+
+**Task A (`05_decision_tables.md`)**:
+- Documented all theoretical condition combinations for `assertCanDecide` (16 rows across C1–C4, 7 end-to-end paths), `submit` (8 rows across C1–C3, 4 reachable paths), and `update` (4 rows across C1–C2, 3 reachable paths), with verbatim code from `ExpenseService.java`.
+- Explained short-circuiting: earlier `if` guards throw before later conditions execute, and `C3` (`needed == Role.MANAGER && !dept.equals(myDept)`) short-circuits to `false` at the `FINANCE` stage.
+- All rows were already covered by `ExpenseServiceWhiteBoxTest` — no new tests needed.
+
+**Task B (`06_state_transitions.md`)**:
+- Built the 5-state × 5-event transition table (`DRAFT`, `SUBMITTED`, `MANAGER_APPROVED`, `FINANCE_APPROVED`, `REJECTED` vs `create/update`, `submit`, `approve`, `reject`) from `RequestStatus.java`.
+- Verified every allowed transition (7 total) and at least one disallowed transition from each of the 5 states are covered by `ExpenseServiceWhiteBoxTest` — no new tests needed.
+
+**Task C (`07_boundary_tests.md` & `ExpenseDtosValidationWhiteBoxTest.java`)**:
+- Added **41 unit-level boundary and equivalence-class tests** using Jakarta Bean Validation `Validator` directly (no Spring context, no database), testing one invalid value per test (below, at, and above each constraint in `ExpenseDtos.java`).
+- Covers `CreateRequest` (title, description, currency, items count: 18 tests), `ItemInput` (description, category, amount, incurredOn: 19 tests), and `DecisionInput` (comment: 4 tests).
+- **Test-level note**: Member 2 tests the same limits through the HTTP API (integration level); these 41 tests are unit-level only and counted at the unit level only.
+
+**Verification totals**:
+- Team unit tests (`-Dtest="*WhiteBoxTest"`): **120** (`DomainWhiteBoxTest`: 15, `AuthServiceWhiteBoxTest`: 11, `ExpenseServiceWhiteBoxTest`: 53, `ExpenseDtosValidationWhiteBoxTest`: 41), 0 failures, 0 errors.
+- JaCoCo 100% check on the 4 scoped classes: **passed** (`All coverage checks have been met.`).
+- PIT (`DEFAULTS` + custom, threshold 95): **81/82 killed (99%), BUILD SUCCESS** (unchanged because PIT targets `service.*` and `domain.*`, while `ExpenseDtos` is in `web.dto`).

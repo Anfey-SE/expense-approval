@@ -180,3 +180,18 @@ No missed lines or branches on any of the 4 target classes. The check gate passe
 | What was changed | Created `tools/pit-custom-mutators/` Maven module; updated `pom.xml` (`pitest-maven`, `pitest-junit5-plugin`, `pit-custom-mutators` dependency, `DEFAULTS` + custom mutators); added 2 tests in `ExpenseServiceWhiteBoxTest.java` and 2 tests in `AuthServiceWhiteBoxTest.java`; created `docs/team/04_mutation_testing.md`; updated `docs/team/viva_notes_member1.md` and `docs/team/ai_use_member1.md`. |
 
 **Prompts used (paraphrased)**: "Proceed to Task 6 (PIT mutation testing). Show baseline score first, then: (1) build 2 custom mutators in `tools/pit-custom-mutators/` and explain how a PIT plugin mutator works in simple words; (2) run `DEFAULTS` + custom and a stronger group, keeping `DEFAULTS` 90% as baseline and reporting extended runs separately; (3) classify at least 15 survivors as equivalent / missing test / weak assertion; (4) add tests in `tests/team/unit` to kill killable ones and report before/after scores without weakening tests or excluding code."
+
+---
+
+## Prompt Part 2 — Decision Tables, State Transitions, and Boundary Tests (`docs/team/05_decision_tables.md`, `06_state_transitions.md`, `07_boundary_tests.md`, `ExpenseDtosValidationWhiteBoxTest.java`)
+
+| Field | Value |
+|---|---|
+| Tool | Antigravity (Google DeepMind) |
+| Date | 2026-11-26 |
+| Purpose | Produce full decision tables for `assertCanDecide`, `submit`, and `update` (Task A), full 5-state transition table with gap analysis (Task B), and Jakarta Bean Validation boundary/equivalence unit tests for `ExpenseDtos` (Task C), then verify full team suite + JaCoCo 100% check + PIT (`DEFAULTS` + custom, threshold 95). |
+| Output | Created `docs/team/05_decision_tables.md`, `docs/team/06_state_transitions.md`, `docs/team/07_boundary_tests.md`, and `tests/team/unit/com/sandy/expense/web/dto/ExpenseDtosValidationWhiteBoxTest.java` (41 unit-level boundary tests; named `*WhiteBoxTest` so `-Dtest="*WhiteBoxTest"` in CI and local runs is identical). Ran `.\mvnw.cmd clean test jacoco:report jacoco:check -Dtest="*WhiteBoxTest" --no-transfer-progress` (**120 tests run, 0 failures, 0 errors**, `All coverage checks have been met.`) and `.\mvnw.cmd test-compile org.pitest:pitest-maven:mutationCoverage "-DmutationThreshold=95" --no-transfer-progress` (**81/82 killed, 99%, BUILD SUCCESS**). |
+| What was checked | Read `ExpenseService.java`, `RequestStatus.java`, `ExpenseDtos.java`, and `ExpenseServiceWhiteBoxTest.java` verbatim with exact line numbers. Verified all decision-table rows (16 rows / 7 end-to-end paths for `assertCanDecide`, 8 rows for `submit`, 4 rows for `update`) and all state transitions (all 7 allowed transitions + disallowed transitions from every state) were already covered by existing tests in `ExpenseServiceWhiteBoxTest`. Verified each boundary test in `ExpenseDtosValidationWhiteBoxTest` tests one invalid value per test (below, at, above) using Jakarta Bean Validation `Validator` with no Spring context or DB. |
+| What was changed | Added `docs/team/05_decision_tables.md`, `docs/team/06_state_transitions.md`, `docs/team/07_boundary_tests.md`, and `ExpenseDtosValidationWhiteBoxTest.java` (41 tests, bringing team unit suite from 79 to 120 tests). Updated `docs/team/ai_use_member1.md` and `docs/team/viva_notes_member1.md`. |
+
+**Prompts used (paraphrased)**: "Decision tables (`05_decision_tables.md`), state transition table (`06_state_transitions.md`), and boundary value + equivalence tests (`ExpenseDtosValidationWhiteBoxTest.java` + `07_boundary_tests.md`) on branch `member1/decision-state-boundary-tests`, then run full team tests with `-Dtest="*WhiteBoxTest"`, JaCoCo check, and PIT (threshold 95)."
