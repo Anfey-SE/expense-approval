@@ -195,3 +195,18 @@ No missed lines or branches on any of the 4 target classes. The check gate passe
 | What was changed | Added `docs/team/05_decision_tables.md`, `docs/team/06_state_transitions.md`, `docs/team/07_boundary_tests.md`, and `ExpenseDtosValidationWhiteBoxTest.java` (41 tests, bringing team unit suite from 79 to 120 tests). Updated `docs/team/ai_use_member1.md` and `docs/team/viva_notes_member1.md`. |
 
 **Prompts used (paraphrased)**: "Decision tables (`05_decision_tables.md`), state transition table (`06_state_transitions.md`), and boundary value + equivalence tests (`ExpenseDtosValidationWhiteBoxTest.java` + `07_boundary_tests.md`) on branch `member1/decision-state-boundary-tests`, then run full team tests with `-Dtest="*WhiteBoxTest"`, JaCoCo check, and PIT (threshold 95)."
+
+---
+
+## Task 7 Demonstration — Blocked PR, Fix PR & Evidence (`docs/team/09_blocked_and_fix_pr.md`)
+
+| Field | Value |
+|---|---|
+| Tool | Antigravity (Google DeepMind) |
+| Date | 2026-11-26 |
+| Purpose | Demonstrate the CI quality gate on a blocked PR (`demo/blocked-drop-department-check`, PR #3), confirm and fix the `currency = "123"` validation defect (`fix/currency-validation`, PR #5 / Issue #4) with a red Commit 1 followed by a green Commit 2, and archive all CI logs/screenshots in `docs/team/09_blocked_and_fix_pr.md`. |
+| Output | (1) `demo/blocked-drop-department-check` (`34b7179`, PR #3, run `45770054227`): failed `Run team tests with JaCoCo report and 100 % check` (`Tests run: 120, Failures: 3`). (2) `fix/currency-validation` Commit 1 (`7b96f70`, PR #5, run `45794816172`): failed `Run team tests with JaCoCo report and 100 % check` (`Tests run: 121, Failures: 1`, `currency_numeric123_isInvalid`). (3) `fix/currency-validation` Commit 2 (`2252ae8`, merged `0dfa6ce`): added `@Pattern(regexp = "[A-Za-z]{3}")` in `ExpenseDtos.java` + 4 tests (`"@@@"`, `"US1"`, `"usd"`, `"USD"`), passing all CI gates (`125` team tests, `157` full suite, SonarQube `SQE-CI`, PIT `81/82 = 99%`). (4) Archived `10_*`, `11_*`, `12_*` screenshots/logs and wrote `docs/team/09_blocked_and_fix_pr.md` on `docs/evidence-blocked-and-fix-pr`. |
+| What was checked | Searched all tracked files in `src/`, `frontend/`, and `tests/` for `currency` references to ensure `@Pattern(regexp = "[A-Za-z]{3}")` would not break seeders, migrations, UI, or existing tests. Extracted verbatim log lines from `10_blocked_pr_logs.zip`, `11_fix_pr_before_logs.zip`, and `12_fix_pr_after_logs.zip` and verified run summary metadata from `12_fix_pr_after_run_summary.png`. |
+| What was changed | Created `docs/team/issues/currency_validation.md` and `ExpenseDtos.java` / `ExpenseDtosValidationWhiteBoxTest.java` changes (merged via PR #5); created `docs/team/09_blocked_and_fix_pr.md`; staged `docs/team/evidence/10_*`, `11_*`, `12_*` and updated `docs/team/ai_use_member1.md`. |
+
+**Prompts used (paraphrased)**: "Do the blocked PR (`demo/blocked-drop-department-check`), the fix PR (`fix/currency-validation`: failing test commit 1, `@Pattern` fix + 4 tests commit 2), and archive the `10_`, `11_`, `12_` evidence and `docs/team/09_blocked_and_fix_pr.md` on `docs/evidence-blocked-and-fix-pr`."

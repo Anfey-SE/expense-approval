@@ -251,3 +251,14 @@ SonarQube does **not** expose per-method complexity (API stops at file level); f
 - Team unit tests (`-Dtest="*WhiteBoxTest"`): **120** (`DomainWhiteBoxTest`: 15, `AuthServiceWhiteBoxTest`: 11, `ExpenseServiceWhiteBoxTest`: 53, `ExpenseDtosValidationWhiteBoxTest`: 41), 0 failures, 0 errors.
 - JaCoCo 100% check on the 4 scoped classes: **passed** (`All coverage checks have been met.`).
 - PIT (`DEFAULTS` + custom, threshold 95): **81/82 killed (99%), BUILD SUCCESS** (unchanged because PIT targets `service.*` and `domain.*`, while `ExpenseDtos` is in `web.dto`).
+
+---
+
+## Task 7 — Blocked PR (`#3`) & Fix PR (`#5`)
+
+**Why the blocked PR (`demo/blocked-drop-department-check`, PR #3) fails:**
+- Removing the `if (needed == Role.MANAGER && !r.getDepartment().getId().equals(me.getDepartmentId()))` guard from `ExpenseService.assertCanDecide` lets a manager from one department approve or reject an expense request belonging to a different department (violating BR2).
+- It is caught immediately in CI step `Run team tests with JaCoCo report and 100 % check` by **3 unit tests** in `ExpenseServiceWhiteBoxTest`:
+  1. `approve_managerOtherDepartment_isForbidden_D3_BtoTrue` — expects `approve()` by Sales manager `dave` on Engineering request to throw `ApiException`, but `approve()` succeeds instead.
+  2. `approve_managerPrincipalWithoutDepartment_isForbidden` — expects `approve()` by a manager principal with `departmentId = null` to throw `ApiException`, but without the guard it reaches `transition()`, where `users.getReferenceById(77L)` returns `null` (not stubbed) and `ApprovalView.of` throws `NullPointerException`.
+  3. `reject_managerOtherDepartment_isForbidden` — expects `reject()` by Sales manager `dave` on Engineering request to throw `ApiException`, but `reject()` succeeds instead.
