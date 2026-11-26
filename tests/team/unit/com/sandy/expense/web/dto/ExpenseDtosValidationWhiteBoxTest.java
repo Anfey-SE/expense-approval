@@ -141,6 +141,11 @@ class ExpenseDtosValidationWhiteBoxTest {
         assertInvalid(new CreateRequest("T", null, "ABCD", List.of(validItem())), "currency");
     }
 
+    @Test
+    void currency_numeric123_isInvalid() {
+        assertInvalid(new CreateRequest("T", null, "123", List.of(validItem())), "currency");
+    }
+
     // ================================================================
     // CreateRequest -- items: @NotEmpty @Size(max = 100) @Valid
     // ================================================================
