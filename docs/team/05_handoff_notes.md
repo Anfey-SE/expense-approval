@@ -25,7 +25,7 @@ The CI workflow lives at [`.github/workflows/ci.yml`](../../.github/workflows/ci
 .\mvnw.cmd clean test jacoco:report jacoco:check "-Dtest=*WhiteBoxTest" --no-transfer-progress
 ```
 
-### Full suite (125 team + 32 upstream Testcontainers tests — **requires Docker**)
+### Full suite (125 team + 32 upstream Testcontainers tests — **requires Docker**; *not run* in this docs pass)
 ```powershell
 .\mvnw.cmd test -Djacoco.skip=true --no-transfer-progress
 ```
@@ -41,7 +41,7 @@ Note: `pom.xml` passes `-Dapi.version=1.44` to Surefire for Docker 29+ compatibi
 
 ## 3. Running the Playwright E2E Suite (`tests/team/e2e`)
 
-1. Start PostgreSQL + Spring Boot backend on `:8081` (e.g. `docker compose up -d db` then `.\mvnw.cmd spring-boot:run`) and Vite frontend on `:5173` (`cd frontend && npm run dev`, which proxies `/api` to `:8081`).
+1. Start PostgreSQL + Spring Boot backend on `:8081` (e.g. `docker compose up -d db` [*not run*], then `.\mvnw.cmd spring-boot:run`) and Vite frontend on `:5173` (`cd frontend && npm run dev` [*not run* — app was already running]).
 2. Install Playwright and Chromium (first time only) and run with `workers: 1`:
 ```powershell
 cd tests\team\e2e
@@ -66,7 +66,7 @@ All accounts use password **`password123`**:
 | `dave@acme.com` | Dave Manager | `MANAGER` | Sales |
 | `fiona@acme.com` | Fiona Finance | `FINANCE` | Finance |
 
-### Resetting the Database
+### Resetting the Database *(command not run)*
 ```bash
 docker compose down -v && docker compose up -d
 ```
