@@ -31,12 +31,12 @@ Evidence: [`docs/team/03_mcdc_and_cfg.md`](03_mcdc_and_cfg.md), [`docs/team/evid
 
 ## 3. White-Box Testing (JaCoCo, MCC, MC/DC)
 
-- **JaCoCo 100% gate** (enforced in `pom.xml`): `ExpenseService` (100% line/branch), `AuthService` (100% line/branch), `RequestStatus` (100% line/branch), `ExpenseRequest` (100% line).
-  Evidence: [`docs/team/evidence/06_team_only_clean_jacoco.txt`](evidence/06_team_only_clean_jacoco.txt), [`docs/team/evidence/06_team_only_clean_jacoco_check.txt`](evidence/06_team_only_clean_jacoco_check.txt).
+- **JaCoCo 100% gate** (enforced in `pom.xml`): `ExpenseService` (100% line/branch), `AuthService` (100% line/branch), `RequestStatus` (100% line/branch), `JwtService` (100% line/branch), `AppUserPrincipal` (100% line/branch), `ExpenseRequest` (100% line).
+  Evidence: [`docs/team/10_coverage_scope.md`](10_coverage_scope.md), [`docs/team/evidence/06_team_only_clean_jacoco.txt`](evidence/06_team_only_clean_jacoco.txt).
 - **MCC & MC/DC (`assertCanDecide`)**: 7 feasible condition combinations (short-circuit `if` chain prevents reaching later guards when earlier ones throw) and full MC/DC independence pairs for D1, D2, D3-A, D3-B, and D4 mapped to `ExpenseServiceWhiteBoxTest`.
   Evidence: [`docs/team/03_mcdc_and_cfg.md`](03_mcdc_and_cfg.md), [`docs/team/05_decision_tables.md`](05_decision_tables.md), [`docs/team/06_state_transitions.md`](06_state_transitions.md).
-- **Unit suite total**: **125** team tests (`DomainWhiteBoxTest`: 15, `AuthServiceWhiteBoxTest`: 11, `ExpenseServiceWhiteBoxTest`: 53, `ExpenseDtosValidationWhiteBoxTest`: 46); **157** total tests in CI with upstream integration tests.
-  Evidence: [`docs/team/evidence/12_fix_pr_after_logs.zip`](evidence/12_fix_pr_after_logs.zip).
+- **Unit suite total**: **136** team tests (`DomainWhiteBoxTest`: 15, `AuthServiceWhiteBoxTest`: 11, `ExpenseServiceWhiteBoxTest`: 53, `ExpenseDtosValidationWhiteBoxTest`: 46, `SecurityWhiteBoxTest`: 11); **168** total tests with upstream suite (`125` / `157` historically at PR #5).
+  Evidence: [`docs/team/10_coverage_scope.md`](10_coverage_scope.md), [`docs/team/evidence/12_fix_pr_after_logs.zip`](evidence/12_fix_pr_after_logs.zip).
 
 ---
 
@@ -54,8 +54,8 @@ Evidence: [`docs/team/03_mcdc_and_cfg.md`](03_mcdc_and_cfg.md), [`docs/team/evid
 ## 5. CI Quality Gate
 
 Workflow [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) enforces:
-- 100% JaCoCo check on the 4 scoped classes,
-- Full suite (`157` tests),
+- 100% JaCoCo check on the 6 scoped classes,
+- Full suite (`168` tests — `136` team + `32` upstream; `157` historically at PR #5),
 - SonarQube `SQE-CI` gate (`bugs > 0`, `vulnerabilities > 2`, `code_smells > 0`, `coverage < 50%`, `duplication > 3%` — derived from measured baseline so upstream issues don't falsely block PRs while regressions fail),
 - PIT mutation threshold **`95%`** (set below `99%` to allow the 1 equivalent mutant).
 

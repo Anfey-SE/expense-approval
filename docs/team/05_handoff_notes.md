@@ -6,8 +6,8 @@ The CI workflow lives at [`.github/workflows/ci.yml`](../../.github/workflows/ci
 
 1. **Checkout & JDK 21**: `actions/checkout@v4` (`fetch-depth: 0` for Sonar) and Temurin JDK 21 with Maven cache.
 2. **Build and install custom PIT mutators**: `./mvnw -f tools/pit-custom-mutators/pom.xml clean install --no-transfer-progress`
-3. **Run team tests with JaCoCo report and 100 % check**: `./mvnw clean test jacoco:report jacoco:check -Dtest="*WhiteBoxTest" --no-transfer-progress` (team-only coverage in `target/site/jacoco/jacoco.xml`; enforces 100% line/branch on `ExpenseService`, `AuthService`, `RequestStatus`, and 100% line on `ExpenseRequest`).
-4. **Run full test suite (upstream + team, JaCoCo skipped)**: `./mvnw test -Djacoco.skip=true --no-transfer-progress` (runs all 157 tests = 125 team + 32 upstream integration tests using Testcontainers).
+3. **Run team tests with JaCoCo report and 100 % check**: `./mvnw clean test jacoco:report jacoco:check -Dtest="*WhiteBoxTest" --no-transfer-progress` (team-only coverage in `target/site/jacoco/jacoco.xml`; enforces 100% line/branch on `ExpenseService`, `AuthService`, `RequestStatus`, `JwtService`, `AppUserPrincipal`, and 100% line on `ExpenseRequest`).
+4. **Run full test suite (upstream + team, JaCoCo skipped)**: `./mvnw test -Djacoco.skip=true --no-transfer-progress` (runs all 168 tests = 136 team + 32 upstream integration tests using Testcontainers).
 5. **Start SonarQube 26.11.0 container**: Starts `sonarqube:community` (digest `7b22967...`) on port `9000` and polls `/api/system/status` until `UP`.
 6. **Create custom quality gate and set as default**: Creates `SQE-CI` with overall-code conditions (`bugs > 0`, `vulnerabilities > 2`, `code_smells > 0`, `coverage < 50`, `duplicated_lines_density > 3`).
 7. **Run SonarQube scan and enforce quality gate**: Generates a one-time token and runs `./mvnw sonar:sonar -Psonar -Dsonar.host.url=http://localhost:9000 -Dsonar.token="$TOKEN" -Dsonar.qualitygate.wait=true`.
@@ -25,7 +25,7 @@ The CI workflow lives at [`.github/workflows/ci.yml`](../../.github/workflows/ci
 .\mvnw.cmd clean test jacoco:report jacoco:check "-Dtest=*WhiteBoxTest" --no-transfer-progress
 ```
 
-### Full suite (125 team + 32 upstream Testcontainers tests — **requires Docker**; *not run* in this docs pass)
+### Full suite (136 team + 32 upstream Testcontainers tests — **requires Docker**; *not run* in this docs pass)
 ```powershell
 .\mvnw.cmd test -Djacoco.skip=true --no-transfer-progress
 ```

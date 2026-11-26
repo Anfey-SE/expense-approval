@@ -248,8 +248,8 @@ SonarQube does **not** expose per-method complexity (API stops at file level); f
 - **Test-level note**: Member 2 tests the same limits through the HTTP API (integration level); these 46 tests are unit-level only and counted at the unit level only.
 
 **Verification totals**:
-- Team unit tests (`-Dtest="*WhiteBoxTest"`): **125** (`DomainWhiteBoxTest`: 15, `AuthServiceWhiteBoxTest`: 11, `ExpenseServiceWhiteBoxTest`: 53, `ExpenseDtosValidationWhiteBoxTest`: 46), 0 failures, 0 errors.
-- JaCoCo 100% check on the 4 scoped classes: **passed** (`All coverage checks have been met.`).
+- Team unit tests (`-Dtest="*WhiteBoxTest"`): **136** (`DomainWhiteBoxTest`: 15, `AuthServiceWhiteBoxTest`: 11, `ExpenseServiceWhiteBoxTest`: 53, `ExpenseDtosValidationWhiteBoxTest`: 46, `SecurityWhiteBoxTest`: 11; historically **125** at PR #5), 0 failures, 0 errors.
+- JaCoCo 100% check on the 6 scoped classes (`ExpenseService`, `AuthService`, `RequestStatus`, `ExpenseRequest`, `JwtService`, `AppUserPrincipal`): **passed** (`All coverage checks have been met.`).
 - PIT (`DEFAULTS` + custom, threshold 95): **81/82 killed (99%), BUILD SUCCESS** (unchanged because PIT targets `service.*` and `domain.*`, while `ExpenseDtos` is in `web.dto`).
 
 ---
