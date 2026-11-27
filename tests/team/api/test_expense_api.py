@@ -332,42 +332,236 @@ def test_br2_and_br4_authorization_rejections(tokens: dict[str, str]) -> None:
     assert len(rb.json()["approvals"]) == 1
 
 
-def test_disallowed_state_transitions_from_every_state(tokens: dict[str, str]) -> None:
-    """BR3: Test disallowed transitions from DRAFT, SUBMITTED, MANAGER_APPROVED, FINANCE_APPROVED, REJECTED."""
-    # 1. From DRAFT: cannot approve or reject
-    d1 = create_draft(tokens["alice"])["id"]
-    assert requests.post(f"{BASE_URL}/api/requests/{d1}/approve", headers=auth_headers(tokens["bob"]), timeout=10).status_code == 409
-    assert requests.post(f"{BASE_URL}/api/requests/{d1}/reject", headers=auth_headers(tokens["bob"]), timeout=10).status_code == 409
-    # Non-owner cannot submit
-    assert requests.post(f"{BASE_URL}/api/requests/{d1}/submit", headers=auth_headers(tokens["carol"]), timeout=10).status_code == 403
+def setup_request_in_state(tokens: dict[str, str], target_state: str) -> tuple[int, int]:
+    """
+    Creates and advances a fresh expense request to target_state.
+    Returns (req_id, expected_approval_trail_count).
+    """
+    draft = create_draft(tokens["alice"])
+    req_id = draft["id"]
+    if target_state == "DRAFT":
+        return req_id, 0
 
-    # 2. From SUBMITTED: cannot update or re-submit
-    submit_request(tokens["alice"], d1)
-    assert requests.put(
-        f"{BASE_URL}/api/requests/{d1}",
-        headers=auth_headers(tokens["alice"]),
-        json=valid_request_payload(),
-        timeout=10,
-    ).status_code == 409
-    assert requests.post(f"{BASE_URL}/api/requests/{d1}/submit", headers=auth_headers(tokens["alice"]), timeout=10).status_code == 409
+    submit_request(tokens["alice"], req_id)
+    if target_state == "SUBMITTED":
+        return req_id, 1
 
-    # 3. From MANAGER_APPROVED: manager approves to enter state (200), then cannot approve again (403), owner cannot submit (409)
-    assert requests.post(f"{BASE_URL}/api/requests/{d1}/approve", headers=auth_headers(tokens["bob"]), timeout=10).status_code == 200
-    assert requests.post(f"{BASE_URL}/api/requests/{d1}/approve", headers=auth_headers(tokens["bob"]), timeout=10).status_code == 403
-    assert requests.post(f"{BASE_URL}/api/requests/{d1}/submit", headers=auth_headers(tokens["alice"]), timeout=10).status_code == 409
+    if target_state == "MANAGER_APPROVED":
+        res = requests.post(
+            f"{BASE_URL}/api/requests/{req_id}/approve",
+            headers=auth_headers(tokens["bob"]),
+            json={"comment": "Manager approved"},
+            timeout=10,
+        )
+        assert res.status_code == 200, f"Setup failed reaching MANAGER_APPROVED: {res.text}"
+        return req_id, 2
 
-    # 4. From FINANCE_APPROVED: terminal state — no further approve/reject/submit
-    assert requests.post(f"{BASE_URL}/api/requests/{d1}/approve", headers=auth_headers(tokens["fiona"]), timeout=10).status_code == 200
-    assert requests.post(f"{BASE_URL}/api/requests/{d1}/approve", headers=auth_headers(tokens["fiona"]), timeout=10).status_code == 409
-    assert requests.post(f"{BASE_URL}/api/requests/{d1}/reject", headers=auth_headers(tokens["fiona"]), timeout=10).status_code == 409
+    if target_state == "FINANCE_APPROVED":
+        res1 = requests.post(
+            f"{BASE_URL}/api/requests/{req_id}/approve",
+            headers=auth_headers(tokens["bob"]),
+            json={"comment": "Manager approved"},
+            timeout=10,
+        )
+        assert res1.status_code == 200, f"Setup step 1 failed: {res1.text}"
+        res2 = requests.post(
+            f"{BASE_URL}/api/requests/{req_id}/approve",
+            headers=auth_headers(tokens["fiona"]),
+            json={"comment": "Finance approved"},
+            timeout=10,
+        )
+        assert res2.status_code == 200, f"Setup step 2 failed reaching FINANCE_APPROVED: {res2.text}"
+        return req_id, 3
 
-    # 5. From REJECTED: terminal state — no further approve/reject/submit
-    d2 = create_draft(tokens["alice"])["id"]
-    submit_request(tokens["alice"], d2)
-    assert requests.post(f"{BASE_URL}/api/requests/{d2}/reject", headers=auth_headers(tokens["bob"]), timeout=10).status_code == 200
-    assert requests.post(f"{BASE_URL}/api/requests/{d2}/approve", headers=auth_headers(tokens["bob"]), timeout=10).status_code == 409
-    assert requests.post(f"{BASE_URL}/api/requests/{d2}/reject", headers=auth_headers(tokens["bob"]), timeout=10).status_code == 409
-    assert requests.post(f"{BASE_URL}/api/requests/{d2}/submit", headers=auth_headers(tokens["alice"]), timeout=10).status_code == 409
+    if target_state == "REJECTED":
+        res = requests.post(
+            f"{BASE_URL}/api/requests/{req_id}/reject",
+            headers=auth_headers(tokens["bob"]),
+            json={"comment": "Rejected by manager"},
+            timeout=10,
+        )
+        assert res.status_code == 200, f"Setup failed reaching REJECTED: {res.text}"
+        return req_id, 2
+
+    raise ValueError(f"Unknown target state: {target_state}")
+
+
+def dispatch_action(
+    tokens: dict[str, str],
+    req_id: int,
+    action: str,
+    actor_key: str,
+    payload: dict[str, Any] | None = None,
+) -> requests.Response:
+    token = tokens[actor_key]
+    if action == "submit":
+        return requests.post(
+            f"{BASE_URL}/api/requests/{req_id}/submit",
+            headers=auth_headers(token),
+            timeout=10,
+        )
+    if action == "approve":
+        return requests.post(
+            f"{BASE_URL}/api/requests/{req_id}/approve",
+            headers=auth_headers(token),
+            json=payload if payload is not None else {},
+            timeout=10,
+        )
+    if action == "reject":
+        return requests.post(
+            f"{BASE_URL}/api/requests/{req_id}/reject",
+            headers=auth_headers(token),
+            json=payload if payload is not None else {},
+            timeout=10,
+        )
+    if action == "update":
+        return requests.put(
+            f"{BASE_URL}/api/requests/{req_id}",
+            headers=auth_headers(token),
+            json=payload if payload is not None else valid_request_payload(),
+            timeout=10,
+        )
+    raise ValueError(f"Unknown action: {action}")
+
+
+ALLOWED_STATE_TRANSITIONS = [
+    # (case_id, initial_state, action, actor_key, payload, expected_status, target_status, expected_trail_count, expected_last_action)
+    (
+        "DRAFT->SUBMITTED",
+        "DRAFT",
+        "submit",
+        "alice",
+        None,
+        200,
+        "SUBMITTED",
+        1,
+        "SUBMIT",
+    ),
+    (
+        "SUBMITTED->MANAGER_APPROVED",
+        "SUBMITTED",
+        "approve",
+        "bob",
+        {"comment": "Approved by Manager"},
+        200,
+        "MANAGER_APPROVED",
+        2,
+        "APPROVE",
+    ),
+    (
+        "SUBMITTED->REJECTED",
+        "SUBMITTED",
+        "reject",
+        "bob",
+        {"comment": "Rejected by Manager"},
+        200,
+        "REJECTED",
+        2,
+        "REJECT",
+    ),
+    (
+        "MANAGER_APPROVED->FINANCE_APPROVED",
+        "MANAGER_APPROVED",
+        "approve",
+        "fiona",
+        {"comment": "Approved by Finance"},
+        200,
+        "FINANCE_APPROVED",
+        3,
+        "APPROVE",
+    ),
+    (
+        "MANAGER_APPROVED->REJECTED",
+        "MANAGER_APPROVED",
+        "reject",
+        "fiona",
+        {"comment": "Rejected by Finance"},
+        200,
+        "REJECTED",
+        3,
+        "REJECT",
+    ),
+]
+
+
+DISALLOWED_STATE_TRANSITIONS = [
+    # (case_id, initial_state, action, actor_key, payload, expected_status, expected_state, expected_trail_count)
+    ("DRAFT:approve_refused", "DRAFT", "approve", "bob", {"comment": "Premature"}, 409, "DRAFT", 0),
+    ("DRAFT:reject_refused", "DRAFT", "reject", "bob", {"comment": "Premature"}, 409, "DRAFT", 0),
+    ("DRAFT:non_owner_submit_refused", "DRAFT", "submit", "carol", None, 403, "DRAFT", 0),
+    ("SUBMITTED:re_submit_refused", "SUBMITTED", "submit", "alice", None, 409, "SUBMITTED", 1),
+    ("SUBMITTED:update_refused", "SUBMITTED", "update", "alice", None, 409, "SUBMITTED", 1),
+    ("SUBMITTED:finance_early_approve_refused", "SUBMITTED", "approve", "fiona", {"comment": "Too early"}, 403, "SUBMITTED", 1),
+    ("MANAGER_APPROVED:manager_second_approve_refused", "MANAGER_APPROVED", "approve", "bob", {"comment": "Second"}, 403, "MANAGER_APPROVED", 2),
+    ("MANAGER_APPROVED:submit_refused", "MANAGER_APPROVED", "submit", "alice", None, 409, "MANAGER_APPROVED", 2),
+    ("MANAGER_APPROVED:update_refused", "MANAGER_APPROVED", "update", "alice", None, 409, "MANAGER_APPROVED", 2),
+    ("FINANCE_APPROVED:re_approve_refused", "FINANCE_APPROVED", "approve", "fiona", {"comment": "Again"}, 409, "FINANCE_APPROVED", 3),
+    ("FINANCE_APPROVED:reject_refused", "FINANCE_APPROVED", "reject", "fiona", {"comment": "Cannot reject"}, 409, "FINANCE_APPROVED", 3),
+    ("FINANCE_APPROVED:submit_refused", "FINANCE_APPROVED", "submit", "alice", None, 409, "FINANCE_APPROVED", 3),
+    ("REJECTED:approve_refused", "REJECTED", "approve", "bob", {"comment": "Cannot approve"}, 409, "REJECTED", 2),
+    ("REJECTED:re_reject_refused", "REJECTED", "reject", "bob", {"comment": "Already rejected"}, 409, "REJECTED", 2),
+    ("REJECTED:submit_refused", "REJECTED", "submit", "alice", None, 409, "REJECTED", 2),
+]
+
+
+@pytest.mark.parametrize(
+    "case_id,initial_state,action,actor_key,payload,expected_status,target_status,expected_trail_count,expected_last_action",
+    ALLOWED_STATE_TRANSITIONS,
+    ids=[c[0] for c in ALLOWED_STATE_TRANSITIONS],
+)
+def test_allowed_state_transitions(
+    tokens: dict[str, str],
+    case_id: str,
+    initial_state: str,
+    action: str,
+    actor_key: str,
+    payload: dict[str, Any] | None,
+    expected_status: int,
+    target_status: str,
+    expected_trail_count: int,
+    expected_last_action: str,
+) -> None:
+    """BR3: Verify every valid state transition succeeds and updates status + approval trail accurately."""
+    req_id, initial_trail_count = setup_request_in_state(tokens, initial_state)
+    resp = dispatch_action(tokens, req_id, action, actor_key, payload)
+    assert resp.status_code == expected_status, f"{case_id} failed: {resp.status_code} {resp.text}"
+
+    # Read back as owner and verify postconditions (status and trail rows)
+    rb = requests.get(f"{BASE_URL}/api/requests/{req_id}", headers=auth_headers(tokens["alice"]), timeout=10)
+    assert rb.status_code == 200
+    data = rb.json()
+    assert data["status"] == target_status, f"{case_id}: expected status {target_status}, got {data['status']}"
+    assert len(data["approvals"]) == expected_trail_count, f"{case_id}: expected {expected_trail_count} trail rows, got {len(data['approvals'])}"
+    assert data["approvals"][-1]["action"] == expected_last_action
+
+
+@pytest.mark.parametrize(
+    "case_id,initial_state,action,actor_key,payload,expected_status,expected_state,expected_trail_count",
+    DISALLOWED_STATE_TRANSITIONS,
+    ids=[c[0] for c in DISALLOWED_STATE_TRANSITIONS],
+)
+def test_disallowed_state_transitions(
+    tokens: dict[str, str],
+    case_id: str,
+    initial_state: str,
+    action: str,
+    actor_key: str,
+    payload: dict[str, Any] | None,
+    expected_status: int,
+    expected_state: str,
+    expected_trail_count: int,
+) -> None:
+    """BR3: Refuse invalid transitions from every state; assert state and approval trail remain unchanged."""
+    req_id, initial_trail_count = setup_request_in_state(tokens, initial_state)
+    resp = dispatch_action(tokens, req_id, action, actor_key, payload)
+    assert resp.status_code == expected_status, f"{case_id}: expected HTTP {expected_status}, got {resp.status_code}: {resp.text}"
+
+    # Read back as owner and verify state and trail rows are unchanged after rejection
+    rb = requests.get(f"{BASE_URL}/api/requests/{req_id}", headers=auth_headers(tokens["alice"]), timeout=10)
+    assert rb.status_code == 200
+    data = rb.json()
+    assert data["status"] == expected_state, f"{case_id}: status was modified to {data['status']}"
+    assert len(data["approvals"]) == expected_trail_count, f"{case_id}: approval trail rows changed from {expected_trail_count} to {len(data['approvals'])}"
 
 
 def test_repeated_requests_no_duplicate_trail_rows(tokens: dict[str, str]) -> None:
