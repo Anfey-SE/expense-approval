@@ -1,0 +1,22 @@
+{
+  "login": {
+    "a11y": 75,
+    "bestPractices": 100,
+    "seo": 82
+  },
+  "requests_list": {
+    "a11y": 75,
+    "bestPractices": 100,
+    "seo": 82
+  },
+  "new_request": {
+    "a11y": 75,
+    "bestPractices": 100,
+    "seo": 82
+  },
+  "request_detail": {
+    "a11y": 75,
+    "bestPractices": 100,
+    "seo": 82
+  }
+}
