@@ -699,3 +699,58 @@ def test_unauthenticated_requests_rejected() -> None:
     """Requests without JWT must return 401."""
     resp = requests.get(f"{BASE_URL}/api/requests", timeout=10)
     assert resp.status_code == 401
+
+
+# ---------------------------------------------------------------------------
+# 7. Coverage-gap tests (discovered by the conftest.py API coverage report)
+# ---------------------------------------------------------------------------
+
+
+def test_get_me_returns_current_user_profile(tokens: dict[str, str]) -> None:
+    """GET /api/auth/me returns the authenticated user's profile (200).
+
+    This endpoint was flagged as uncovered by the API coverage report.
+    """
+    resp = requests.get(f"{BASE_URL}/api/auth/me", headers=auth_headers(tokens["alice"]), timeout=10)
+    assert resp.status_code == 200, f"Expected 200 from GET /api/auth/me, got {resp.status_code}: {resp.text}"
+    body = resp.json()
+    assert body["email"] == "alice@acme.com", f"Unexpected email: {body.get('email')}"
+    assert body["role"] == "EMPLOYEE", f"Unexpected role: {body.get('role')}"
+
+
+def test_get_me_unauthenticated_returns_401() -> None:
+    """GET /api/auth/me without a token must return 401."""
+    resp = requests.get(f"{BASE_URL}/api/auth/me", timeout=10)
+    assert resp.status_code == 401, f"Expected 401, got {resp.status_code}"
+
+
+def test_register_new_employee_returns_201_with_token() -> None:
+    """POST /api/auth/register creates a new EMPLOYEE account and returns 201 + JWT.
+
+    This endpoint was flagged as uncovered by the API coverage report.
+    Uses a unique email derived from the current timestamp to avoid 409 on reruns.
+    """
+    import time
+    unique_email = f"coverage.gap.{int(time.time())}@acme.com"
+    payload = {
+        "email": unique_email,
+        "password": "Register123",
+        "fullName": "Coverage Gap User",
+    }
+    resp = requests.post(f"{BASE_URL}/api/auth/register", json=payload, timeout=10)
+    assert resp.status_code == 201, f"Expected 201 from POST /api/auth/register, got {resp.status_code}: {resp.text}"
+    body = resp.json()
+    assert "token" in body, f"Response missing 'token': {body}"
+    assert body.get("user", {}).get("role") == "EMPLOYEE", f"Expected role EMPLOYEE: {body}"
+
+
+def test_register_duplicate_email_returns_409() -> None:
+    """POST /api/auth/register with an already-registered email must return 409."""
+    # alice@acme.com is seeded — trying to register it again must conflict
+    payload = {
+        "email": "alice@acme.com",
+        "password": "AnotherPass1",
+        "fullName": "Duplicate Alice",
+    }
+    resp = requests.post(f"{BASE_URL}/api/auth/register", json=payload, timeout=10)
+    assert resp.status_code == 409, f"Expected 409 for duplicate email, got {resp.status_code}: {resp.text}"
