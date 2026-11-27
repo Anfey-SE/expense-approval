@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
+    allowedHosts: true,
     // Proxy /api to the Spring Boot app so the dev server behaves like production, where the
     // backend serves the built SPA and the API is same-origin. Keeping both environments
     // same-origin means the app never depends on a cross-origin setup working.
