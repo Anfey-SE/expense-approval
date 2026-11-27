@@ -5,7 +5,9 @@ Covers:
 1. Generated EP & 3-point BVA tests from OpenAPI spec (one invalid value per test).
 2. Business rules BR1-BR4 rejections and boundary enforcement.
 3. State transition matrix (every allowed transition + disallowed transitions from every state).
-4. Repeated requests (double submit/approve/reject -> no duplicate approval trail rows).
+4. Idempotency: separate tests for double-submit, double-manager-approve, double-finance-approve,
+   double-reject, and concurrent double-approve (threading.Barrier), each asserting exactly one
+   new trail row per successful transition and no extra rows on the rejected repeat.
 5. Cross-workflow read-back assertions after both success and rejection.
 6. Endpoint behavior / weakness verification (pagination clamping, blank rejection comment, unauthenticated access).
 """
@@ -13,6 +15,7 @@ Covers:
 from __future__ import annotations
 
 import json
+import threading
 from pathlib import Path
 from typing import Any
 
@@ -564,23 +567,132 @@ def test_disallowed_state_transitions(
     assert len(data["approvals"]) == expected_trail_count, f"{case_id}: approval trail rows changed from {expected_trail_count} to {len(data['approvals'])}"
 
 
-def test_repeated_requests_no_duplicate_trail_rows(tokens: dict[str, str]) -> None:
-    """Repeated submit, approve, and reject requests must fail and never append duplicate approval trail rows."""
+def test_double_submit_adds_one_trail_row(tokens: dict[str, str]) -> None:
+    """Submit → assert 1 trail row; submit again → assert still 1 trail row (409)."""
     d = create_draft(tokens["alice"])["id"]
     submit_request(tokens["alice"], d)
-    # Repeat submit -> 409
-    assert requests.post(f"{BASE_URL}/api/requests/{d}/submit", headers=auth_headers(tokens["alice"]), timeout=10).status_code == 409
 
-    # Manager approve -> 200, repeat -> 403 (stage is now FINANCE)
-    assert requests.post(f"{BASE_URL}/api/requests/{d}/approve", headers=auth_headers(tokens["bob"]), timeout=10).status_code == 200
-    assert requests.post(f"{BASE_URL}/api/requests/{d}/approve", headers=auth_headers(tokens["bob"]), timeout=10).status_code == 403
+    # Read back: exactly 1 approval row (the SUBMIT action)
+    rb = requests.get(f"{BASE_URL}/api/requests/{d}", headers=auth_headers(tokens["alice"]), timeout=10).json()
+    assert len(rb["approvals"]) == 1, f"Expected 1 trail row after first submit, got {len(rb['approvals'])}"
+    assert rb["status"] == "SUBMITTED"
 
-    # Finance approve -> 200, repeat -> 409
-    assert requests.post(f"{BASE_URL}/api/requests/{d}/approve", headers=auth_headers(tokens["fiona"]), timeout=10).status_code == 200
-    assert requests.post(f"{BASE_URL}/api/requests/{d}/approve", headers=auth_headers(tokens["fiona"]), timeout=10).status_code == 409
+    # Repeat submit must be rejected
+    r2 = requests.post(f"{BASE_URL}/api/requests/{d}/submit", headers=auth_headers(tokens["alice"]), timeout=10)
+    assert r2.status_code == 409, f"Expected 409 on double-submit, got {r2.status_code}"
+
+    # Trail must still have exactly 1 row — no extra row appended
+    rb2 = requests.get(f"{BASE_URL}/api/requests/{d}", headers=auth_headers(tokens["alice"]), timeout=10).json()
+    assert len(rb2["approvals"]) == 1, f"Expected still 1 trail row after double-submit, got {len(rb2['approvals'])}"
+    assert rb2["status"] == "SUBMITTED", "Status must not change after rejected re-submit"
+
+
+def test_double_manager_approve_second_returns_403(tokens: dict[str, str]) -> None:
+    """Manager approve (200) → 2 trail rows; re-approve by same manager (403) → still 2 rows.
+
+    Why 403 not 409: after the first manager approval the request moves to MANAGER_APPROVED,
+    which is owned by the FINANCE stage. A manager calling /approve again is hitting the wrong
+    role for that stage, so the server rejects it as Forbidden before even checking idempotency.
+    """
+    d = create_draft(tokens["alice"])["id"]
+    submit_request(tokens["alice"], d)
+
+    r1 = requests.post(f"{BASE_URL}/api/requests/{d}/approve", headers=auth_headers(tokens["bob"]), timeout=10)
+    assert r1.status_code == 200, f"First manager approve must be 200, got {r1.status_code}"
 
     rb = requests.get(f"{BASE_URL}/api/requests/{d}", headers=auth_headers(tokens["alice"]), timeout=10).json()
-    assert len(rb["approvals"]) == 3, f"Expected exactly 3 trail rows, got {len(rb['approvals'])}"
+    assert len(rb["approvals"]) == 2, f"Expected 2 trail rows (SUBMIT + APPROVE), got {len(rb['approvals'])}"
+    assert rb["status"] == "MANAGER_APPROVED"
+
+    # Manager tries to approve again — wrong role for FINANCE stage → 403
+    r2 = requests.post(f"{BASE_URL}/api/requests/{d}/approve", headers=auth_headers(tokens["bob"]), timeout=10)
+    assert r2.status_code == 403, f"Expected 403 on manager re-approve (wrong stage), got {r2.status_code}"
+
+    # Trail must still have exactly 2 rows
+    rb2 = requests.get(f"{BASE_URL}/api/requests/{d}", headers=auth_headers(tokens["alice"]), timeout=10).json()
+    assert len(rb2["approvals"]) == 2, f"Expected still 2 trail rows after rejected re-approve, got {len(rb2['approvals'])}"
+    assert rb2["status"] == "MANAGER_APPROVED", "Status must not change after rejected re-approve"
+
+
+def test_double_finance_approve_second_returns_409(tokens: dict[str, str]) -> None:
+    """Finance approve (200) → 3 trail rows; re-approve by finance (409) → still 3 rows."""
+    d = create_draft(tokens["alice"])["id"]
+    submit_request(tokens["alice"], d)
+    requests.post(f"{BASE_URL}/api/requests/{d}/approve", headers=auth_headers(tokens["bob"]), timeout=10)
+
+    r1 = requests.post(f"{BASE_URL}/api/requests/{d}/approve", headers=auth_headers(tokens["fiona"]), timeout=10)
+    assert r1.status_code == 200, f"First finance approve must be 200, got {r1.status_code}"
+
+    rb = requests.get(f"{BASE_URL}/api/requests/{d}", headers=auth_headers(tokens["alice"]), timeout=10).json()
+    assert len(rb["approvals"]) == 3, f"Expected 3 trail rows (SUBMIT + MGR_APPROVE + FIN_APPROVE), got {len(rb['approvals'])}"
+    assert rb["status"] == "FINANCE_APPROVED"
+
+    # Finance tries to approve again — terminal state → 409
+    r2 = requests.post(f"{BASE_URL}/api/requests/{d}/approve", headers=auth_headers(tokens["fiona"]), timeout=10)
+    assert r2.status_code == 409, f"Expected 409 on finance re-approve (terminal state), got {r2.status_code}"
+
+    # Trail must still have exactly 3 rows
+    rb2 = requests.get(f"{BASE_URL}/api/requests/{d}", headers=auth_headers(tokens["alice"]), timeout=10).json()
+    assert len(rb2["approvals"]) == 3, f"Expected still 3 trail rows after rejected re-approve, got {len(rb2['approvals'])}"
+    assert rb2["status"] == "FINANCE_APPROVED", "Status must not change after rejected re-approve"
+
+
+def test_double_reject_second_returns_409(tokens: dict[str, str]) -> None:
+    """Reject (200) → 2 trail rows; re-reject (409) → still 2 rows."""
+    d = create_draft(tokens["alice"])["id"]
+    submit_request(tokens["alice"], d)
+
+    r1 = requests.post(f"{BASE_URL}/api/requests/{d}/reject", headers=auth_headers(tokens["bob"]), timeout=10)
+    assert r1.status_code == 200, f"First reject must be 200, got {r1.status_code}"
+
+    rb = requests.get(f"{BASE_URL}/api/requests/{d}", headers=auth_headers(tokens["alice"]), timeout=10).json()
+    assert len(rb["approvals"]) == 2, f"Expected 2 trail rows (SUBMIT + REJECT), got {len(rb['approvals'])}"
+    assert rb["status"] == "REJECTED"
+
+    # Reject again — terminal state → 409
+    r2 = requests.post(f"{BASE_URL}/api/requests/{d}/reject", headers=auth_headers(tokens["bob"]), timeout=10)
+    assert r2.status_code == 409, f"Expected 409 on re-reject (terminal state), got {r2.status_code}"
+
+    # Trail must still have exactly 2 rows
+    rb2 = requests.get(f"{BASE_URL}/api/requests/{d}", headers=auth_headers(tokens["alice"]), timeout=10).json()
+    assert len(rb2["approvals"]) == 2, f"Expected still 2 trail rows after rejected re-reject, got {len(rb2['approvals'])}"
+    assert rb2["status"] == "REJECTED", "Status must not change after rejected re-reject"
+
+
+def test_concurrent_double_approve_no_duplicate_trail(tokens: dict[str, str]) -> None:
+    """Two threads both call POST /approve simultaneously on a SUBMITTED request.
+
+    Expected: exactly one thread gets 200, the other gets 409 (optimistic-lock conflict) or 403.
+    Final trail must have exactly 2 rows (SUBMIT + one APPROVE).
+    """
+    d = create_draft(tokens["alice"])["id"]
+    submit_request(tokens["alice"], d)
+
+    results: list[int] = []
+    barrier = threading.Barrier(2)  # both threads start the POST at the same instant
+
+    def do_approve() -> None:
+        barrier.wait()
+        r = requests.post(f"{BASE_URL}/api/requests/{d}/approve", headers=auth_headers(tokens["bob"]), timeout=10)
+        results.append(r.status_code)
+
+    t1 = threading.Thread(target=do_approve)
+    t2 = threading.Thread(target=do_approve)
+    t1.start()
+    t2.start()
+    t1.join()
+    t2.join()
+
+    # Exactly one success and one conflict/forbidden
+    assert sorted(results) in ([200, 403], [200, 409]), (
+        f"Expected one 200 and one 403/409 from concurrent approve, got {sorted(results)}"
+    )
+
+    # Trail must have exactly 2 rows regardless of race outcome
+    rb = requests.get(f"{BASE_URL}/api/requests/{d}", headers=auth_headers(tokens["alice"]), timeout=10).json()
+    assert len(rb["approvals"]) == 2, (
+        f"Expected exactly 2 trail rows after concurrent approve, got {len(rb['approvals'])}"
+    )
 
 
 def test_unauthenticated_requests_rejected() -> None:
