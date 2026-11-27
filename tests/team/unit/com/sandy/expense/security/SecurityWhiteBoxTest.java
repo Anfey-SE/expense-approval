@@ -111,9 +111,9 @@ class SecurityWhiteBoxTest {
         JwtService jwt = new JwtService(SECRET_32, 60);
         String token = jwt.issue(user(1L, "alice@acme.com", Role.EMPLOYEE, null));
         int lastDot = token.lastIndexOf('.');
-        char lastChar = token.charAt(token.length() - 1);
-        char flipped = (lastChar == 'a') ? 'b' : 'a';
-        String tampered = token.substring(0, lastDot + 1) + token.substring(lastDot + 1, token.length() - 1) + flipped;
+        char firstSigChar = token.charAt(lastDot + 1);
+        char flipped = (firstSigChar == 'a') ? 'b' : 'a';
+        String tampered = token.substring(0, lastDot + 1) + flipped + token.substring(lastDot + 2);
 
         assertThat(jwt.parse(tampered)).isNull();
     }
