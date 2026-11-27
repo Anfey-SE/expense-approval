@@ -24,7 +24,7 @@ Every detail below was directly read and executed in the local Windows environme
 | Docker CLI | `Docker version 29.8.0, build 88096ef` | Docker CLI in PATH | `docker -v` | Installed |
 | Docker Desktop Engine | Docker Desktop 29.8.0 (`com.docker.service`) | `C:\Program Files\Docker\Docker\Docker Desktop.exe` | `docker ps` | Engine stopped; needs Desktop UI launched |
 | k6 | `k6.exe v2.2.0 (commit/00a9a1b7f5, go1.26.5)` | k6 in PATH | `k6 version` | Installed & Verified |
-| Playwright Chromium | `Chrome for Testing 159.0.8154.6` (Playwright v1255) | `ms-playwright\chromium-1255` | `npx playwright install chromium` | Download / Install in progress |
+| Playwright Chromium | `Chrome for Testing 159.0.8154.6` (Playwright v1255) | `ms-playwright\chromium-1255` | `npx playwright install chromium` | Installed & Verified (exit code 0) |
 | System Chrome | `158.0.8127.37` | `C:\Program Files\Google\Chrome\Application\chrome.exe` | File VersionInfo | Installed |
 | Axe-core | `@axe-core/playwright` | `tests/team/e2e/node_modules` | npm package | Configured |
 | Lighthouse | `lighthouse`, `playwright-lighthouse` | `tests/team/e2e/node_modules` | npm package | Configured |
