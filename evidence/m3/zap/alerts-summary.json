@@ -1,0 +1,473 @@
+{
+  "total": 58,
+  "high": 0,
+  "medium": 12,
+  "low": 26,
+  "informational": 20,
+  "items": [
+    {
+      "risk": "Medium",
+      "confidence": "Medium",
+      "name": "Missing Anti-clickjacking Header",
+      "url": "http://host.docker.internal:5173/login",
+      "cweId": "1021",
+      "solution": "Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Ensure one of them is set on all web pages returned by your site/app.\nIf you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. Alternatively consider implementing Content Security Policy's \"frame-ancestors\" directive."
+    },
+    {
+      "risk": "Medium",
+      "confidence": "High",
+      "name": "Content Security Policy (CSP) Header Not Set",
+      "url": "http://host.docker.internal:5173/login",
+      "cweId": "693",
+      "solution": "Ensure that your web server, application server, load balancer, etc. is configured to set the Content-Security-Policy header."
+    },
+    {
+      "risk": "Informational",
+      "confidence": "Medium",
+      "name": "Modern Web Application",
+      "url": "http://host.docker.internal:5173/login",
+      "cweId": "-1",
+      "solution": "This is an informational alert and so no changes are required."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/login",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/src/index.css",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/src/main.tsx",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/node_modules/vite/dist/client/env.mjs",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/node_modules/.vite/deps/rolldown-runtime-BPOCksWG.js?v=a50468d0",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Informational",
+      "confidence": "Medium",
+      "name": "Information Disclosure - Suspicious Comments",
+      "url": "http://host.docker.internal:5173/src/auth.tsx",
+      "cweId": "615",
+      "solution": "Remove all comments that return information that may help an attacker and fix any underlying problems they refer to."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/src/auth.tsx",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/src/App.tsx",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/src/pages/Login.tsx",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=a50468d0",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/src/ui.tsx",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Informational",
+      "confidence": "Medium",
+      "name": "Information Disclosure - Sensitive Information in URL",
+      "url": "http://host.docker.internal:5173/?token=7XdN7wcJc875",
+      "cweId": "598",
+      "solution": "Do not pass sensitive information in URIs."
+    },
+    {
+      "risk": "Informational",
+      "confidence": "Medium",
+      "name": "Information Disclosure - Suspicious Comments",
+      "url": "http://host.docker.internal:5173/@react-refresh",
+      "cweId": "615",
+      "solution": "Remove all comments that return information that may help an attacker and fix any underlying problems they refer to."
+    },
+    {
+      "risk": "Informational",
+      "confidence": "Medium",
+      "name": "Information Disclosure - Suspicious Comments",
+      "url": "http://host.docker.internal:5173/@react-refresh",
+      "cweId": "615",
+      "solution": "Remove all comments that return information that may help an attacker and fix any underlying problems they refer to."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/src/pages/RequestList.tsx",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Informational",
+      "confidence": "Medium",
+      "name": "Information Disclosure - Suspicious Comments",
+      "url": "http://host.docker.internal:5173/src/api.ts",
+      "cweId": "615",
+      "solution": "Remove all comments that return information that may help an attacker and fix any underlying problems they refer to."
+    },
+    {
+      "risk": "Informational",
+      "confidence": "Medium",
+      "name": "Information Disclosure - Suspicious Comments",
+      "url": "http://host.docker.internal:5173/src/api.ts",
+      "cweId": "615",
+      "solution": "Remove all comments that return information that may help an attacker and fix any underlying problems they refer to."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/@react-refresh",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/src/api.ts",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Informational",
+      "confidence": "Medium",
+      "name": "Information Disclosure - Suspicious Comments",
+      "url": "http://host.docker.internal:5173/src/pages/RequestDetail.tsx",
+      "cweId": "615",
+      "solution": "Remove all comments that return information that may help an attacker and fix any underlying problems they refer to."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/src/pages/RequestDetail.tsx",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/src/pages/NewRequest.tsx",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Informational",
+      "confidence": "High",
+      "name": "Authentication Request Identified",
+      "url": "http://host.docker.internal:5173/api/auth/login",
+      "cweId": "-1",
+      "solution": "This is an informational alert rather than a vulnerability and so there is nothing to fix."
+    },
+    {
+      "risk": "Medium",
+      "confidence": "Medium",
+      "name": "Missing Anti-clickjacking Header",
+      "url": "http://host.docker.internal:5173/requests/new",
+      "cweId": "1021",
+      "solution": "Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Ensure one of them is set on all web pages returned by your site/app.\nIf you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. Alternatively consider implementing Content Security Policy's \"frame-ancestors\" directive."
+    },
+    {
+      "risk": "Informational",
+      "confidence": "Medium",
+      "name": "Session Management Response Identified",
+      "url": "http://host.docker.internal:5173/api/auth/login",
+      "cweId": "-1",
+      "solution": "This is an informational alert rather than a vulnerability and so there is nothing to fix."
+    },
+    {
+      "risk": "Medium",
+      "confidence": "High",
+      "name": "Content Security Policy (CSP) Header Not Set",
+      "url": "http://host.docker.internal:5173/requests/new",
+      "cweId": "693",
+      "solution": "Ensure that your web server, application server, load balancer, etc. is configured to set the Content-Security-Policy header."
+    },
+    {
+      "risk": "Informational",
+      "confidence": "Medium",
+      "name": "Modern Web Application",
+      "url": "http://host.docker.internal:5173/requests/new",
+      "cweId": "-1",
+      "solution": "This is an informational alert and so no changes are required."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/requests/new",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/@vite/client",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/node_modules/.vite/deps/react-dom.js?v=a50468d0",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/node_modules/.vite/deps/react.js?v=a50468d0",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Informational",
+      "confidence": "Medium",
+      "name": "Information Disclosure - Suspicious Comments",
+      "url": "http://host.docker.internal:5173/node_modules/.vite/deps/react-router-dom.js?v=a50468d0",
+      "cweId": "615",
+      "solution": "Remove all comments that return information that may help an attacker and fix any underlying problems they refer to."
+    },
+    {
+      "risk": "Informational",
+      "confidence": "Medium",
+      "name": "Information Disclosure - Suspicious Comments",
+      "url": "http://host.docker.internal:5173/node_modules/.vite/deps/react-router-dom.js?v=a50468d0",
+      "cweId": "615",
+      "solution": "Remove all comments that return information that may help an attacker and fix any underlying problems they refer to."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/node_modules/.vite/deps/react-router-dom.js?v=a50468d0",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Low",
+      "name": "Timestamp Disclosure - Unix",
+      "url": "http://host.docker.internal:5173/node_modules/.vite/deps/react-dom_client.js?v=a50468d0",
+      "cweId": "497",
+      "solution": "Manually confirm that the timestamp data is not sensitive, and that the data cannot be aggregated to disclose exploitable patterns."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/node_modules/.vite/deps/react-dom_client.js?v=a50468d0",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Informational",
+      "confidence": "High",
+      "name": "Authentication Request Identified",
+      "url": "http://host.docker.internal:5173/api/auth/login",
+      "cweId": "-1",
+      "solution": "This is an informational alert rather than a vulnerability and so there is nothing to fix."
+    },
+    {
+      "risk": "Informational",
+      "confidence": "High",
+      "name": "Session Management Response Identified",
+      "url": "http://host.docker.internal:5173/api/auth/login",
+      "cweId": "-1",
+      "solution": "This is an informational alert rather than a vulnerability and so there is nothing to fix."
+    },
+    {
+      "risk": "Medium",
+      "confidence": "Medium",
+      "name": "Missing Anti-clickjacking Header",
+      "url": "http://host.docker.internal:5173/requests/69",
+      "cweId": "1021",
+      "solution": "Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Ensure one of them is set on all web pages returned by your site/app.\nIf you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. Alternatively consider implementing Content Security Policy's \"frame-ancestors\" directive."
+    },
+    {
+      "risk": "Medium",
+      "confidence": "High",
+      "name": "Content Security Policy (CSP) Header Not Set",
+      "url": "http://host.docker.internal:5173/requests/69",
+      "cweId": "693",
+      "solution": "Ensure that your web server, application server, load balancer, etc. is configured to set the Content-Security-Policy header."
+    },
+    {
+      "risk": "Informational",
+      "confidence": "Medium",
+      "name": "Modern Web Application",
+      "url": "http://host.docker.internal:5173/requests/69",
+      "cweId": "-1",
+      "solution": "This is an informational alert and so no changes are required."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/requests/69",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Medium",
+      "confidence": "Medium",
+      "name": "Missing Anti-clickjacking Header",
+      "url": "http://host.docker.internal:5173/requests/70",
+      "cweId": "1021",
+      "solution": "Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Ensure one of them is set on all web pages returned by your site/app.\nIf you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. Alternatively consider implementing Content Security Policy's \"frame-ancestors\" directive."
+    },
+    {
+      "risk": "Medium",
+      "confidence": "High",
+      "name": "Content Security Policy (CSP) Header Not Set",
+      "url": "http://host.docker.internal:5173/requests/70",
+      "cweId": "693",
+      "solution": "Ensure that your web server, application server, load balancer, etc. is configured to set the Content-Security-Policy header."
+    },
+    {
+      "risk": "Informational",
+      "confidence": "Medium",
+      "name": "Modern Web Application",
+      "url": "http://host.docker.internal:5173/requests/70",
+      "cweId": "-1",
+      "solution": "This is an informational alert and so no changes are required."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/requests/70",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Medium",
+      "confidence": "Medium",
+      "name": "Missing Anti-clickjacking Header",
+      "url": "http://host.docker.internal:5173/requests/71",
+      "cweId": "1021",
+      "solution": "Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Ensure one of them is set on all web pages returned by your site/app.\nIf you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. Alternatively consider implementing Content Security Policy's \"frame-ancestors\" directive."
+    },
+    {
+      "risk": "Medium",
+      "confidence": "High",
+      "name": "Content Security Policy (CSP) Header Not Set",
+      "url": "http://host.docker.internal:5173/requests/71",
+      "cweId": "693",
+      "solution": "Ensure that your web server, application server, load balancer, etc. is configured to set the Content-Security-Policy header."
+    },
+    {
+      "risk": "Informational",
+      "confidence": "Medium",
+      "name": "Modern Web Application",
+      "url": "http://host.docker.internal:5173/requests/71",
+      "cweId": "-1",
+      "solution": "This is an informational alert and so no changes are required."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/requests/71",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Medium",
+      "confidence": "Medium",
+      "name": "Missing Anti-clickjacking Header",
+      "url": "http://host.docker.internal:5173/requests/72",
+      "cweId": "1021",
+      "solution": "Modern Web browsers support the Content-Security-Policy and X-Frame-Options HTTP headers. Ensure one of them is set on all web pages returned by your site/app.\nIf you expect the page to be framed only by pages on your server (e.g. it's part of a FRAMESET) then you'll want to use SAMEORIGIN, otherwise if you never expect the page to be framed, you should use DENY. Alternatively consider implementing Content Security Policy's \"frame-ancestors\" directive."
+    },
+    {
+      "risk": "Medium",
+      "confidence": "High",
+      "name": "Content Security Policy (CSP) Header Not Set",
+      "url": "http://host.docker.internal:5173/requests/72",
+      "cweId": "693",
+      "solution": "Ensure that your web server, application server, load balancer, etc. is configured to set the Content-Security-Policy header."
+    },
+    {
+      "risk": "Informational",
+      "confidence": "Medium",
+      "name": "Modern Web Application",
+      "url": "http://host.docker.internal:5173/requests/72",
+      "cweId": "-1",
+      "solution": "This is an informational alert and so no changes are required."
+    },
+    {
+      "risk": "Low",
+      "confidence": "Medium",
+      "name": "X-Content-Type-Options Header Missing",
+      "url": "http://host.docker.internal:5173/requests/72",
+      "cweId": "693",
+      "solution": "Ensure that the application/web server sets the Content-Type header appropriately, and that it sets the X-Content-Type-Options header to 'nosniff' for all web pages.\nIf possible, ensure that the end user uses a standards-compliant and modern web browser that does not perform MIME-sniffing at all, or that can be directed by the web application/web server to not perform MIME-sniffing."
+    },
+    {
+      "risk": "Informational",
+      "confidence": "High",
+      "name": "Authentication Request Identified",
+      "url": "http://host.docker.internal:5173/api/auth/login",
+      "cweId": "-1",
+      "solution": "This is an informational alert rather than a vulnerability and so there is nothing to fix."
+    }
+  ]
+}

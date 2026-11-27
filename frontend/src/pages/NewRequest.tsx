@@ -48,23 +48,47 @@ export function NewRequest() {
   };
 
   return (
-    <>
+    <main role="main">
       <h1>New expense request</h1>
-      <p className="subtitle">Created as a draft — you can review and submit it on the next screen.</p>
+      <p className="subtitle" style={{ color: "#374151" }}>
+        Created as a draft — you can review and submit it on the next screen.
+      </p>
 
       <form onSubmit={submit} className="stack" style={{ maxWidth: 720 }}>
         <div className="card card-pad stack">
           <div>
-            <label>Title</label>
-            <input value={title} onChange={(e) => setTitle(e.target.value)} required maxLength={200} />
+            <label htmlFor="request-title" style={{ color: "#374151" }}>
+              Title
+            </label>
+            <input
+              id="request-title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+              maxLength={200}
+            />
           </div>
           <div>
-            <label>Description</label>
-            <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={2} />
+            <label htmlFor="request-description" style={{ color: "#374151" }}>
+              Description
+            </label>
+            <textarea
+              id="request-description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={2}
+            />
           </div>
           <div style={{ maxWidth: 120 }}>
-            <label>Currency</label>
-            <input value={currency} onChange={(e) => setCurrency(e.target.value.toUpperCase())} maxLength={3} />
+            <label htmlFor="request-currency" style={{ color: "#374151" }}>
+              Currency
+            </label>
+            <input
+              id="request-currency"
+              value={currency}
+              onChange={(e) => setCurrency(e.target.value.toUpperCase())}
+              maxLength={3}
+            />
           </div>
         </div>
 
@@ -76,22 +100,43 @@ export function NewRequest() {
             </button>
           </div>
           {items.map((it, idx) => (
-            <div key={idx} className="grid2" style={{ gridTemplateColumns: "2fr 1fr 1fr 1fr auto", alignItems: "end" }}>
+            <div
+              key={idx}
+              className="grid2"
+              style={{ gridTemplateColumns: "2fr 1fr 1fr 1fr auto", alignItems: "end" }}
+            >
               <div>
-                <label>Description</label>
-                <input value={it.description} onChange={(e) => updateItem(idx, { description: e.target.value })} required />
+                <label htmlFor={`item-desc-${idx}`} style={{ color: "#374151" }}>
+                  Description
+                </label>
+                <input
+                  id={`item-desc-${idx}`}
+                  value={it.description}
+                  onChange={(e) => updateItem(idx, { description: e.target.value })}
+                  required
+                />
               </div>
               <div>
-                <label>Category</label>
-                <select value={it.category} onChange={(e) => updateItem(idx, { category: e.target.value })}>
+                <label htmlFor={`item-cat-${idx}`} style={{ color: "#374151" }}>
+                  Category
+                </label>
+                <select
+                  id={`item-cat-${idx}`}
+                  aria-label="Category"
+                  value={it.category}
+                  onChange={(e) => updateItem(idx, { category: e.target.value })}
+                >
                   {CATEGORIES.map((c) => (
                     <option key={c}>{c}</option>
                   ))}
                 </select>
               </div>
               <div>
-                <label>Amount</label>
+                <label htmlFor={`item-amount-${idx}`} style={{ color: "#374151" }}>
+                  Amount
+                </label>
                 <input
+                  id={`item-amount-${idx}`}
                   type="number"
                   min="0.01"
                   step="0.01"
@@ -101,8 +146,17 @@ export function NewRequest() {
                 />
               </div>
               <div>
-                <label>Date</label>
-                <input type="date" max={TODAY} value={it.incurredOn} onChange={(e) => updateItem(idx, { incurredOn: e.target.value })} required />
+                <label htmlFor={`item-date-${idx}`} style={{ color: "#374151" }}>
+                  Date
+                </label>
+                <input
+                  id={`item-date-${idx}`}
+                  type="date"
+                  max={TODAY}
+                  value={it.incurredOn}
+                  onChange={(e) => updateItem(idx, { incurredOn: e.target.value })}
+                  required
+                />
               </div>
               <button
                 type="button"
@@ -110,13 +164,16 @@ export function NewRequest() {
                 disabled={items.length === 1}
                 onClick={() => setItems((p) => p.filter((_, i) => i !== idx))}
                 title="Remove"
+                aria-label={`Remove line item ${idx + 1}`}
               >
                 ✕
               </button>
             </div>
           ))}
           <div className="right">
-            <strong>Total: {currency} {total.toFixed(2)}</strong>
+            <strong>
+              Total: {currency} {total.toFixed(2)}
+            </strong>
           </div>
         </div>
 
@@ -127,6 +184,6 @@ export function NewRequest() {
           </button>
         </div>
       </form>
-    </>
+    </main>
   );
 }
