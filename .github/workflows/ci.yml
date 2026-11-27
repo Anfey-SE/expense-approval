@@ -141,3 +141,86 @@ jobs:
           path: |
             target/site/jacoco/
             target/pit-reports/
+
+  # ---------------------------------------------------------------------------
+  # Member 2 (24i-3097): Python API & Integration tests
+  # Runs in parallel with quality-gate.
+  # Brought to Member 1 for review: minimal addition, no changes to quality-gate.
+  # Starts PostgreSQL service container, runs Spring Boot, generates EP/BVA
+  # data, runs full pytest suite and uploads coverage report.
+  # NO continue-on-error and NO || true anywhere.
+  # ---------------------------------------------------------------------------
+  python-api-tests:
+    name: python-api-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: expense
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: expense
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U expense"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python test dependencies
+        run: pip install requests pytest pyyaml
+
+      - name: Start Spring Boot backend
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5433/expense
+          SPRING_DATASOURCE_USERNAME: expense
+          SPRING_DATASOURCE_PASSWORD: password
+          SERVER_PORT: 8085
+        run: |
+          ./mvnw spring-boot:run \
+            -Dspring-boot.run.arguments="--server.port=8085 --spring.datasource.url=jdbc:postgresql://localhost:5433/expense --spring.datasource.username=expense --spring.datasource.password=password" \
+            --no-transfer-progress &
+          echo "Waiting for backend health check on port 8085..."
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8085/actuator/health | grep -q '"status":"UP"'; then
+              echo "Backend is UP."
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Backend failed to become healthy within 150s"
+          exit 1
+
+      - name: Generate EP & BVA test data from OpenAPI spec
+        run: python tests/team/api/generate_test_data.py
+
+      - name: Run Python API & Integration tests
+        env:
+          EXPENSE_BASE_URL: http://localhost:8085
+        run: python -m pytest tests/team/api/test_expense_api.py -v --tb=short
+
+      - name: Upload API coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-api-coverage-report
+          path: docs/team/evidence/api_coverage_report.txt
