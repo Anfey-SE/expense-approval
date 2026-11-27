@@ -1,0 +1,2015 @@
+{
+  "generated_at": "2026-11-26T06:37:07.816174+00:00",
+  "spec_title": "Expense Approval MIS API",
+  "spec_version": "1.0.0",
+  "summary": {
+    "total_ep_cases": 162,
+    "total_bva_cases": 95,
+    "total_cases": 257
+  },
+  "constraints_snapshot": {
+    "LoginRequest": {
+      "email": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength": 254
+      },
+      "password": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128
+      }
+    },
+    "RegisterRequest": {
+      "email": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength": 254
+      },
+      "password": {
+        "type": "string",
+        "minLength": 8,
+        "maxLength": 128
+      },
+      "fullName": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 120
+      },
+      "departmentId": {
+        "type": "integer",
+        "minimum": 1,
+        "nullable": true
+      }
+    },
+    "ItemInput": {
+      "description": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200
+      },
+      "category": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 40
+      },
+      "amount": {
+        "type": "number",
+        "minimum": 0.01,
+        "maximum": 9999999999.99,
+        "multipleOf": 0.01
+      },
+      "incurredOn": {
+        "type": "string",
+        "x-constraint": "pastOrPresent"
+      }
+    },
+    "CreateRequest": {
+      "title": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200
+      },
+      "description": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 2000,
+        "nullable": true
+      },
+      "currency": {
+        "type": "string",
+        "minLength": 3,
+        "maxLength": 3,
+        "nullable": true
+      },
+      "items": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 100
+      }
+    },
+    "DecisionInput": {
+      "comment": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 500,
+        "nullable": true
+      }
+    },
+    "UserView": {
+      "id": {
+        "type": "integer"
+      },
+      "email": {
+        "type": "string"
+      },
+      "fullName": {
+        "type": "string"
+      },
+      "role": {
+        "type": "string"
+      },
+      "departmentId": {
+        "type": "integer",
+        "nullable": true
+      },
+      "departmentName": {
+        "type": "string",
+        "nullable": true
+      }
+    },
+    "AuthResponse": {
+      "token": {
+        "type": "string"
+      },
+      "tokenType": {
+        "type": "string"
+      },
+      "expiresInSeconds": {
+        "type": "integer"
+      },
+      "user": {
+        "type": "object"
+      }
+    },
+    "ItemView": {
+      "id": {
+        "type": "integer"
+      },
+      "description": {
+        "type": "string"
+      },
+      "category": {
+        "type": "string"
+      },
+      "amount": {
+        "type": "number"
+      },
+      "incurredOn": {
+        "type": "string"
+      }
+    },
+    "ApprovalView": {
+      "id": {
+        "type": "integer"
+      },
+      "actorId": {
+        "type": "integer"
+      },
+      "actorName": {
+        "type": "string"
+      },
+      "action": {
+        "type": "string"
+      },
+      "fromStatus": {
+        "type": "string"
+      },
+      "toStatus": {
+        "type": "string"
+      },
+      "comment": {
+        "type": "string"
+      },
+      "createdAt": {
+        "type": "string"
+      }
+    },
+    "RequestDetail": {
+      "id": {
+        "type": "integer"
+      },
+      "title": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "totalAmount": {
+        "type": "number"
+      },
+      "currency": {
+        "type": "string"
+      },
+      "requesterId": {
+        "type": "integer"
+      },
+      "requesterName": {
+        "type": "string"
+      },
+      "departmentName": {
+        "type": "string"
+      },
+      "submittedAt": {
+        "type": "string",
+        "nullable": true
+      },
+      "createdAt": {
+        "type": "string"
+      },
+      "items": {
+        "type": "array"
+      },
+      "approvals": {
+        "type": "array"
+      }
+    },
+    "ErrorResponse": {
+      "code": {
+        "type": "string"
+      },
+      "message": {
+        "type": "string"
+      },
+      "timestamp": {
+        "type": "string"
+      },
+      "fields": {
+        "type": "object"
+      }
+    }
+  },
+  "ep_cases": {
+    "LoginRequest": [
+      {
+        "field": "email",
+        "class": "valid_email",
+        "value": "valid.user@acme.com",
+        "valid": true
+      },
+      {
+        "field": "email",
+        "class": "invalid_email_no_at",
+        "value": "not-an-email",
+        "valid": false
+      },
+      {
+        "field": "email",
+        "class": "invalid_blank",
+        "value": "   ",
+        "valid": false
+      },
+      {
+        "field": "email",
+        "class": "invalid_missing_null",
+        "value": null,
+        "valid": false
+      },
+      {
+        "field": "password",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "password",
+        "class": "invalid_empty_string",
+        "value": "",
+        "valid": false
+      },
+      {
+        "field": "password",
+        "class": "invalid_whitespace_only",
+        "value": "   ",
+        "valid": false
+      },
+      {
+        "field": "password",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "password",
+        "class": "invalid_missing_null",
+        "value": null,
+        "valid": false
+      }
+    ],
+    "RegisterRequest": [
+      {
+        "field": "email",
+        "class": "valid_email",
+        "value": "valid.user@acme.com",
+        "valid": true
+      },
+      {
+        "field": "email",
+        "class": "invalid_email_no_at",
+        "value": "not-an-email",
+        "valid": false
+      },
+      {
+        "field": "email",
+        "class": "invalid_blank",
+        "value": "   ",
+        "valid": false
+      },
+      {
+        "field": "email",
+        "class": "invalid_missing_null",
+        "value": null,
+        "valid": false
+      },
+      {
+        "field": "password",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "password",
+        "class": "invalid_empty_string",
+        "value": "",
+        "valid": false
+      },
+      {
+        "field": "password",
+        "class": "invalid_whitespace_only",
+        "value": "   ",
+        "valid": false
+      },
+      {
+        "field": "password",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "password",
+        "class": "invalid_missing_null",
+        "value": null,
+        "valid": false
+      },
+      {
+        "field": "fullName",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "fullName",
+        "class": "invalid_empty_string",
+        "value": "",
+        "valid": false
+      },
+      {
+        "field": "fullName",
+        "class": "invalid_whitespace_only",
+        "value": "   ",
+        "valid": false
+      },
+      {
+        "field": "fullName",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "fullName",
+        "class": "invalid_missing_null",
+        "value": null,
+        "valid": false
+      },
+      {
+        "field": "departmentId",
+        "class": "valid_mid_range",
+        "value": 50,
+        "valid": true
+      },
+      {
+        "field": "departmentId",
+        "class": "invalid_negative",
+        "value": -5,
+        "valid": false
+      },
+      {
+        "field": "departmentId",
+        "class": "invalid_zero",
+        "value": 0,
+        "valid": false
+      }
+    ],
+    "ItemInput": [
+      {
+        "field": "description",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "description",
+        "class": "invalid_empty_string",
+        "value": "",
+        "valid": false
+      },
+      {
+        "field": "description",
+        "class": "invalid_whitespace_only",
+        "value": "   ",
+        "valid": false
+      },
+      {
+        "field": "description",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "description",
+        "class": "invalid_missing_null",
+        "value": null,
+        "valid": false
+      },
+      {
+        "field": "category",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "category",
+        "class": "invalid_empty_string",
+        "value": "",
+        "valid": false
+      },
+      {
+        "field": "category",
+        "class": "invalid_whitespace_only",
+        "value": "   ",
+        "valid": false
+      },
+      {
+        "field": "category",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "category",
+        "class": "invalid_missing_null",
+        "value": null,
+        "valid": false
+      },
+      {
+        "field": "amount",
+        "class": "valid_mid_range",
+        "value": 50.01,
+        "valid": true
+      },
+      {
+        "field": "amount",
+        "class": "invalid_negative",
+        "value": -1.0,
+        "valid": false
+      },
+      {
+        "field": "amount",
+        "class": "invalid_zero",
+        "value": 0,
+        "valid": false
+      },
+      {
+        "field": "amount",
+        "class": "invalid_missing_null",
+        "value": null,
+        "valid": false
+      },
+      {
+        "field": "incurredOn",
+        "class": "valid_past_date",
+        "value": "2026-11-19",
+        "valid": true
+      },
+      {
+        "field": "incurredOn",
+        "class": "invalid_future_date",
+        "value": "2026-12-26",
+        "valid": false
+      },
+      {
+        "field": "incurredOn",
+        "class": "invalid_date_format",
+        "value": "2026-99-99",
+        "valid": false
+      },
+      {
+        "field": "incurredOn",
+        "class": "invalid_missing_null",
+        "value": null,
+        "valid": false
+      }
+    ],
+    "CreateRequest": [
+      {
+        "field": "title",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "title",
+        "class": "invalid_empty_string",
+        "value": "",
+        "valid": false
+      },
+      {
+        "field": "title",
+        "class": "invalid_whitespace_only",
+        "value": "   ",
+        "valid": false
+      },
+      {
+        "field": "title",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "title",
+        "class": "invalid_missing_null",
+        "value": null,
+        "valid": false
+      },
+      {
+        "field": "description",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "description",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "currency",
+        "class": "valid_iso_currency_upper",
+        "value": "EUR",
+        "valid": true
+      },
+      {
+        "field": "currency",
+        "class": "valid_iso_currency_lower",
+        "value": "gbp",
+        "valid": true
+      },
+      {
+        "field": "currency",
+        "class": "valid_null_defaults_usd",
+        "value": null,
+        "valid": true
+      },
+      {
+        "field": "currency",
+        "class": "invalid_too_short",
+        "value": "US",
+        "valid": false
+      },
+      {
+        "field": "currency",
+        "class": "invalid_too_long",
+        "value": "USDD",
+        "valid": false
+      },
+      {
+        "field": "items",
+        "class": "invalid_missing_null",
+        "value": null,
+        "valid": false
+      }
+    ],
+    "DecisionInput": [
+      {
+        "field": "comment",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "comment",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      }
+    ],
+    "UserView": [
+      {
+        "field": "id",
+        "class": "valid_mid_range",
+        "value": 50,
+        "valid": true
+      },
+      {
+        "field": "id",
+        "class": "invalid_negative",
+        "value": -5,
+        "valid": false
+      },
+      {
+        "field": "email",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "email",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "fullName",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "fullName",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "role",
+        "class": "valid_enum_EMPLOYEE",
+        "value": "EMPLOYEE",
+        "valid": true
+      },
+      {
+        "field": "role",
+        "class": "valid_enum_MANAGER",
+        "value": "MANAGER",
+        "valid": true
+      },
+      {
+        "field": "role",
+        "class": "valid_enum_FINANCE",
+        "value": "FINANCE",
+        "valid": true
+      },
+      {
+        "field": "role",
+        "class": "invalid_enum",
+        "value": "INVALID_ENUM_VALUE",
+        "valid": false
+      },
+      {
+        "field": "departmentId",
+        "class": "valid_mid_range",
+        "value": 50,
+        "valid": true
+      },
+      {
+        "field": "departmentId",
+        "class": "invalid_negative",
+        "value": -5,
+        "valid": false
+      },
+      {
+        "field": "departmentName",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "departmentName",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      }
+    ],
+    "AuthResponse": [
+      {
+        "field": "token",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "token",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "tokenType",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "tokenType",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "expiresInSeconds",
+        "class": "valid_mid_range",
+        "value": 50,
+        "valid": true
+      },
+      {
+        "field": "expiresInSeconds",
+        "class": "invalid_negative",
+        "value": -5,
+        "valid": false
+      }
+    ],
+    "ItemView": [
+      {
+        "field": "id",
+        "class": "valid_mid_range",
+        "value": 50,
+        "valid": true
+      },
+      {
+        "field": "id",
+        "class": "invalid_negative",
+        "value": -5,
+        "valid": false
+      },
+      {
+        "field": "description",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "description",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "category",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "category",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "amount",
+        "class": "valid_mid_range",
+        "value": 50.0,
+        "valid": true
+      },
+      {
+        "field": "amount",
+        "class": "invalid_negative",
+        "value": -1.0,
+        "valid": false
+      },
+      {
+        "field": "incurredOn",
+        "class": "valid_past_date",
+        "value": "2026-11-19",
+        "valid": true
+      },
+      {
+        "field": "incurredOn",
+        "class": "invalid_future_date",
+        "value": "2026-12-26",
+        "valid": false
+      },
+      {
+        "field": "incurredOn",
+        "class": "invalid_date_format",
+        "value": "2026-99-99",
+        "valid": false
+      }
+    ],
+    "ApprovalView": [
+      {
+        "field": "id",
+        "class": "valid_mid_range",
+        "value": 50,
+        "valid": true
+      },
+      {
+        "field": "id",
+        "class": "invalid_negative",
+        "value": -5,
+        "valid": false
+      },
+      {
+        "field": "actorId",
+        "class": "valid_mid_range",
+        "value": 50,
+        "valid": true
+      },
+      {
+        "field": "actorId",
+        "class": "invalid_negative",
+        "value": -5,
+        "valid": false
+      },
+      {
+        "field": "actorName",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "actorName",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "action",
+        "class": "valid_enum_SUBMIT",
+        "value": "SUBMIT",
+        "valid": true
+      },
+      {
+        "field": "action",
+        "class": "valid_enum_APPROVE",
+        "value": "APPROVE",
+        "valid": true
+      },
+      {
+        "field": "action",
+        "class": "valid_enum_REJECT",
+        "value": "REJECT",
+        "valid": true
+      },
+      {
+        "field": "action",
+        "class": "invalid_enum",
+        "value": "INVALID_ENUM_VALUE",
+        "valid": false
+      },
+      {
+        "field": "fromStatus",
+        "class": "valid_enum_DRAFT",
+        "value": "DRAFT",
+        "valid": true
+      },
+      {
+        "field": "fromStatus",
+        "class": "valid_enum_SUBMITTED",
+        "value": "SUBMITTED",
+        "valid": true
+      },
+      {
+        "field": "fromStatus",
+        "class": "valid_enum_MANAGER_APPROVED",
+        "value": "MANAGER_APPROVED",
+        "valid": true
+      },
+      {
+        "field": "fromStatus",
+        "class": "valid_enum_FINANCE_APPROVED",
+        "value": "FINANCE_APPROVED",
+        "valid": true
+      },
+      {
+        "field": "fromStatus",
+        "class": "valid_enum_REJECTED",
+        "value": "REJECTED",
+        "valid": true
+      },
+      {
+        "field": "fromStatus",
+        "class": "invalid_enum",
+        "value": "INVALID_ENUM_VALUE",
+        "valid": false
+      },
+      {
+        "field": "toStatus",
+        "class": "valid_enum_DRAFT",
+        "value": "DRAFT",
+        "valid": true
+      },
+      {
+        "field": "toStatus",
+        "class": "valid_enum_SUBMITTED",
+        "value": "SUBMITTED",
+        "valid": true
+      },
+      {
+        "field": "toStatus",
+        "class": "valid_enum_MANAGER_APPROVED",
+        "value": "MANAGER_APPROVED",
+        "valid": true
+      },
+      {
+        "field": "toStatus",
+        "class": "valid_enum_FINANCE_APPROVED",
+        "value": "FINANCE_APPROVED",
+        "valid": true
+      },
+      {
+        "field": "toStatus",
+        "class": "valid_enum_REJECTED",
+        "value": "REJECTED",
+        "valid": true
+      },
+      {
+        "field": "toStatus",
+        "class": "invalid_enum",
+        "value": "INVALID_ENUM_VALUE",
+        "valid": false
+      },
+      {
+        "field": "comment",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "comment",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "createdAt",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "createdAt",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      }
+    ],
+    "RequestDetail": [
+      {
+        "field": "id",
+        "class": "valid_mid_range",
+        "value": 50,
+        "valid": true
+      },
+      {
+        "field": "id",
+        "class": "invalid_negative",
+        "value": -5,
+        "valid": false
+      },
+      {
+        "field": "title",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "title",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "description",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "description",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "status",
+        "class": "valid_enum_DRAFT",
+        "value": "DRAFT",
+        "valid": true
+      },
+      {
+        "field": "status",
+        "class": "valid_enum_SUBMITTED",
+        "value": "SUBMITTED",
+        "valid": true
+      },
+      {
+        "field": "status",
+        "class": "valid_enum_MANAGER_APPROVED",
+        "value": "MANAGER_APPROVED",
+        "valid": true
+      },
+      {
+        "field": "status",
+        "class": "valid_enum_FINANCE_APPROVED",
+        "value": "FINANCE_APPROVED",
+        "valid": true
+      },
+      {
+        "field": "status",
+        "class": "valid_enum_REJECTED",
+        "value": "REJECTED",
+        "valid": true
+      },
+      {
+        "field": "status",
+        "class": "invalid_enum",
+        "value": "INVALID_ENUM_VALUE",
+        "valid": false
+      },
+      {
+        "field": "totalAmount",
+        "class": "valid_mid_range",
+        "value": 50.0,
+        "valid": true
+      },
+      {
+        "field": "totalAmount",
+        "class": "invalid_negative",
+        "value": -1.0,
+        "valid": false
+      },
+      {
+        "field": "currency",
+        "class": "valid_iso_currency_upper",
+        "value": "EUR",
+        "valid": true
+      },
+      {
+        "field": "currency",
+        "class": "valid_iso_currency_lower",
+        "value": "gbp",
+        "valid": true
+      },
+      {
+        "field": "currency",
+        "class": "valid_null_defaults_usd",
+        "value": null,
+        "valid": true
+      },
+      {
+        "field": "currency",
+        "class": "invalid_too_short",
+        "value": "US",
+        "valid": false
+      },
+      {
+        "field": "currency",
+        "class": "invalid_too_long",
+        "value": "USDD",
+        "valid": false
+      },
+      {
+        "field": "requesterId",
+        "class": "valid_mid_range",
+        "value": 50,
+        "valid": true
+      },
+      {
+        "field": "requesterId",
+        "class": "invalid_negative",
+        "value": -5,
+        "valid": false
+      },
+      {
+        "field": "requesterName",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "requesterName",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "departmentName",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "departmentName",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "submittedAt",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "submittedAt",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "createdAt",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "createdAt",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      }
+    ],
+    "ErrorResponse": [
+      {
+        "field": "code",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "code",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "message",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "message",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      },
+      {
+        "field": "timestamp",
+        "class": "valid_typical_string",
+        "value": "xxxxxxxxxx",
+        "valid": true
+      },
+      {
+        "field": "timestamp",
+        "class": "invalid_exceeds_maxLength",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "valid": false
+      }
+    ],
+    "Parameters": [
+      {
+        "field": "GET /api/requests [query:status]",
+        "class": "valid_enum_DRAFT",
+        "value": "DRAFT",
+        "valid": true
+      },
+      {
+        "field": "GET /api/requests [query:status]",
+        "class": "valid_enum_SUBMITTED",
+        "value": "SUBMITTED",
+        "valid": true
+      },
+      {
+        "field": "GET /api/requests [query:status]",
+        "class": "valid_enum_MANAGER_APPROVED",
+        "value": "MANAGER_APPROVED",
+        "valid": true
+      },
+      {
+        "field": "GET /api/requests [query:status]",
+        "class": "valid_enum_FINANCE_APPROVED",
+        "value": "FINANCE_APPROVED",
+        "valid": true
+      },
+      {
+        "field": "GET /api/requests [query:status]",
+        "class": "valid_enum_REJECTED",
+        "value": "REJECTED",
+        "valid": true
+      },
+      {
+        "field": "GET /api/requests [query:status]",
+        "class": "invalid_enum",
+        "value": "INVALID_ENUM_VALUE",
+        "valid": false
+      },
+      {
+        "field": "GET /api/requests [query:page]",
+        "class": "valid_mid_range",
+        "value": 50,
+        "valid": true
+      },
+      {
+        "field": "GET /api/requests [query:page]",
+        "class": "invalid_negative",
+        "value": -5,
+        "valid": false
+      },
+      {
+        "field": "GET /api/requests [query:size]",
+        "class": "valid_mid_range",
+        "value": 50,
+        "valid": true
+      },
+      {
+        "field": "GET /api/requests [query:size]",
+        "class": "invalid_negative",
+        "value": -5,
+        "valid": false
+      },
+      {
+        "field": "GET /api/requests [query:size]",
+        "class": "invalid_zero",
+        "value": 0,
+        "valid": false
+      }
+    ]
+  },
+  "bva_cases": {
+    "LoginRequest": [
+      {
+        "field": "email",
+        "point": "below_min",
+        "boundary": "minLength=3",
+        "value": "aa",
+        "valid": false,
+        "reason": "Length 2 < minLength 3"
+      },
+      {
+        "field": "email",
+        "point": "at_min",
+        "boundary": "minLength=3",
+        "value": "aaa",
+        "valid": true,
+        "reason": "Length 3 == minLength 3"
+      },
+      {
+        "field": "email",
+        "point": "above_min",
+        "boundary": "minLength=3",
+        "value": "aaaa",
+        "valid": true,
+        "reason": "Length 4 > minLength 3"
+      },
+      {
+        "field": "email",
+        "point": "below_max",
+        "boundary": "maxLength=254",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": true,
+        "reason": "Length 253 < maxLength 254"
+      },
+      {
+        "field": "email",
+        "point": "at_max",
+        "boundary": "maxLength=254",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": true,
+        "reason": "Length 254 == maxLength 254"
+      },
+      {
+        "field": "email",
+        "point": "above_max",
+        "boundary": "maxLength=254",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": false,
+        "reason": "Length 255 > maxLength 254"
+      },
+      {
+        "field": "password",
+        "point": "below_min",
+        "boundary": "minLength=1",
+        "value": "",
+        "valid": false,
+        "reason": "Length 0 < minLength 1"
+      },
+      {
+        "field": "password",
+        "point": "at_min",
+        "boundary": "minLength=1",
+        "value": "a",
+        "valid": true,
+        "reason": "Length 1 == minLength 1"
+      },
+      {
+        "field": "password",
+        "point": "above_min",
+        "boundary": "minLength=1",
+        "value": "aa",
+        "valid": true,
+        "reason": "Length 2 > minLength 1"
+      },
+      {
+        "field": "password",
+        "point": "below_max",
+        "boundary": "maxLength=128",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": true,
+        "reason": "Length 127 < maxLength 128"
+      },
+      {
+        "field": "password",
+        "point": "at_max",
+        "boundary": "maxLength=128",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": true,
+        "reason": "Length 128 == maxLength 128"
+      },
+      {
+        "field": "password",
+        "point": "above_max",
+        "boundary": "maxLength=128",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": false,
+        "reason": "Length 129 > maxLength 128"
+      }
+    ],
+    "RegisterRequest": [
+      {
+        "field": "email",
+        "point": "below_min",
+        "boundary": "minLength=3",
+        "value": "aa",
+        "valid": false,
+        "reason": "Length 2 < minLength 3"
+      },
+      {
+        "field": "email",
+        "point": "at_min",
+        "boundary": "minLength=3",
+        "value": "aaa",
+        "valid": true,
+        "reason": "Length 3 == minLength 3"
+      },
+      {
+        "field": "email",
+        "point": "above_min",
+        "boundary": "minLength=3",
+        "value": "aaaa",
+        "valid": true,
+        "reason": "Length 4 > minLength 3"
+      },
+      {
+        "field": "email",
+        "point": "below_max",
+        "boundary": "maxLength=254",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": true,
+        "reason": "Length 253 < maxLength 254"
+      },
+      {
+        "field": "email",
+        "point": "at_max",
+        "boundary": "maxLength=254",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": true,
+        "reason": "Length 254 == maxLength 254"
+      },
+      {
+        "field": "email",
+        "point": "above_max",
+        "boundary": "maxLength=254",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": false,
+        "reason": "Length 255 > maxLength 254"
+      },
+      {
+        "field": "password",
+        "point": "below_min",
+        "boundary": "minLength=8",
+        "value": "aaaaaaa",
+        "valid": false,
+        "reason": "Length 7 < minLength 8"
+      },
+      {
+        "field": "password",
+        "point": "at_min",
+        "boundary": "minLength=8",
+        "value": "aaaaaaaa",
+        "valid": true,
+        "reason": "Length 8 == minLength 8"
+      },
+      {
+        "field": "password",
+        "point": "above_min",
+        "boundary": "minLength=8",
+        "value": "aaaaaaaaa",
+        "valid": true,
+        "reason": "Length 9 > minLength 8"
+      },
+      {
+        "field": "password",
+        "point": "below_max",
+        "boundary": "maxLength=128",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": true,
+        "reason": "Length 127 < maxLength 128"
+      },
+      {
+        "field": "password",
+        "point": "at_max",
+        "boundary": "maxLength=128",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": true,
+        "reason": "Length 128 == maxLength 128"
+      },
+      {
+        "field": "password",
+        "point": "above_max",
+        "boundary": "maxLength=128",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": false,
+        "reason": "Length 129 > maxLength 128"
+      },
+      {
+        "field": "fullName",
+        "point": "below_min",
+        "boundary": "minLength=1",
+        "value": "",
+        "valid": false,
+        "reason": "Length 0 < minLength 1"
+      },
+      {
+        "field": "fullName",
+        "point": "at_min",
+        "boundary": "minLength=1",
+        "value": "a",
+        "valid": true,
+        "reason": "Length 1 == minLength 1"
+      },
+      {
+        "field": "fullName",
+        "point": "above_min",
+        "boundary": "minLength=1",
+        "value": "aa",
+        "valid": true,
+        "reason": "Length 2 > minLength 1"
+      },
+      {
+        "field": "fullName",
+        "point": "below_max",
+        "boundary": "maxLength=120",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": true,
+        "reason": "Length 119 < maxLength 120"
+      },
+      {
+        "field": "fullName",
+        "point": "at_max",
+        "boundary": "maxLength=120",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": true,
+        "reason": "Length 120 == maxLength 120"
+      },
+      {
+        "field": "fullName",
+        "point": "above_max",
+        "boundary": "maxLength=120",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": false,
+        "reason": "Length 121 > maxLength 120"
+      },
+      {
+        "field": "departmentId",
+        "point": "below_min",
+        "boundary": "minimum=1",
+        "value": 0,
+        "valid": false,
+        "reason": "Value 0 < minimum 1"
+      },
+      {
+        "field": "departmentId",
+        "point": "at_min",
+        "boundary": "minimum=1",
+        "value": 1,
+        "valid": true,
+        "reason": "Value 1 == minimum 1"
+      },
+      {
+        "field": "departmentId",
+        "point": "above_min",
+        "boundary": "minimum=1",
+        "value": 2,
+        "valid": true,
+        "reason": "Value 2 > minimum 1"
+      }
+    ],
+    "ItemInput": [
+      {
+        "field": "description",
+        "point": "below_min",
+        "boundary": "minLength=1",
+        "value": "",
+        "valid": false,
+        "reason": "Length 0 < minLength 1"
+      },
+      {
+        "field": "description",
+        "point": "at_min",
+        "boundary": "minLength=1",
+        "value": "a",
+        "valid": true,
+        "reason": "Length 1 == minLength 1"
+      },
+      {
+        "field": "description",
+        "point": "above_min",
+        "boundary": "minLength=1",
+        "value": "aa",
+        "valid": true,
+        "reason": "Length 2 > minLength 1"
+      },
+      {
+        "field": "description",
+        "point": "below_max",
+        "boundary": "maxLength=200",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": true,
+        "reason": "Length 199 < maxLength 200"
+      },
+      {
+        "field": "description",
+        "point": "at_max",
+        "boundary": "maxLength=200",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": true,
+        "reason": "Length 200 == maxLength 200"
+      },
+      {
+        "field": "description",
+        "point": "above_max",
+        "boundary": "maxLength=200",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": false,
+        "reason": "Length 201 > maxLength 200"
+      },
+      {
+        "field": "category",
+        "point": "below_min",
+        "boundary": "minLength=1",
+        "value": "",
+        "valid": false,
+        "reason": "Length 0 < minLength 1"
+      },
+      {
+        "field": "category",
+        "point": "at_min",
+        "boundary": "minLength=1",
+        "value": "a",
+        "valid": true,
+        "reason": "Length 1 == minLength 1"
+      },
+      {
+        "field": "category",
+        "point": "above_min",
+        "boundary": "minLength=1",
+        "value": "aa",
+        "valid": true,
+        "reason": "Length 2 > minLength 1"
+      },
+      {
+        "field": "category",
+        "point": "below_max",
+        "boundary": "maxLength=40",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": true,
+        "reason": "Length 39 < maxLength 40"
+      },
+      {
+        "field": "category",
+        "point": "at_max",
+        "boundary": "maxLength=40",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": true,
+        "reason": "Length 40 == maxLength 40"
+      },
+      {
+        "field": "category",
+        "point": "above_max",
+        "boundary": "maxLength=40",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": false,
+        "reason": "Length 41 > maxLength 40"
+      },
+      {
+        "field": "amount",
+        "point": "below_min",
+        "boundary": "minimum=0.01",
+        "value": 0.0,
+        "valid": false,
+        "reason": "Value 0.0 < minimum 0.01"
+      },
+      {
+        "field": "amount",
+        "point": "at_min",
+        "boundary": "minimum=0.01",
+        "value": 0.01,
+        "valid": true,
+        "reason": "Value 0.01 == minimum 0.01"
+      },
+      {
+        "field": "amount",
+        "point": "above_min",
+        "boundary": "minimum=0.01",
+        "value": 0.02,
+        "valid": true,
+        "reason": "Value 0.02 > minimum 0.01"
+      },
+      {
+        "field": "amount",
+        "point": "below_max",
+        "boundary": "maximum=9999999999.99",
+        "value": 9999999999.98,
+        "valid": true,
+        "reason": "Value 9999999999.98 < maximum 9999999999.99"
+      },
+      {
+        "field": "amount",
+        "point": "at_max",
+        "boundary": "maximum=9999999999.99",
+        "value": 9999999999.99,
+        "valid": true,
+        "reason": "Value 9999999999.99 == maximum 9999999999.99"
+      },
+      {
+        "field": "amount",
+        "point": "above_max",
+        "boundary": "maximum=9999999999.99",
+        "value": 10000000000.0,
+        "valid": false,
+        "reason": "Value 10000000000.0 > maximum 9999999999.99"
+      },
+      {
+        "field": "amount",
+        "point": "invalid_precision",
+        "boundary": "multipleOf=0.01",
+        "value": 10.123,
+        "valid": false,
+        "reason": "3 decimal places exceeds 2-decimal precision"
+      },
+      {
+        "field": "incurredOn",
+        "point": "below_max",
+        "boundary": "pastOrPresent=today",
+        "value": "2026-11-25",
+        "valid": true,
+        "reason": "Yesterday is in the past"
+      },
+      {
+        "field": "incurredOn",
+        "point": "at_max",
+        "boundary": "pastOrPresent=today",
+        "value": "2026-11-26",
+        "valid": true,
+        "reason": "Today is at the PastOrPresent boundary"
+      },
+      {
+        "field": "incurredOn",
+        "point": "above_max",
+        "boundary": "pastOrPresent=today",
+        "value": "2026-11-27",
+        "valid": false,
+        "reason": "Tomorrow is in the future (violates PastOrPresent)"
+      }
+    ],
+    "CreateRequest": [
+      {
+        "field": "title",
+        "point": "below_min",
+        "boundary": "minLength=1",
+        "value": "",
+        "valid": false,
+        "reason": "Length 0 < minLength 1"
+      },
+      {
+        "field": "title",
+        "point": "at_min",
+        "boundary": "minLength=1",
+        "value": "a",
+        "valid": true,
+        "reason": "Length 1 == minLength 1"
+      },
+      {
+        "field": "title",
+        "point": "above_min",
+        "boundary": "minLength=1",
+        "value": "aa",
+        "valid": true,
+        "reason": "Length 2 > minLength 1"
+      },
+      {
+        "field": "title",
+        "point": "below_max",
+        "boundary": "maxLength=200",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": true,
+        "reason": "Length 199 < maxLength 200"
+      },
+      {
+        "field": "title",
+        "point": "at_max",
+        "boundary": "maxLength=200",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": true,
+        "reason": "Length 200 == maxLength 200"
+      },
+      {
+        "field": "title",
+        "point": "above_max",
+        "boundary": "maxLength=200",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": false,
+        "reason": "Length 201 > maxLength 200"
+      },
+      {
+        "field": "description",
+        "point": "at_min",
+        "boundary": "minLength=0",
+        "value": "",
+        "valid": true,
+        "reason": "Length 0 == minLength 0"
+      },
+      {
+        "field": "description",
+        "point": "above_min",
+        "boundary": "minLength=0",
+        "value": "a",
+        "valid": true,
+        "reason": "Length 1 > minLength 0"
+      },
+      {
+        "field": "description",
+        "point": "below_max",
+        "boundary": "maxLength=2000",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": true,
+        "reason": "Length 1999 < maxLength 2000"
+      },
+      {
+        "field": "description",
+        "point": "at_max",
+        "boundary": "maxLength=2000",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": true,
+        "reason": "Length 2000 == maxLength 2000"
+      },
+      {
+        "field": "description",
+        "point": "above_max",
+        "boundary": "maxLength=2000",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": false,
+        "reason": "Length 2001 > maxLength 2000"
+      },
+      {
+        "field": "description",
+        "point": "nullable",
+        "boundary": "nullable=true",
+        "value": null,
+        "valid": true,
+        "reason": "Optional nullable field omitted/null"
+      },
+      {
+        "field": "currency",
+        "point": "below_min",
+        "boundary": "minLength=3",
+        "value": "aa",
+        "valid": false,
+        "reason": "Length 2 < minLength 3"
+      },
+      {
+        "field": "currency",
+        "point": "at_min",
+        "boundary": "minLength=3",
+        "value": "aaa",
+        "valid": true,
+        "reason": "Length 3 == minLength 3"
+      },
+      {
+        "field": "currency",
+        "point": "at_max",
+        "boundary": "maxLength=3",
+        "value": "aaa",
+        "valid": true,
+        "reason": "Length 3 == maxLength 3"
+      },
+      {
+        "field": "currency",
+        "point": "above_max",
+        "boundary": "maxLength=3",
+        "value": "aaaa",
+        "valid": false,
+        "reason": "Length 4 > maxLength 3"
+      },
+      {
+        "field": "currency",
+        "point": "nullable",
+        "boundary": "nullable=true",
+        "value": null,
+        "valid": true,
+        "reason": "Optional nullable field omitted/null"
+      },
+      {
+        "field": "items",
+        "point": "below_min",
+        "boundary": "minItems=1",
+        "count": 0,
+        "valid": false,
+        "reason": "Item count 0 < minItems 1"
+      },
+      {
+        "field": "items",
+        "point": "at_min",
+        "boundary": "minItems=1",
+        "count": 1,
+        "valid": true,
+        "reason": "Item count 1 == minItems 1"
+      },
+      {
+        "field": "items",
+        "point": "above_min",
+        "boundary": "minItems=1",
+        "count": 2,
+        "valid": true,
+        "reason": "Item count 2 > minItems 1"
+      },
+      {
+        "field": "items",
+        "point": "below_max",
+        "boundary": "maxItems=100",
+        "count": 99,
+        "valid": true,
+        "reason": "Item count 99 < maxItems 100"
+      },
+      {
+        "field": "items",
+        "point": "at_max",
+        "boundary": "maxItems=100",
+        "count": 100,
+        "valid": true,
+        "reason": "Item count 100 == maxItems 100"
+      },
+      {
+        "field": "items",
+        "point": "above_max",
+        "boundary": "maxItems=100",
+        "count": 101,
+        "valid": false,
+        "reason": "Item count 101 > maxItems 100"
+      }
+    ],
+    "DecisionInput": [
+      {
+        "field": "comment",
+        "point": "at_min",
+        "boundary": "minLength=0",
+        "value": "",
+        "valid": true,
+        "reason": "Length 0 == minLength 0"
+      },
+      {
+        "field": "comment",
+        "point": "above_min",
+        "boundary": "minLength=0",
+        "value": "a",
+        "valid": true,
+        "reason": "Length 1 > minLength 0"
+      },
+      {
+        "field": "comment",
+        "point": "below_max",
+        "boundary": "maxLength=500",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": true,
+        "reason": "Length 499 < maxLength 500"
+      },
+      {
+        "field": "comment",
+        "point": "at_max",
+        "boundary": "maxLength=500",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": true,
+        "reason": "Length 500 == maxLength 500"
+      },
+      {
+        "field": "comment",
+        "point": "above_max",
+        "boundary": "maxLength=500",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "valid": false,
+        "reason": "Length 501 > maxLength 500"
+      },
+      {
+        "field": "comment",
+        "point": "nullable",
+        "boundary": "nullable=true",
+        "value": null,
+        "valid": true,
+        "reason": "Optional nullable field omitted/null"
+      }
+    ],
+    "UserView": [
+      {
+        "field": "departmentName",
+        "point": "nullable",
+        "boundary": "nullable=true",
+        "value": null,
+        "valid": true,
+        "reason": "Optional nullable field omitted/null"
+      }
+    ],
+    "AuthResponse": [],
+    "ItemView": [],
+    "ApprovalView": [],
+    "RequestDetail": [
+      {
+        "field": "submittedAt",
+        "point": "nullable",
+        "boundary": "nullable=true",
+        "value": null,
+        "valid": true,
+        "reason": "Optional nullable field omitted/null"
+      }
+    ],
+    "ErrorResponse": [],
+    "Parameters": [
+      {
+        "field": "GET /api/requests [query:page]",
+        "point": "below_min",
+        "boundary": "minimum=0",
+        "value": -1,
+        "valid": false,
+        "reason": "Value -1 < minimum 0"
+      },
+      {
+        "field": "GET /api/requests [query:page]",
+        "point": "at_min",
+        "boundary": "minimum=0",
+        "value": 0,
+        "valid": true,
+        "reason": "Value 0 == minimum 0"
+      },
+      {
+        "field": "GET /api/requests [query:page]",
+        "point": "above_min",
+        "boundary": "minimum=0",
+        "value": 1,
+        "valid": true,
+        "reason": "Value 1 > minimum 0"
+      },
+      {
+        "field": "GET /api/requests [query:size]",
+        "point": "below_min",
+        "boundary": "minimum=1",
+        "value": 0,
+        "valid": false,
+        "reason": "Value 0 < minimum 1"
+      },
+      {
+        "field": "GET /api/requests [query:size]",
+        "point": "at_min",
+        "boundary": "minimum=1",
+        "value": 1,
+        "valid": true,
+        "reason": "Value 1 == minimum 1"
+      },
+      {
+        "field": "GET /api/requests [query:size]",
+        "point": "above_min",
+        "boundary": "minimum=1",
+        "value": 2,
+        "valid": true,
+        "reason": "Value 2 > minimum 1"
+      },
+      {
+        "field": "GET /api/requests [query:size]",
+        "point": "below_max",
+        "boundary": "maximum=100",
+        "value": 99,
+        "valid": true,
+        "reason": "Value 99 < maximum 100"
+      },
+      {
+        "field": "GET /api/requests [query:size]",
+        "point": "at_max",
+        "boundary": "maximum=100",
+        "value": 100,
+        "valid": true,
+        "reason": "Value 100 == maximum 100"
+      },
+      {
+        "field": "GET /api/requests [query:size]",
+        "point": "above_max",
+        "boundary": "maximum=100",
+        "value": 101,
+        "valid": false,
+        "reason": "Value 101 > maximum 100"
+      }
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+=== OpenAPI Spec Constraint Change & Regeneration Demo ===
+Before summary: {'total_ep_cases': 162, 'total_bva_cases': 95, 'total_cases': 257}
+After summary:  {'total_ep_cases': 162, 'total_bva_cases': 95, 'total_cases': 257}
+
+Constraint 1: CreateRequest.title.maxLength (200 -> 100)
+  Before at_max len=200, above_max len=201
+  After  at_max len=100, above_max len=101
+
+Constraint 2: CreateRequest.items.maxItems (100 -> 50)
+  Before at_max count=100, above_max count=101
+  After  at_max count=50, above_max count=51
