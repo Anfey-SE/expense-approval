@@ -1,4 +1,5 @@
 import os
+import re
 
 base_dir = r"C:\Users\DELL\.gemini\antigravity\scratch\expense-approval"
 
@@ -21,59 +22,61 @@ m1_ai = read_file("docs/team/ai_use_member1.md")
 m2_ai = read_file("docs/team/ai_use_member2.md")
 m3_ai = read_file("docs/m3/ai-use-record.md")
 
-header = """# SE3002 Software Quality Engineering — Final Project Report
-## Automated Testing of an Open-Source Management Information System
-### System Under Test: Expense Approval MIS (Spring Boot 4.1 + React 19 + PostgreSQL 16)
+header = """# FAST National University of Computer and Emerging Sciences
+## Department of Computer Science — Islamabad Campus
+### SE3002: Software Quality Engineering (Fall 2026)
+# Final Project Quality Engineering Report: Automated Testing of Expense Approval MIS
 
 ---
 
-### Project & Team Metadata
+### Project Information & Group Details
 
-| Field | Detail |
+| Parameter | Specification |
 |---|---|
-| **Course** | SE3002 Software Quality Engineering, Fall 2026 |
-| **Institution** | FAST National University of Computer and Emerging Sciences |
+| **Course** | SE3002: Software Quality Engineering |
+| **Academic Term** | Fall 2026 |
 | **Section** | Section C |
-| **Repository URL** | `https://github.com/Anfey-SE/expense-approval` |
-| **Upstream URL** | `https://github.com/LijuanTang94/expense-approval` (MIT Licence) |
+| **System Under Test** | Expense Approval Management Information System (Spring Boot 4.1, PostgreSQL 16, React 19) |
+| **Repository URL** | https://github.com/Anfey-SE/expense-approval |
+| **Upstream Repository** | https://github.com/LijuanTang94/expense-approval (MIT Licence) |
 | **Baseline Commit** | `ae596c3` |
-| **Final Integration Commit** | Merged across PRs #14, #15, #16, #17, #18, #19 to `master` |
-| **Team Members** | **Member 1:** 24i-3112 (Static Analysis, White-Box, Mutation, CI Gate, UC1/UC2)<br>**Member 2:** 24i-3097 (Shared Test Management Lead, OpenAPI, EP/BVA Data Generator, API Suite, UC3/UC4, PDF)<br>**Member 3:** 24i-0761 (Usability/A11y, Defensive Security, k6 Perf, ACID Recovery, UC5/UC6, Defect RCA) |
+| **Final Integration** | Merged across PRs #14 through #21 to `master` |
+| **Group Members** | **Member 1 (24i-3112):** Static Analysis, White-Box Unit Testing, PIT Mutation, CI Quality Gate, UC1/UC2<br>**Member 2 (24i-3097):** Test Management Lead, OpenAPI Specification, EP/BVA Test Data Generator, API Test Suite, UC3/UC4, PDF Compilation<br>**Member 3 (24i-0761):** Usability & WCAG 2.1 AA Accessibility, Defensive Security, k6 Performance, ACID Failure Recovery, UC5/UC6, Defect RCA |
 
 ---
 
-## Executive Summary & Work Allocation
+## Executive Summary & Work Allocation Matrix
 
-This report presents the complete quality engineering deliverables for the **Expense Approval MIS**, satisfying the 120-mark SQE rubric through automated multi-level testing, quantitative metrics, defect root-cause analysis, and continuous integration gating.
+This document compiles the complete, end-to-end quality engineering deliverables for the Expense Approval MIS project. Testing was conducted across the software lifecycle, encompassing static code analysis, statement/branch white-box coverage, mutation analysis with custom domain mutators, specification-based equivalence partitioning and boundary value analysis, REST API integration, browser end-to-end automation, non-functional accessibility and defensive security audits, and load/stress recovery benchmarks.
 
-### Work Division & Responsibility Matrix
+### Work Division and Component Traceability
 
-| Area | Deliverable | Lead Member | Marks | Verification Status |
+| Functional Area | Primary Deliverables | Lead Author | Marks Weighting | Status |
 |---|---|---|---|---|
-| **System & Scope** | Baseline commit, requirements (16), business rules (4), roles (3), test basis, seed data, reset procedure | M1 Lead (Shared) | 5 | Complete (`docs/team/01_system_and_scope.md`) |
-| **Static Analysis** | SonarQube Community run, complexity analysis, clean maintainability (0 smells), vulnerability documentation | Member 1 (24i-3112) | 5 | Complete (Rating A Reliability, Rating D Security documented) |
-| **White-Box Testing** | JaCoCo 100% line/branch gate on 6 core classes, MCC & MC/DC on `assertCanDecide`, 136 team unit tests | Member 1 (24i-3112) | 16 | Complete (100% JaCoCo, 100% MC/DC) |
-| **Mutation Testing** | PIT mutation testing, 2 custom business-rule mutators, 99% mutation score, survivor analysis | Member 1 (24i-3112) | 8 | Complete (81/82 mutants killed in DEFAULTS, 98% in ALL) |
-| **CI Quality Gate** | GitHub Actions pipeline enforcing coverage, SonarQube, PIT, and demo of blocked PR vs fix PR | Member 1 (24i-3112) | Shared | Complete (Blocked PR #3, Fix PR #5 merged) |
-| **Test Plan & Estimation** | 5-week schedule, 3-point estimation vs actuals, variance analysis | Member 2 (24i-3097) | 5 | Complete (82.5h vs 89.81h expected, variance -8.1%) |
-| **Risk & Exit Criteria** | 5x5 Risk Register (8 product, 2 project), 3 measurable exit criteria | Member 2 (24i-3097) | 5 | Complete (EC-1, EC-2, EC-3 all 100% MET) |
-| **Test Monitoring** | Weekly tracking, GQM metrics, completion report, release recommendation | Member 2 (24i-3097) | 5 | Complete (GO FOR RELEASE, 0 open Critical/High defects) |
-| **OpenAPI & Generator** | Complete OpenAPI 3.0 spec (11 endpoints), automated EP/BVA generator (257 cases), live regeneration demo | Member 2 (24i-3097) | 7 | Complete (`openapi.yaml`, `generate_test_data.py`) |
-| **API & Integration** | 120 API tests (EP, BVA, state transitions, idempotency, concurrent double-approve, coverage fixture) | Member 2 (24i-3097) | 10 | Complete (120/120 passing in CI job `python-api-tests`) |
-| **Usability & A11y** | Lighthouse audit, `@axe-core` scans, UI bug fix (`53f7568`), keyboard-only navigation test | Member 3 (24i-0761) | 5 | Complete (Lighthouse 75->100, 0 axe serious violations) |
-| **Defensive Security** | 5/5 role access matrix, OWASP ZAP passive scan (0 High), `npm audit`, Maven Dependency-Check | Member 3 (24i-0761) | 6 | Complete (58 ZAP alerts: 0 High, 12 Med, 26 Low, 20 Info) |
-| **Performance & Recovery** | k6 load testing (4 runs, 11,318 reqs, p95 13-19 ms vs 250 ms SLA), PostgreSQL failure recovery | Member 3 (24i-0761) | 5 | Complete (p95 <= 19.19 ms, 0% errors, 0 duplicate rows) |
-| **Defect RCA & Pareto** | 6 GitHub issue drafts, 5 Whys root cause analysis, Pareto chart (89.6% concentration), Fishbone diagram | Member 3 (24i-0761) | 5 | Complete (`docs/m3/defects/`, Pareto & Fishbone charts) |
-| **E2E Use Cases** | Playwright E2E automation for UC1-UC6 (2 per member): M1 (UC1/UC2), M2 (UC3/UC4), M3 (UC5/UC6) | All Members | 12 | Complete (25 Playwright tests passing: M1 8, M2 8, M3 9) |
-| **AI Use Records** | Prompts, tools, outputs, manual verification, and reflection | All Members | 6 | Complete (M1, M2, M3 individual disclosures) |
-| **Final Package** | PDF compilation (M2), Git zip assembly (M1), Evidence verification (M3) | M2 Lead | 2 | Complete (`Project_24I-3112_24I-3097_24I-0761_C.pdf`) |
+| **System & Scope** | Baseline verification, 16 functional requirements, 4 business rules, 3 user roles, seed data & environment reset scripts | Member 1 (Shared) | 5 Marks | Complete (docs/team/01_system_and_scope.md) |
+| **Static Analysis** | SonarQube Community scan, file/method complexity, 0 debt/code smells, documentation of upstream security rules | Member 1 (24i-3112) | 5 Marks | Complete (Rating A Reliability, Rating D Security documented) |
+| **White-Box Testing** | JaCoCo 100% line/branch enforcement on 6 core classes, MCC & MC/DC on `assertCanDecide`, 136 team unit tests | Member 1 (24i-3112) | 16 Marks | Complete (100% JaCoCo, 100% MC/DC) |
+| **Mutation Testing** | PIT mutation analysis, 2 custom domain mutators (department check, approver swap), 99% mutation score | Member 1 (24i-3112) | 8 Marks | Complete (81/82 mutants killed in DEFAULTS) |
+| **CI Quality Gate** | GitHub Actions pipeline enforcing coverage, SonarQube quality gate, and mutation thresholds | Member 1 (24i-3112) | Shared | Complete (Blocked PR #3 demo, Fix PR #5 merged) |
+| **Test Plan & Estimation** | 5-week schedule, 3-point effort estimation ($E = \frac{O+4M+P}{6}$) vs actuals, variance analysis | Member 2 (24i-3097) | 5 Marks | Complete (82.50h actual vs 89.81h expected, variance -8.1%) |
+| **Risk & Exit Criteria** | 5x5 Risk Matrix (8 product risks, 2 project risks), 3 measurable exit criteria | Member 2 (24i-3097) | 5 Marks | Complete (EC-1, EC-2, EC-3 verified MET) |
+| **Monitoring & Completion** | Weekly GQM metric tracking, test completion report, release recommendation | Member 2 (24i-3097) | 5 Marks | Complete (GO FOR RELEASE, 0 open Critical/High defects) |
+| **OpenAPI & Test Data Generator** | OpenAPI 3.0.3 spec (11 endpoints), automated EP/BVA generator (257 test cases), live regeneration demo | Member 2 (24i-3097) | 7 Marks | Complete (openapi.yaml, generate_test_data.py) |
+| **API & Integration Tests** | 120 API tests (EP, BVA, state transitions, idempotency, concurrent double-approve, coverage tracking) | Member 2 (24i-3097) | 10 Marks | Complete (120/120 passing in CI job python-api-tests) |
+| **Usability & Accessibility** | Lighthouse audits, axe-core scans, UI remediation commit `53f7568`, keyboard navigation tests | Member 3 (24i-0761) | 5 Marks | Complete (Lighthouse 75 to 100/100, 0 axe serious violations) |
+| **Defensive Security** | 5-role access decision matrix, OWASP ZAP passive scan (0 High), npm audit, Dependency-Check | Member 3 (24i-0761) | 6 Marks | Complete (58 ZAP alerts: 0 High, 12 Medium, 26 Low, 20 Info) |
+| **Performance & Recovery** | k6 load tests (4 runs, 11,318 requests, p95 13-19 ms vs 250 ms SLA), PostgreSQL failure recovery test | Member 3 (24i-0761) | 5 Marks | Complete (p95 <= 19.19 ms, 0.00% errors, 0 duplicate rows) |
+| **Defect Management & RCA** | 6 GitHub issue drafts, 5 Whys root cause analysis, Pareto distribution (89.6% concentration), Fishbone | Member 3 (24i-0761) | 5 Marks | Complete (docs/m3/defects/, Pareto & Fishbone diagrams) |
+| **Browser E2E Use Cases** | Playwright E2E automation for UC1 through UC6: M1 (UC1/UC2), M2 (UC3/UC4), M3 (UC5/UC6) | All Members | 12 Marks | Complete (25 Playwright tests passing: M1 8, M2 8, M3 9) |
+| **AI Usage Transparency** | Prompts, tools consulted, output evaluation, verification procedures, and integrity statements | All Members | 6 Marks | Complete (M1, M2, M3 individual disclosures) |
+| **Final Submission Package** | PDF compilation (M2), Git zip assembly (M1), Evidence verification (M3) | Member 2 Lead | 2 Marks | Complete (Project_24I-3112_24I-3097_24I-0761_C.pdf) |
 
 ---
 """
 
 parts = [
     header,
-    "\n# PART I: SHARED TEST MANAGEMENT & SYSTEM FOUNDATION\n*(Led by Member 2 — Shared Test Management Lead)*\n\n",
+    "\n# PART I: SHARED TEST MANAGEMENT & SYSTEM SPECIFICATION\n*(Prepared by Member 2 — Shared Test Management Lead)*\n\n",
     sys_scope,
     "\n---\n\n",
     test_plan,
@@ -83,39 +86,63 @@ parts = [
     monitor_comp,
     "\n---\n\n",
     weekly_prog,
-    "\n---\n\n# PART II: MEMBER 1 CONTRIBUTION (24i-3112)\n*(Static Analysis, White-Box Testing, PIT Mutation, CI Quality Gate, UC1 & UC2)*\n\n",
+    "\n---\n\n# PART II: MEMBER 1 CONTRIBUTION (24i-3112)\n*(Static Analysis, White-Box Unit Testing, PIT Mutation Testing, CI Pipeline, UC1 & UC2)*\n\n",
     m1_report,
-    "\n---\n\n# PART III: MEMBER 2 CONTRIBUTION (24i-3097)\n*(OpenAPI Specification, EP/BVA Test Data Generator, API & Integration Testing, UC3 & UC4)*\n\n",
+    "\n---\n\n# PART III: MEMBER 2 CONTRIBUTION (24i-3097)\n*(OpenAPI Specification, Automated EP/BVA Test Data Generator, API Integration Suite, UC3 & UC4)*\n\n",
     m2_report,
     "\n---\n\n# PART IV: MEMBER 3 CONTRIBUTION (24i-0761)\n*(Usability & Accessibility, Defensive Security, k6 Performance, ACID Failure Recovery, UC5 & UC6, Defect RCA)*\n\n",
     m3_report,
-    "\n---\n\n# PART V: CONSOLIDATED AI USE DISCLOSURES\n\n### AI Use Record — Member 1 (24i-3112)\n",
+    "\n---\n\n# PART V: CONSOLIDATED AI ASSISTANCE DISCLOSURES\n\n",
+    "### AI Usage Record — Member 1 (24i-3112)\n\n",
     m1_ai,
-    "\n---\n\n### AI Use Record — Member 2 (24i-3097)\n",
+    "\n---\n\n### AI Usage Record — Member 2 (24i-3097)\n\n",
     m2_ai,
-    "\n---\n\n### AI Use Record — Member 3 (24i-0761)\n",
+    "\n---\n\n### AI Usage Record — Member 3 (24i-0761)\n\n",
     m3_ai,
     """
 ---
 
-### Appendix: Git Commit History & Release Verification
+### Appendix: Git Commit History & Build Traceability
 - **Baseline Commit:** `ae596c3`
-- **Member 1 Commits:** Static analysis, white-box unit tests, JaCoCo gate, PIT custom mutators, CI quality gate (`0dfa6ce`, PR #5).
-- **Member 2 Commits:** 
-  - PR #14: Parametrized state transitions with per-case status & approval trail read-backs.
-  - PR #15: Split idempotency tests with concurrent double-approve race condition test.
-  - PR #16: OpenAPI coverage fixture, automated report, and coverage gap tests.
-  - PR #17: CI `python-api-tests` GitHub Actions job.
-  - PR #18: 6-week GQM progress reports and AI use disclosure.
-  - PR #19: Review and merge of Member 3's quality engineering deliverables.
-- **Member 3 Commits:** PR #19 (UC5/UC6 E2E, Lighthouse accessibility UI fix `53f7568`, OWASP ZAP passive scan, k6 performance load, ACID failure recovery, 6 defect drafts and 5 Whys RCA).
-- **Release Verdict:** All exit criteria (EC-1, EC-2, EC-3) 100% MET. Unconditional **GO FOR RELEASE**.
+- **Member 1 Integration:** White-box unit tests, JaCoCo threshold enforcement, PIT custom mutators, CI quality gate (`0dfa6ce`, PR #5).
+- **Member 2 Integration:**
+  - PR #14: Parametrized state transition suite with per-case status and approval trail read-backs.
+  - PR #15: Split repeated request idempotency tests and concurrent double-approval race condition verification.
+  - PR #16: Automated OpenAPI test coverage fixture, coverage report, and endpoint gap tests.
+  - PR #17: CI `python-api-tests` workflow job in `.github/workflows/ci.yml`.
+  - PR #18: 6-week GQM progress reports and updated AI-assistance record.
+  - PR #19: Review and merge of Member 3 quality engineering deliverables.
+  - PR #20 & #21: Shared test management consolidation, embedded user screenshots, cryptographic test fix, and final PDF generation.
+- **Member 3 Integration:** PR #19 (UC5/UC6 E2E automation, Lighthouse UI accessibility remediation `53f7568`, OWASP ZAP passive scan, k6 performance load, ACID failure recovery, 6 defect drafts and 5 Whys RCA).
+- **Release Recommendation:** Unconditional **GO FOR RELEASE** (All 3 Exit Criteria EC-1, EC-2, EC-3 are 100% MET).
 """
 ]
 
 combined = "".join(parts)
+
+# Clean any remaining emojis
+emoji_replacements = {
+    '✅': '[Passed]',
+    '🔄': '[In Progress]',
+    '⚠️': '[Accepted]',
+    '❌': '[Failed]',
+    '✓': '[Passed]',
+    '✗': '[Failed]',
+    '✕': '[x]',
+    '🟢': '[Approved]',
+    '🎯': '',
+    '👉': '',
+    '📸': 'Figure: ',
+    '🎉': '',
+}
+for k, v in emoji_replacements.items():
+    combined = combined.replace(k, v)
+
+# Clean excessive asterisks like **** or ***
+combined = re.sub(r'\*{3,}', '**', combined)
+
 out_path = os.path.join(base_dir, "docs", "team", "Final_Project_Report_Combined.md")
 with open(out_path, "w", encoding="utf-8") as f:
     f.write(combined)
 
-print("Saved Final_Project_Report_Combined.md successfully! Length:", len(combined))
+print("Saved Final_Project_Report_Combined.md cleanly! Length:", len(combined))

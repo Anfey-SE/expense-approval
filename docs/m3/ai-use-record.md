@@ -1,6 +1,6 @@
 # AI-Use Record — Member 3 (24i-0761)
 
-In compliance with the course Academic Integrity Policy (Section 7), this log discloses all areas where generative AI (Antigravity / Gemini) was consulted as an assistive drafting tool, alongside what was manually reviewed, verified, executed, or adjusted by me.
+In compliance with the course Academic Integrity Policy (Section 7), this log discloses all areas where generative AI (AI Assistant / Gemini) was consulted as an assistive drafting tool, alongside what was manually reviewed, verified, executed, or adjusted by me.
 
 | Stage | Purpose of AI Assistance | AI Output Summary | What I Manually Checked, Tested, or Changed |
 |---|---|---|---|
