@@ -98,7 +98,7 @@ def test_uc3_alt2_approve_from_inbox_among_multiple(page: Page) -> None:
     req2 = api_create_and_submit("alice@acme.com", "UC3 Inbox Sibling")
 
     ui_login(page, "bob@acme.com")
-    expect(page.get_by_text("Awaiting your approval")).to_be_visible()
+    expect(page.get_by_text("Awaiting your approval", exact=True)).to_be_visible()
 
     # Locate the inbox row for req1 and click Approve
     inbox_row = page.locator("tr", has_text="UC3 Inbox Target").first
