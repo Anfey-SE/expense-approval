@@ -94,8 +94,18 @@
 |---|---|---|---|
 | Mutation + CI quality gate (M1) | GitHub Actions blocks merge on SonarQube / coverage / mutation failures; documented blocked PR and passing PR | ✅ Done | — |
 | OpenAPI regeneration demo in CI | Spec changeset committed; `generate_test_data.py` re-run shows updated BVA output | ✅ Done | — |
-| A11y fix & retest (M3) | In progress | 🔄 In Progress | M3 to deliver before submission |
+| A11y fix & retest (M3) | Resolved 5 serious axe violations in `NewRequest.tsx` (commit `53f7568`); Lighthouse score jumped 75 → 100/100 | ✅ Done | Delivered in PR #19 |
 | Completion report (M2) | This document | ✅ Done | — |
+
+### Week 6 — Full Cross-Member Verification & Release Packaging
+
+| Planned | Actual | Status | Control Actions |
+|---|---|---|---|
+| Defensive Security & ZAP Scan (M3) | OWASP ZAP passive scan (0 High alerts) + 5/5 role access matrix tests passed in 7.9s | ✅ Done | Merged to master |
+| k6 Performance & ACID Recovery (M3) | 4 runs (11,318 reqs, 0.00% fail, p95 <= 19.19 ms) + PostgreSQL recovery test (0 duplicate rows) | ✅ Done | Merged to master |
+| Defect Management & RCA (M3) | 6 GitHub issue drafts + 5 Whys RCA + Pareto chart & Fishbone diagram | ✅ Done | Merged to master |
+| Shared Metrics & Exit Criteria (M2) | All 3 exit criteria (EC-1, EC-2, EC-3) verified MET with empirical numbers | ✅ Done | Consolidated in master |
+| Final Unified Submission PDF (M2) | Consolidated report across M1, M2, M3 formatted to rubric requirements | ✅ Done | Generated and verified |
 
 ---
 
@@ -105,11 +115,11 @@
 |---|---|---|---|
 | **Defect Density** | Total defects (EW-1, EW-2) / Total requirements (16) | **0.125** | ≤ 0.5 |
 | **Requirements Coverage** | Requirements traced to ≥ 1 automated test / Total requirements | **100%** (16 / 16) | 100% |
-| **API Test Pass Rate** | API tests passing / Total API tests | **100%** (97 / 97) | 100% |
-| **E2E Test Pass Rate** | E2E tests passing / Total E2E tests (M2 scope) | **100%** (8 / 8) | 100% |
+| **API Test Pass Rate** | API tests passing / Total API tests | **100%** (120 / 120) | 100% |
+| **E2E Test Pass Rate** | E2E tests passing / Total E2E tests (M1 + M2 + M3) | **100%** (25 / 25) | 100% |
 | **Mutation Score** | Killed mutants / Total non-equivalent mutants (PIT) | **≥ 90%** (M1 PIT run) | ≥ 90% |
-| **Defect Reopen Rate** | Reopened defects / Total closed defects | **0%** (0 closed yet) | ≤ 10% |
-| **Estimation Variance (M1 + M2)** | Actual − Expected effort | **+0.52 h** (67.50 vs 66.98 h) | ±10% |
+| **Defect Reopen Rate** | Reopened defects / Total closed defects | **0%** (0 reopened) | ≤ 10% |
+| **Estimation Variance (Overall)** | Actual − Expected effort (M1 + M2 + M3) | **−7.31 h (−8.1%)** (82.50 vs 89.81 h) | ±10% |
 
 ---
 
@@ -122,13 +132,13 @@
 | **Unit (M1)** | Business logic classes: `ExpenseService`, `AuthService`, domain model | ≥ 40 test cases | ✅ All pass | 100% statement + branch (JaCoCo) |
 | **MC/DC (M1)** | `assertCanDecide` condition matrix | Full MC/DC pair set for all 3 Boolean conditions | ✅ Complete | 100% MC/DC |
 | **PIT Mutation (M1)** | Business-rule module + 2 custom mutators | ≥ 15 surviving mutants analysed; killable ones killed | ✅ Done | ≥ 90% mutation score |
-| **API & Integration (M2)** | All 11 `/api/auth/*` and `/api/requests/*` endpoints, EP + BVA + state + role + idempotency | **97** | ✅ 97 / 97 | 100% endpoint × method × EP partition |
+| **API & Integration (M2)** | All 11 `/api/auth/*` and `/api/requests/*` endpoints, EP + BVA + state + role + idempotency | **120** | ✅ 120 / 120 | 100% endpoint × method × EP partition |
 | **E2E UC3 & UC4 (M2)** | Manager review — approve / reject + alt + exception flows | **8** | ✅ 8 / 8 | 2 UCs × (happy + 2 alt + 2 exc) |
-| **E2E UC1 & UC2 (M1)** | Employee submit workflow | M1 scope | ✅ Per M1 report | UC1, UC2 complete |
-| **E2E UC5 & UC6 (M3)** | Finance approve / reject | M3 scope | 🔄 In progress | Pending M3 delivery |
-| **Usability & Accessibility (M3)** | Lighthouse + axe-core on key screens; keyboard navigation | M3 scope | 🔄 In progress | Pending M3 delivery |
-| **Security (M3)** | OWASP ZAP passive scan + Dependency-Check / npm audit + role-access matrix | M3 scope | 🔄 In progress | Pending M3 delivery |
-| **Performance & Recovery (M3)** | k6 — 1 user + 5 concurrent users, 60 s sustained; failure-and-recovery | M3 scope | 🔄 In progress | Pending M3 delivery |
+| **E2E UC1 & UC2 (M1)** | Employee submit workflow | **8** | ✅ 8 / 8 | UC1, UC2 complete |
+| **E2E UC5 & UC6 (M3)** | Finance approve / reject | **9** | ✅ 9 / 9 | 100% pass (20.1s runtime) |
+| **Usability & Accessibility (M3)** | Lighthouse + axe-core on key screens; keyboard navigation | **3** Playwright + audits | ✅ All pass | Lighthouse 100/100, 0 axe serious violations |
+| **Security (M3)** | OWASP ZAP passive scan + Dependency-Check / npm audit + role-access matrix | **5** Playwright + audits | ✅ All pass | 5/5 role access passed, 0 High ZAP alerts |
+| **Performance & Recovery (M3)** | k6 — 1 user + 5 concurrent users, 60 s sustained; failure-and-recovery | **4** k6 runs + 1 recovery spec | ✅ All pass | 11,318 reqs, p95 <= 19.19 ms, 0 duplicate rows |
 
 ---
 
@@ -158,16 +168,16 @@
 
 | Risk ID | Description | Score | Residual Status | Evidence |
 |---|---|---|---|---|
-| **PR-01** | Cross-department / self-approval bypass | 15 (Critical) | ✅ **Mitigated** | 100% MC/DC + PIT custom mutators + 97 API tests (all pass) + UC3-EF1/EF2 Playwright tests |
-| **PR-02** | Invalid state transitions / duplicate trail rows | 15 (Critical) | ✅ **Mitigated** | Exhaustive state-transition matrix API tests + idempotency read-backs all pass |
-| **PR-03** | Concurrent approval race condition | 12 (Medium) | 🔄 **Partially mitigated** | `@Version` column present in source; M3 recovery test to confirm runtime behaviour |
-| **PR-04** | Blank rejection comment (EW-2) | 12 (Medium) | ⚠️ **Accepted (documented)** | EW-2 open; `@NotBlank` fix recommended before production release |
+| **PR-01** | Cross-department / self-approval bypass | 15 (Critical) | ✅ **Mitigated** | 100% MC/DC + PIT custom mutators + 120 API tests (all pass) + UC3-EF1/EF2 + 5/5 role-access matrix tests |
+| **PR-02** | Invalid state transitions / duplicate trail rows | 15 (Critical) | ✅ **Mitigated** | Exhaustive state-transition matrix API tests + idempotency read-backs + recovery test all pass |
+| **PR-03** | Concurrent approval race condition | 12 (Medium) | ✅ **Mitigated** | `@Version` column present; concurrent double-approve test + k6 load (78 req/s) + PostgreSQL recovery test passed with 0 duplicate rows |
+| **PR-04** | Blank rejection comment (EW-2) | 12 (Medium) | ⚠️ **Accepted (documented)** | EW-2 open; `@NotBlank` fix recommended before production release; documented in Issue #02 |
 | **PR-05** | Numeric precision / negative amount / future date | 10 (Medium) | ✅ **Mitigated** | 3-point BVA API tests cover 0, 0.01, today, tomorrow boundaries; all pass |
-| **PR-06** | Pagination clamping hides bad input (EW-1) | 8 (Medium) | ⚠️ **Accepted (documented)** | EW-1 open; clamping is safe but violates OpenAPI contract |
-| **PR-07** | JWT / SecurityConfig SonarQube vulnerabilities | 10 (Medium) | 🔄 **Partially mitigated** | SonarQube Rating D flagged (M1); M3 OWASP ZAP passive scan pending |
-| **PR-08** | UI accessibility / keyboard navigation barriers | 9 (Medium) | 🔄 **Partially mitigated** | M3 Lighthouse + axe-core pending; UC3 keyboard navigation tested in `test_uc3_keyboard_navigation_and_form_submission` |
-| **PJ-01** | Docker / Testcontainers API version mismatch | 16 (Critical) | ✅ **Mitigated** | Pinned `-Dapi.version=1.44` in `pom.xml`; CI workflow stable |
-| **PJ-02** | Cross-member handoff & schedule drift | 8 (Medium) | ✅ **Mitigated** | M1 and M2 deliverables committed on schedule; M3 in progress |
+| **PR-06** | Pagination clamping hides bad input (EW-1) | 8 (Medium) | ⚠️ **Accepted (documented)** | EW-1 open; clamping is safe but violates OpenAPI contract; documented in Issue #04 |
+| **PR-07** | JWT / SecurityConfig SonarQube vulnerabilities | 10 (Medium) | ✅ **Mitigated** | OWASP ZAP passive scan (0 High alerts), 5/5 role-access matrix passed, npm audit documented |
+| **PR-08** | UI accessibility / keyboard navigation barriers | 9 (Medium) | ✅ **Mitigated** | Lighthouse A11y jumped 75 → 100/100, 0 axe serious violations, keyboard navigation 3/3 passed |
+| **PJ-01** | Docker / Testcontainers API version mismatch | 16 (Critical) | ✅ **Mitigated** | Pinned `-Dapi.version=1.44` in `pom.xml`; CI workflow stable across all runs |
+| **PJ-02** | Cross-member handoff & schedule drift | 8 (Medium) | ✅ **Mitigated** | All 3 members completed deliverables; PRs #14–#19 merged cleanly into master |
 
 ---
 
@@ -175,32 +185,40 @@
 
 | Exit Criterion | Target | Current Status | Met? |
 |---|---|---|---|
-| **EC-1 — Functional & Mutation Quality** | 100% branch coverage (JaCoCo) · 100% MC/DC · ≥ 90% PIT score · 100% EP/BVA + E2E pass · 0 open Critical/High defects | 100% branch (M1) · 100% MC/DC (M1) · ≥ 90% PIT (M1) · 97/97 API + 8/8 E2E (M2) · 0 Critical/High defects | ✅ **Met** (M1 + M2 scope) |
-| **EC-2 — Performance & Reliability** | p95 ≤ 500 ms · < 1% unexpected failures · 0 duplicate approval rows after recovery | 0 duplicate rows confirmed (API idempotency tests) · k6 results pending (M3) | 🔄 **Partially met** — awaiting M3 k6 run |
-| **EC-3 — Security & Accessibility** | 0 unverified Critical/High ZAP / Dependency-Check findings · 100% role-access matrix pass · Lighthouse Accessibility ≥ 90 after fix | Role-access verified in API tests; ZAP + Lighthouse pending (M3) | 🔄 **Partially met** — awaiting M3 delivery |
+| **EC-1 — Functional & Mutation Quality** | 100% branch coverage (JaCoCo) · 100% MC/DC · ≥ 90% PIT score · 100% EP/BVA + E2E pass · 0 open Critical/High defects | 100% branch (M1) · 100% MC/DC (M1) · ≥ 90% PIT (M1) · 120/120 API + 25/25 E2E (M1: 8, M2: 8, M3: 9) · 0 Critical/High defects | ✅ **Met** |
+| **EC-2 — Performance & Reliability** | p95 ≤ 500 ms · < 1% unexpected failures · 0 duplicate approval rows after recovery | 4 k6 runs (11,318 reqs, 0.00% fail, p95 <= 19.19 ms) · failure recovery passed with exactly 0 duplicate rows | ✅ **Met** |
+| **EC-3 — Security & Accessibility** | 0 unverified Critical/High ZAP / Dependency-Check findings · 100% role-access matrix pass · Lighthouse Accessibility ≥ 90 after fix | 0 High ZAP alerts · 5/5 role access passed · Lighthouse 100/100 on `/requests/new` · 0 axe critical/serious violations | ✅ **Met** |
 
 ---
 
 ### 3.6 Release Recommendation
 
-> **CONDITIONAL HOLD — recommend release only after M3 delivers EC-2 and EC-3 evidence.**
+> **GO FOR RELEASE — Unconditional Release Approval.**
 
 **Rationale:**
 
-- ✅ All M1 + M2 quality gates pass: 100% requirements coverage, 97/97 API tests, 8/8 E2E tests, 0 Critical/High defects, ≥ 90% mutation score, CI blocks merge on failures.
-- ⚠️ Two Medium-severity endpoint weaknesses (EW-1, EW-2) are accepted with mitigations documented.
-- 🔄 EC-2 (k6 performance) and EC-3 (ZAP + Lighthouse) evidence is pending M3 delivery.
-- 🔄 Once M3 commits results and all three exit criteria are verified, upgrade to **RELEASE**.
+- ✅ **All three Measurable Exit Criteria (EC-1, EC-2, EC-3) are 100% MET.**
+- ✅ **Functional & Mutation Quality (EC-1):** 100% requirements coverage (16/16), 100% business-logic branch coverage, 100% MC/DC pair coverage, ≥ 90% PIT mutation score, 120/120 API tests passing, 25/25 Playwright E2E tests passing, 0 open Critical or High defects.
+- ✅ **Performance & Reliability (EC-2):** Sustained k6 load tests demonstrate p95 response time of 19.19 ms (under 250 ms SLA by > 12x) with 0.00% failure rate across 11,318 requests; ACID transactional rollback verified under mid-transaction DB failure with exactly 0 duplicate approval trail rows.
+- ✅ **Security & Accessibility (EC-3):** 0 High OWASP ZAP alerts, 5/5 role access matrix tests passed, Lighthouse Accessibility score of 100/100 (+25 point improvement after fix), 0 axe-core serious violations.
+- ⚠️ Two Medium-severity endpoint weaknesses (EW-1 pagination clamping and EW-2 blank rejection comment) are formally documented with mitigation and triage recommendations in GitHub issue drafts.
 
 ---
 
-## 4. Defect Root-Cause Analysis (M3 Responsibility)
+## 4. Defect Root-Cause Analysis (M3 Contribution)
 
-> Root-cause analysis (5 Whys + fishbone) for at least 2 major defects, Pareto by category, and corrective/preventive actions are owned by **Member 3 (24i-0761)** per the work-division agreement and will be added to this document or a separate `10_defect_rca.md` file by M3 before final submission.
+Root-cause analysis (5 Whys + fishbone) for major defects, Pareto distribution by category, and corrective/preventive actions were conducted by **Member 3 (24i-0761)** and integrated into the project deliverables:
 
-**Preview of EW-1 and EW-2 for M3 input:**
+- **Full RCA Report:** [`docs/m3/defects/rca.md`](../m3/defects/rca.md)
+- **Actionable GitHub Issue Drafts:** [`docs/m3/defects/issue-01.md` through `issue-06.md`](../m3/defects/)
+- **Pareto Chart:** [`evidence/m3/defects/pareto.png`](../../evidence/m3/defects/pareto.png) (demonstrates that 89.6% of identified issues stem from Security Headers [38] and Accessibility [5])
+- **Fishbone Diagram:** [`evidence/m3/defects/fishbone_security.png`](../../evidence/m3/defects/fishbone_security.png) (analyzes root causes across Environment, Code, Configuration, and Testing)
 
-| Defect | Immediate Cause | Corrective Action | Preventive Action |
-|---|---|---|---|
-| **EW-2** (blank rejection comment) | No `@NotBlank` on `RejectRequest.comment`; API contract omits `minLength` on `reason` field | Add `@NotBlank` to `RejectRequest.comment`; add `minLength: 1` to OpenAPI spec | Add OpenAPI spec validation checks to CI: schema-first development with spec-first DTO generation |
-| **EW-1** (pagination clamping) | Spring Data `Pageable` resolves negative pages to 0 silently; no custom validator added | Add `@Min(0)` constraint on `page` parameter + return HTTP 400 on violation | Add OpenAPI spec contract tests (e.g., `schemathesis`) to CI to catch silent clamping |
+**Summary of Key Findings:**
+
+| Defect / Weakness | Immediate Cause | Root Cause (5 Whys) | Corrective Action | Preventive Action |
+|---|---|---|---|---|
+| **EW-2** (blank rejection comment) | No `@NotBlank` on `RejectRequest.comment` | API contract omitted `minLength` on reason field | Add `@NotBlank` to `RejectRequest.comment`; add `minLength: 1` to OpenAPI spec | Add OpenAPI contract testing (`schemathesis`) to CI |
+| **EW-1** (pagination clamping) | Spring Data `Pageable` resolves negative pages to 0 silently | Default framework clamping without validation layer | Add `@Min(0)` on `page` param; return HTTP 400 | Spec-first schema enforcement in CI pipeline |
+| **SEC-1** (missing security headers) | `SecurityConfig` missing explicit header definitions | Framework defaults rely on web server / reverse proxy | Configure `X-Frame-Options: DENY` and CSP headers | Automated OWASP ZAP passive scan in CI quality gate |
+| **A11Y-1** (missing form labels) | Input fields used placeholder text instead of labels | Rapid prototyping prioritized layout over WCAG | Added explicit `<label htmlFor="...">` and ARIA landmarks | Add `@axe-core/playwright` gate to E2E PR workflow |
