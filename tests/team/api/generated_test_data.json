@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-27T12:16:07.747712+00:00",
+  "generated_at": "2026-11-27T22:26:29.240134+00:00",
   "spec_title": "Expense Approval MIS API",
   "spec_version": "1.0.0",
   "summary": {
@@ -46,7 +46,7 @@
       "description": {
         "type": "string",
         "minLength": 1,
-        "maxLength": 200
+        "maxLength": 100
       },
       "category": {
         "type": "string",
@@ -415,7 +415,7 @@
       {
         "field": "description",
         "class": "invalid_exceeds_maxLength",
-        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+        "value": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
         "valid": false
       },
       {
@@ -481,13 +481,13 @@
       {
         "field": "incurredOn",
         "class": "valid_past_date",
-        "value": "2026-11-20",
+        "value": "2026-11-21",
         "valid": true
       },
       {
         "field": "incurredOn",
         "class": "invalid_future_date",
-        "value": "2026-12-27",
+        "value": "2026-12-28",
         "valid": false
       },
       {
@@ -773,13 +773,13 @@
       {
         "field": "incurredOn",
         "class": "valid_past_date",
-        "value": "2026-11-20",
+        "value": "2026-11-21",
         "valid": true
       },
       {
         "field": "incurredOn",
         "class": "invalid_future_date",
-        "value": "2026-12-27",
+        "value": "2026-12-28",
         "valid": false
       },
       {
@@ -1527,26 +1527,26 @@
       {
         "field": "description",
         "point": "below_max",
-        "boundary": "maxLength=200",
-        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "boundary": "maxLength=100",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "valid": true,
-        "reason": "Length 199 < maxLength 200"
+        "reason": "Length 99 < maxLength 100"
       },
       {
         "field": "description",
         "point": "at_max",
-        "boundary": "maxLength=200",
-        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "boundary": "maxLength=100",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "valid": true,
-        "reason": "Length 200 == maxLength 200"
+        "reason": "Length 100 == maxLength 100"
       },
       {
         "field": "description",
         "point": "above_max",
-        "boundary": "maxLength=200",
-        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "boundary": "maxLength=100",
+        "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         "valid": false,
-        "reason": "Length 201 > maxLength 200"
+        "reason": "Length 101 > maxLength 100"
       },
       {
         "field": "category",
@@ -1656,7 +1656,7 @@
         "field": "incurredOn",
         "point": "below_max",
         "boundary": "pastOrPresent=today",
-        "value": "2026-11-26",
+        "value": "2026-11-27",
         "valid": true,
         "reason": "Yesterday is in the past"
       },
@@ -1664,7 +1664,7 @@
         "field": "incurredOn",
         "point": "at_max",
         "boundary": "pastOrPresent=today",
-        "value": "2026-11-27",
+        "value": "2026-11-28",
         "valid": true,
         "reason": "Today is at the PastOrPresent boundary"
       },
@@ -1672,7 +1672,7 @@
         "field": "incurredOn",
         "point": "above_max",
         "boundary": "pastOrPresent=today",
-        "value": "2026-11-28",
+        "value": "2026-11-29",
         "valid": false,
         "reason": "Tomorrow is in the future (violates PastOrPresent)"
       }

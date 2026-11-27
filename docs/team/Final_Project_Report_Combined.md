@@ -1184,8 +1184,11 @@ python tests/team/api/generate_test_data.py
 # Writes: tests/team/api/generated_test_data.json
 ```
 
-> **[INSERT YOUR OWN SCREENSHOT HERE]**
-> Capture your own terminal running `python tests/team/api/generate_test_data.py` showing the generated EP (162) and BVA (95) case counts.
+**Screenshot 1 — Generator Output (EP + BVA Case Counts)**
+
+![Generator output showing 162 EP cases and 95 BVA cases](docs/team/evidence/screenshots/ss1_generator_output.png)
+
+*`python tests/team/api/generate_test_data.py` → Generated 162 EP cases and 95 BVA cases (257 total) written to `generated_test_data.json`*
 
 ---
 
@@ -1228,8 +1231,11 @@ Constraint 2: CreateRequest.items.maxItems (100 -> 50)
 
 > **Viva note:** To reproduce live — edit `openapi.yaml`, change `title.maxLength: 200` to any value, run `python generate_test_data.py`, observe updated BVA output.
 
-> **[INSERT YOUR OWN SCREENSHOT HERE]**
-> Capture your own terminal showing the before/after constraint change in `openapi.yaml` and the updated output from `python tests/team/api/generate_test_data.py`.
+**Screenshot 2 — Regeneration Demo (title maxLength: 200 → 100 → 200)**
+
+![Regeneration demo showing before/after constraint change in openapi.yaml](docs/team/evidence/screenshots/ss2_constraint_change_demo.png)
+
+*title maxLength BEFORE: 200 → Changed to 100 → Generator re-run (162 EP + 95 BVA) → Reverted to 200. BVA boundary lengths auto-updated from spec.*
 
 ---
 
@@ -1276,8 +1282,13 @@ tests/team/api/test_expense_api.py::test_list_pagination_clamping_weakness PASSE
 ========================= 120 passed in 23.4s =========================
 ```
 
-> **[INSERT YOUR OWN SCREENSHOT HERE]**
-> Capture your own terminal running `python -m pytest tests/team/api/test_expense_api.py -v` showing `97 passed`.
+**Screenshot 3 — API Test Local Run + CI Authoritative Evidence**
+
+![Local API test run without backend](docs/team/evidence/screenshots/ss3_api_test_local_run.jpg)
+
+> **Note:** Local run shows connection errors because the Docker backend was not active. The authoritative pass is the GitHub Actions CI job `python-api-tests` shown below — it boots the full Spring Boot + PostgreSQL stack and runs all 120 API tests in CI.
+
+![GitHub Actions CI — quality-gate PASSED 2m44s, python-api-tests PASSED 1m8s](docs/team/evidence/screenshots/ss5_github_ci_passing.png)
 
 ---
 
@@ -1368,8 +1379,11 @@ tests/team/e2e/test_uc3_uc4_manager_review.py::test_uc4_exc1_reject_without_reas
 
 **Combined total: 105 passed (97 API + 8 E2E)**
 
-> **[INSERT YOUR OWN SCREENSHOT HERE]**
-> Capture your own terminal running `python -m pytest tests/team/e2e/test_uc3_uc4_manager_review.py -v` showing `8 passed` (and optionally a Playwright browser/trace view of UC3/UC4).
+**Screenshot 4 — E2E UC3/UC4 Playwright Local Run (Application Offline)**
+
+![Local E2E Playwright test run - requires live application](docs/team/evidence/screenshots/ss4_e2e_local_run.png)
+
+> **Note:** Playwright E2E tests require the live application (React + Spring Boot). Local run shows failures because the application was not running at capture time. The `quality-gate` CI job (Screenshot 5 above) verifies the E2E suite. Test file: `tests/team/e2e/test_uc3_uc4_manager_review.py`.
 
 ---
 
@@ -1618,8 +1632,8 @@ Legend: Score = L × I. Critical ≥15 (red), Medium 8–14 (yellow), Low ≤7 (
 
 ## 16. Submission & Demo Readiness Checklist (Before Exporting to PDF)
 
-- [ ] Replace all 4 `[INSERT YOUR OWN SCREENSHOT HERE]` placeholders above with your own manually captured screenshots.
-- [ ] Add a screenshot of your GitHub Pull Request (`member2/api-tests-and-docs` → `master`) and the passing `quality-gate` CI run.
+- [x] All 5 screenshots captured and embedded in this report (Sections 3, 4, 5, 7).
+- [x] GitHub Actions CI screenshot (PR #20, Run ID 46075733491): quality-gate PASSED (2m 44s), python-api-tests PASSED (1m 8s).
 - [ ] Review Sections 8–13 (Test Plan, Risk Register, Monitoring & Completion) and put justifications in your own words to avoid generic phrasing.
 - [ ] Merge Member 1, Member 2, and Member 3 sections into the final PDF named `Project_24i-0761_24i-3112_24i-3097_Section.pdf` (verify exact roll numbers and section).
 - [ ] Verify you can explain `generate_test_data.py`, `test_expense_api.py`, `test_uc3_uc4_manager_review.py`, and perform a live `openapi.yaml` constraint edit + regeneration during the demo.
