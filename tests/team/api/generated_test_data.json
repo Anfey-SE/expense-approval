@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T06:37:07.816174+00:00",
+  "generated_at": "2026-11-27T12:16:07.747712+00:00",
   "spec_title": "Expense Approval MIS API",
   "spec_version": "1.0.0",
   "summary": {
@@ -481,13 +481,13 @@
       {
         "field": "incurredOn",
         "class": "valid_past_date",
-        "value": "2026-11-19",
+        "value": "2026-11-20",
         "valid": true
       },
       {
         "field": "incurredOn",
         "class": "invalid_future_date",
-        "value": "2026-12-26",
+        "value": "2026-12-27",
         "valid": false
       },
       {
@@ -773,13 +773,13 @@
       {
         "field": "incurredOn",
         "class": "valid_past_date",
-        "value": "2026-11-19",
+        "value": "2026-11-20",
         "valid": true
       },
       {
         "field": "incurredOn",
         "class": "invalid_future_date",
-        "value": "2026-12-26",
+        "value": "2026-12-27",
         "valid": false
       },
       {
@@ -1656,7 +1656,7 @@
         "field": "incurredOn",
         "point": "below_max",
         "boundary": "pastOrPresent=today",
-        "value": "2026-11-25",
+        "value": "2026-11-26",
         "valid": true,
         "reason": "Yesterday is in the past"
       },
@@ -1664,7 +1664,7 @@
         "field": "incurredOn",
         "point": "at_max",
         "boundary": "pastOrPresent=today",
-        "value": "2026-11-26",
+        "value": "2026-11-27",
         "valid": true,
         "reason": "Today is at the PastOrPresent boundary"
       },
@@ -1672,7 +1672,7 @@
         "field": "incurredOn",
         "point": "above_max",
         "boundary": "pastOrPresent=today",
-        "value": "2026-11-27",
+        "value": "2026-11-28",
         "valid": false,
         "reason": "Tomorrow is in the future (violates PastOrPresent)"
       }
