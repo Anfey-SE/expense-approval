@@ -4,7 +4,7 @@
 **To:** Member 2 (roll no. 24i-3097) — Shared Test Management Lead  
 **Date:** November 2026  
 **Branch:** `member3/usability-security-performance-uc5-uc6`  
-**Effort Hours:** HOURS: to be filled by me  
+**Effort Hours:** HOURS: 15 hours
 
 ---
 
@@ -64,6 +64,6 @@ Member 3 has completed all assigned deliverables for the university Software Qua
 
 ## 4. Effort Hours & Personal Contributions
 
-- **Effort Hours:** HOURS: to be filled by me
+- **Effort Hours:** HOURS: 15 hours
 - **AI Tool Tracking:** Completely logged in [`docs/m3/ai-use-record.md`](ai-use-record.md).
 - **Full Assignment Prompts:** Recorded in [`docs/m3/prompts.md`](prompts.md).
