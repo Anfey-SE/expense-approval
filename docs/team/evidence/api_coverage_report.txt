@@ -1,0 +1,31 @@
+======================================================================
+API COVERAGE REPORT — Member 2 (24i-3097)
+======================================================================
+
+Endpoint coverage : 10/10 = 100.0%
+Status-code coverage : 25/40 = 62.5%
+Query-param coverage : 3/3 = 100.0%
+
+----------------------------------------------------------------------
+UNCOVERED ENDPOINTS (not hit at all):
+  None — All 10 endpoints defined in openapi.yaml are exercised.
+
+----------------------------------------------------------------------
+UNCOVERED STATUS CODES (endpoint hit but status code never triggered):
+  POST   /api/auth/login  — missing: [400]
+  POST   /api/auth/register  — missing: [400]
+  POST   /api/requests  — missing: [401]
+  POST   /api/requests/{id}/approve  — missing: [400, 401, 404]
+  POST   /api/requests/{id}/reject  — missing: [400, 401, 404]
+  POST   /api/requests/{id}/submit  — missing: [401, 404]
+  PUT    /api/requests/{id}  — missing: [400, 401, 404]
+
+----------------------------------------------------------------------
+UNCOVERED QUERY PARAMS (param never passed in a request):
+  None — All 3 query parameters ('page', 'size', 'status') are exercised in GET /api/requests.
+
+----------------------------------------------------------------------
+OBSERVED BUT NOT IN SPEC (extra paths the tests hit):
+  None
+
+======================================================================
