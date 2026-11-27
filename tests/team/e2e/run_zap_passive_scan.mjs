@@ -128,50 +128,39 @@ async function run() {
 
   // Logout Alice
   await page.getByRole("button", { name: "Log out" }).click();
-  await page.waitForTimeout(2000);
-  if (!page.url().includes("/login")) {
-    await page.goto(`${BASE_URL}/login`);
-  }
-
-  // Extract ID from reqUrl
-  const reqId = reqUrl.match(/\/requests\/(\d+)/)[1];
+  await page.waitForURL(`${BASE_URL}/login`);
 
   // Workflow 2: Manager reviews & approves
   console.log("Driving Workflow 2 (Manager review) through ZAP proxy...");
   await page.locator('input[type="email"]').fill("bob@acme.com");
   await page.locator('input[type="password"]').fill("password123");
   await page.getByRole("button", { name: "Sign in" }).click();
-  await page.waitForTimeout(3000);
+  await page.waitForURL(new RegExp(`${BASE_URL}`));
 
-  // Directly click the Approve button on the row in Bob's inbox table
-  const bobInboxApprove = page.getByRole("button", { name: "Approve" }).first();
-  await bobInboxApprove.waitFor({ state: "visible", timeout: 20000 });
-  await bobInboxApprove.click();
-  await page.waitForTimeout(3000);
+  if (page.url() !== reqUrl) {
+    await page.goto(reqUrl);
+  }
+  await page.locator("input[maxlength='500']").fill("Bob approved via ZAP proxy");
+  await page.getByRole("button", { name: "Approve" }).click();
+  await page.waitForSelector(".status-badge, body:has-text('manager approved')");
 
   // Logout Bob
   await page.getByRole("button", { name: "Log out" }).click();
-  await page.waitForTimeout(2000);
-  if (!page.url().includes("/login")) {
-    await page.goto(`${BASE_URL}/login`);
-  }
+  await page.waitForURL(`${BASE_URL}/login`);
 
   // Workflow 2 part 2: Finance reviews & approves
   console.log("Driving Workflow 2 (Finance review) through ZAP proxy...");
   await page.locator('input[type="email"]').fill("fiona@acme.com");
   await page.locator('input[type="password"]').fill("password123");
   await page.getByRole("button", { name: "Sign in" }).click();
-  await page.waitForTimeout(3000);
+  await page.waitForURL(new RegExp(`${BASE_URL}`));
 
-  // Directly click the Approve button on the row in Fiona's inbox table
-  const fionaInboxApprove = page.getByRole("button", { name: "Approve" }).first();
-  await fionaInboxApprove.waitFor({ state: "visible", timeout: 20000 });
-  await fionaInboxApprove.click();
-  await page.waitForTimeout(3000);
-
-  // Logout Fiona
-  await page.getByRole("button", { name: "Log out" }).click();
-  await page.waitForTimeout(2000);
+  if (page.url() !== reqUrl) {
+    await page.goto(reqUrl);
+  }
+  await page.locator("input[maxlength='500']").fill("Fiona approved via ZAP proxy");
+  await page.getByRole("button", { name: "Approve" }).click();
+  await page.waitForSelector(".status-badge, body:has-text('finance approved')");
 
   await browser.close();
   console.log("Workflows completed.");
