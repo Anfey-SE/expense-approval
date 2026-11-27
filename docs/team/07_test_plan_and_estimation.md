@@ -73,11 +73,11 @@ Formula: **Expected Effort $E = \frac{O + 4M + P}{6}$** (hours), **Std Dev $SD =
 | OpenAPI Spec + EP/BVA Generator + Demo | M2 | 5.0 | 7.0 | 11.0 | 7.33 | 7.00 | −0.33 |
 | API & Integration Tests (pytest) | M2 | 6.0 | 8.0 | 12.0 | 8.33 | 8.00 | −0.33 |
 | Test Plan, Risk, Monitoring, Completion | M2 | 6.0 | 8.0 | 12.0 | 8.33 | 8.50 | +0.17 |
-| E2E Use Cases (UC1–UC6, 2 each) | All | 9.0 | 12.0 | 18.0 | 12.50 | 12.00 | −0.50 |
-| Usability & Accessibility (LH + axe) | M3 | 5.0 | 7.0 | 11.0 | 7.33 | — (in progress) | — |
-| Security & Performance (ZAP + k6) | M3 | 7.0 | 10.0 | 15.0 | 10.33 | — (in progress) | — |
-| Defect Management & RCA | M3 | 3.0 | 5.0 | 8.0 | 5.17 | — (in progress) | — |
-| **Total (M1 + M2 completed areas)** | **M1+M2** | **47.0** | **65.0** | **99.0** | **66.98** | **67.50 (M1+M2)** | **+0.52** |
+| E2E Use Cases (UC1–UC6, 2 each) | All | 9.0 | 12.0 | 18.0 | 12.50 | 14.00 | +1.50 |
+| Usability & Accessibility (LH + axe) | M3 | 5.0 | 7.0 | 11.0 | 7.33 | 4.50 | −2.83 |
+| Security & Performance (ZAP + k6) | M3 | 7.0 | 10.0 | 15.0 | 10.33 | 5.50 | −4.83 |
+| Defect Management & RCA | M3 | 3.0 | 5.0 | 8.0 | 5.17 | 3.00 | −2.17 |
+| **Grand Total (M1 + M2 + M3 Complete)** | **All** | **62.0** | **87.0** | **133.0** | **89.81** | **82.50** | **−7.31 (−8.1%)** |
 
 ---
 
