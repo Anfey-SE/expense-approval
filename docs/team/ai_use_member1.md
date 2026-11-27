@@ -1,6 +1,6 @@
 # AI-Use Log — Member 1 (24i-3112)
 
-This log records every task assistance from AI (Antigravity), including the exact user prompt, tool invoked, purpose, tool output, and what was verified or changed, as required by project integrity rules.
+This log records every task assistance from AI (AI Assistant), including the exact user prompt, tool invoked, purpose, tool output, and what was verified or changed, as required by project integrity rules.
 
 ---
 
@@ -111,7 +111,7 @@ No missed lines or branches on any of the 4 target classes. The check gate passe
 
 | Field | Value |
 |---|---|
-| Tool | Antigravity (Google DeepMind) |
+| Tool | Generative AI Assistant (LLM) |
 | Date | 2026-11-25 |
 | Purpose | Write `docs/team/01_system_and_scope.md`: project identity, install commands, DB, roles, requirements, and 4 business rules, all with verbatim code snippets and file+line references |
 | Output | 278-line Markdown document covering project identity, install/start/reset commands, DB schema (Flyway V1+V2), role enforcement (HTTP + service layer), 13 requirements (REQ-A1–A4, REQ-E1–E8, REQ-AP1–AP4), and 4 business rules (BR1–BR4) |
@@ -126,7 +126,7 @@ No missed lines or branches on any of the 4 target classes. The check gate passe
 
 | Field | Value |
 |---|---|
-| Tool | Antigravity (Google DeepMind) |
+| Tool | Generative AI Assistant (LLM) |
 | Date | 2026-11-25 |
 | Purpose | Write `docs/team/03_mcdc_and_cfg.md`: CFG of `assertCanDecide`, cyclomatic complexity (both E−N+2 and decisions+1), full MCC table, MC/DC independence pairs mapped to real test method names, BR2/BR4 decision tables, BR3 state transition table |
 | Output | 321-line Markdown document (after Task 5 CFG reconciliation) with ASCII CFG, 11-node/15-edge inventory, V(G)=6 by both formulas (`1 + 4 ifs + 1 && = 6` and `15 − 11 + 2 = 6`), 7-row MCC table, MC/DC pairs for D1/D2/D3-A/D3-B/D4 each referencing exact test method names and line numbers in `ExpenseServiceWhiteBoxTest.java`, and three tables (BR2 decision, BR4 decision, BR3 state transitions) |
@@ -142,7 +142,7 @@ No missed lines or branches on any of the 4 target classes. The check gate passe
 
 | Field | Value |
 |---|---|
-| Tool | Antigravity (Google DeepMind) |
+| Tool | Generative AI Assistant (LLM) |
 | Date | 2026-11-25 |
 | Purpose | Run SonarQube Community scan on the project, capture all metrics (bugs, vulnerabilities, code smells, hotspots, coverage, complexity, duplication, ratings, tech debt, quality gate), and write `docs/team/02_static_analysis.md` explaining each metric in plain words |
 | Output | SonarQube Community Build 26.11.0.134175 running on Docker port 9000. `sonar-maven-plugin` 5.9.0.7382 added to `pom.xml`. Final clean scan completed (CE task `07ae8f77-c571-4640-97c6-7253374e97ec`, SUCCESS). All metrics captured via REST API and saved to `docs/team/evidence/05_sonar_measures.txt` and `05_sonar_scan.txt`. `02_static_analysis.md` written (172 lines after Task 5 Correction Pass). |
@@ -157,7 +157,7 @@ No missed lines or branches on any of the 4 target classes. The check gate passe
 
 | Field | Value |
 |---|---|
-| Tool | Antigravity (Google DeepMind) |
+| Tool | Generative AI Assistant (LLM) |
 | Date | 2026-11-25 |
 | Purpose | Fix three discrepancies identified before starting Task 6: (1) wipe `target/` with `mvnw clean` before running team-only tests so `jacoco.exec` does not append onto the 107-test run, (2) verify whether SonarQube exposes per-method complexity and replace estimated per-method figures with real file-level measures + recount `assertCanDecide` by hand as `1 + 4 ifs + 1 && = 6`, (3) explicitly state which tests produced coverage fed to Sonar and verify zero secrets/tokens are committed. |
 | Output | Re-ran `./mvnw clean test jacoco:report -Dtest="*WhiteBoxTest"` (75 tests, 0 failures) and `mvnw jacoco:check` (`All coverage checks have been met.`), then re-ran `mvnw sonar:sonar` (CE task `07ae8f77-c571-4640-97c6-7253374e97ec`, SUCCESS). Saved clean outputs in `docs/team/evidence/06_team_only_clean_jacoco.txt`, `06_team_only_clean_jacoco_check.txt`, `06_team_only_clean_jacoco.xml`, and updated `05_sonar_measures.txt` & `05_sonar_scan.txt`. Updated `03_mcdc_and_cfg.md`, `02_static_analysis.md`, and `viva_notes_member1.md`. |
@@ -172,7 +172,7 @@ No missed lines or branches on any of the 4 target classes. The check gate passe
 
 | Field | Value |
 |---|---|
-| Tool | Antigravity (Google DeepMind) |
+| Tool | Generative AI Assistant (LLM) |
 | Date | 2026-11-25 |
 | Purpose | Configure PIT (`pitest-maven:1.30.2` + `pitest-junit5-plugin:1.2.3`) against team tests only, build 2 custom business-rule mutators in `tools/pit-custom-mutators/`, run `DEFAULTS`, `DEFAULTS+custom`, `STRONGER+custom`, and `ALL+custom`, classify >= 15 survivors, write tests to kill killable survivors, and report before/after scores in `docs/team/04_mutation_testing.md`. |
 | Output | (1) `tools/pit-custom-mutators/`: `DropDepartmentCheckMutator` (`DROP_DEPARTMENT_CHECK`, BR2) and `SwapApproverRoleMutator` (`SWAP_APPROVER_ROLE`, BR3/BR4) registered via `ServiceLoader`, with `Implementation-Title`/`Version`/`Vendor` manifest entries. (2) Measured scores before fix: `DEFAULTS` baseline **71/79 (90%)**, `DEFAULTS+custom` **74/82 (90%)** (`DROP_DEPARTMENT_CHECK` 1/1 killed, `SWAP_APPROVER_ROLE` 2/2 killed), `STRONGER+custom` **100/108 (93%)**, extended `ALL+custom` **312/333 (94%)** (19 `SURVIVED` + 2 `NO_COVERAGE`). (3) Classified all 21 non-killed mutants (5 equivalent/unreachable, 16 weak assertions) and added 4 tests bringing team suite to 79 tests. (4) Measured scores after fix: `DEFAULTS+custom` **81/82 (99%)**, `ALL+custom` **328/333 (98%, 99% test strength)**. Written report: `docs/team/04_mutation_testing.md`; raw outputs archived under `docs/team/evidence/07_pit_*` and `docs/team/evidence/pit-*/`. |
@@ -187,7 +187,7 @@ No missed lines or branches on any of the 4 target classes. The check gate passe
 
 | Field | Value |
 |---|---|
-| Tool | Antigravity (Google DeepMind) |
+| Tool | Generative AI Assistant (LLM) |
 | Date | 2026-11-26 |
 | Purpose | Produce full decision tables for `assertCanDecide`, `submit`, and `update` (Task A), full 5-state transition table with gap analysis (Task B), and Jakarta Bean Validation boundary/equivalence unit tests for `ExpenseDtos` (Task C), then verify full team suite + JaCoCo 100% check + PIT (`DEFAULTS` + custom, threshold 95). |
 | Output | Created `docs/team/05_decision_tables.md`, `docs/team/06_state_transitions.md`, `docs/team/07_boundary_tests.md`, and `tests/team/unit/com/sandy/expense/web/dto/ExpenseDtosValidationWhiteBoxTest.java` (41 unit-level boundary tests; named `*WhiteBoxTest` so `-Dtest="*WhiteBoxTest"` in CI and local runs is identical). Ran `.\mvnw.cmd clean test jacoco:report jacoco:check -Dtest="*WhiteBoxTest" --no-transfer-progress` (**120 tests run, 0 failures, 0 errors**, `All coverage checks have been met.`) and `.\mvnw.cmd test-compile org.pitest:pitest-maven:mutationCoverage "-DmutationThreshold=95" --no-transfer-progress` (**81/82 killed, 99%, BUILD SUCCESS**). |
@@ -202,7 +202,7 @@ No missed lines or branches on any of the 4 target classes. The check gate passe
 
 | Field | Value |
 |---|---|
-| Tool | Antigravity (Google DeepMind) |
+| Tool | Generative AI Assistant (LLM) |
 | Date | 2026-11-26 |
 | Purpose | Demonstrate the CI quality gate on a blocked PR (`demo/blocked-drop-department-check`, PR #3), confirm and fix the `currency = "123"` validation defect (`fix/currency-validation`, PR #5 / Issue #4) with a red Commit 1 followed by a green Commit 2, and archive all CI logs/screenshots in `docs/team/09_blocked_and_fix_pr.md`. |
 | Output | (1) `demo/blocked-drop-department-check` (`34b7179`, PR #3, run `45770054227`): failed `Run team tests with JaCoCo report and 100 % check` (`Tests run: 120, Failures: 3`). (2) `fix/currency-validation` Commit 1 (`7b96f70`, PR #5, run `45794816172`): failed `Run team tests with JaCoCo report and 100 % check` (`Tests run: 121, Failures: 1`, `currency_numeric123_isInvalid`). (3) `fix/currency-validation` Commit 2 (`2252ae8`, merged `0dfa6ce`): added `@Pattern(regexp = "[A-Za-z]{3}")` in `ExpenseDtos.java` + 4 tests (`"@@@"`, `"US1"`, `"usd"`, `"USD"`), passing all CI gates (`125` team tests, `157` full suite, SonarQube `SQE-CI`, PIT `81/82 = 99%`). (4) Archived `10_*`, `11_*`, `12_*` screenshots/logs and wrote `docs/team/09_blocked_and_fix_pr.md` on `docs/evidence-blocked-and-fix-pr`. |
@@ -217,7 +217,7 @@ No missed lines or branches on any of the 4 target classes. The check gate passe
 
 | Field | Value |
 |---|---|
-| Tool | Antigravity (Google DeepMind) |
+| Tool | Generative AI Assistant (LLM) |
 | Date | 2026-11-26 |
 | Purpose | Inspect the real React UI and Spring Boot API, write use case specifications (`UC1_submit_draft.md`, `UC2_create_draft.md`), record the missing edit UI observation (`docs/team/issues/ui_no_edit_form.md`), and automate all 10 flows in Playwright (`tests/team/e2e/`) with display + independent postcondition assertions. |
 | Output | (1) `docs/team/issues/ui_no_edit_form.md`: recorded that `PUT /api/requests/{id}` exists in `ExpenseController.java` L64-70 but has no frontend edit form (covered by Member 2 at API level). (2) `docs/team/uc/UC1_submit_draft.md` (5 flows: `UC1_M`, `UC1_A1`, `UC1_A2`, `UC1_E1`, `UC1_E2`) and `docs/team/uc/UC2_create_draft.md` (5 flows: `UC2_M`, `UC2_A1`, `UC2_A2`, `UC2_E1`, `UC2_E2`). (3) `tests/team/e2e/` (`package.json`, `playwright.config.ts` with `workers: 1` Chromium, `.gitignore`, `tests/helpers.ts`, `tests/uc1-submit.spec.ts`, `tests/uc2-create.spec.ts`). (4) Ran all 10 tests twice against the live app (`localhost:5173` + `localhost:8081`): **10 passed (15.9s)** in `docs/team/evidence/uc/run1.txt` and **10 passed (15.4s)** in `docs/team/evidence/uc/run2.txt`. |
@@ -232,7 +232,7 @@ No missed lines or branches on any of the 4 target classes. The check gate passe
 
 | Field | Value |
 |---|---|
-| Tool | Antigravity (Google DeepMind) |
+| Tool | Generative AI Assistant (LLM) |
 | Date | 2026-11-27 |
 | Purpose | Audit all `docs/team/` numbers and evidence links, update `05_handoff_notes.md`, write `Member1_PDF_Section.md`, archive the exact prompt files in `docs/team/prompts/`, and document both AI tools honestly. |
 | Output | Verified 0 missing evidence files and 5 PR/run URLs; identified and corrected `07_boundary_tests.md` (`41 → 46`, baseline 41 + 5 PR #5 currency tests) and `viva_notes_member1.md` (`120 → 125`); added Sonar scan commit/date and re-measurement note to `02_static_analysis.md`; updated `05_handoff_notes.md` (with verified PIT `81/82 = 99%` run); created `Member1_PDF_Section.md`; archived prompt files under `docs/team/prompts/`. |
@@ -245,7 +245,7 @@ No missed lines or branches on any of the 4 target classes. The check gate passe
 
 | Tool | Role & Purpose | Output Used | What Member 1 Checked or Changed |
 |---|---|---|---|
-| **Antigravity** (Google DeepMind) | Code editing, test generation (white-box unit, DTO boundary, Playwright E2E), Maven/JaCoCo/Sonar/PIT/Playwright execution, documentation, and consistency checks | Unit tests (`tests/team/unit/`), Playwright suite (`tests/team/e2e/`), custom PIT mutators (`tools/pit-custom-mutators/`), CI workflow (`.github/workflows/ci.yml`), and `docs/team/*.md` | Checked all code quotes against real line numbers, ran every test/build/CI command directly, caught and corrected initial hallucinations/mismatches (e.g. `EMPTY_REQUEST`, decision path count `7`, `09_blocked_and_fix_pr.md` log line verification, `07_boundary_tests.md` `41 → 46`). |
-| **Claude** (Anthropic chat assistant) | Used by Member 1 in chat to draft the structured Antigravity prompts, review Antigravity's reports, catch gaps/inconsistencies, and explain SQE concepts | Prompt specifications archived in [`docs/team/prompts/`](prompts/) (`ANTIGRAVITY_PROMPT_MEMBER1.md`, `ANTIGRAVITY_PROMPT_PART2.md`, `ANTIGRAVITY_PROMPT_PART3_USE_CASES.md`, `ANTIGRAVITY_PROMPT_4_5_AND_FOLLOWUP_MESSAGES.md`) | Reviewed every prompt against course requirements and repo state before sending to Antigravity; verified Antigravity's outputs against raw logs and GitHub Actions runs. |
+| **AI Assistant** (Google DeepMind) | Code editing, test generation (white-box unit, DTO boundary, Playwright E2E), Maven/JaCoCo/Sonar/PIT/Playwright execution, documentation, and consistency checks | Unit tests (`tests/team/unit/`), Playwright suite (`tests/team/e2e/`), custom PIT mutators (`tools/pit-custom-mutators/`), CI workflow (`.github/workflows/ci.yml`), and `docs/team/*.md` | Checked all code quotes against real line numbers, ran every test/build/CI command directly, caught and corrected initial hallucinations/mismatches (e.g. `EMPTY_REQUEST`, decision path count `7`, `09_blocked_and_fix_pr.md` log line verification, `07_boundary_tests.md` `41 → 46`). |
+| **Claude** (Anthropic chat assistant) | Used by Member 1 in chat to draft the structured AI Assistant prompts, review AI Assistant's reports, catch gaps/inconsistencies, and explain SQE concepts | Prompt specifications archived in [`docs/team/prompts/`](prompts/) (`ANTIGRAVITY_PROMPT_MEMBER1.md`, `ANTIGRAVITY_PROMPT_PART2.md`, `ANTIGRAVITY_PROMPT_PART3_USE_CASES.md`, `ANTIGRAVITY_PROMPT_4_5_AND_FOLLOWUP_MESSAGES.md`) | Reviewed every prompt against course requirements and repo state before sending to AI Assistant; verified AI Assistant's outputs against raw logs and GitHub Actions runs. |
 
 Smaller follow-up corrections typed in chat are not archived as files.

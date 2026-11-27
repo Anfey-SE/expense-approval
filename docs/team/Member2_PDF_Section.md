@@ -170,7 +170,7 @@ python tests/team/api/generate_test_data.py
 # Writes: tests/team/api/generated_test_data.json
 ```
 
-**Screenshot 1 — Generator Output (EP + BVA Case Counts)**
+#### Figure 1: Automated Test Data Generator Execution (162 EP Cases, 95 BVA Cases)
 
 ![Generator output showing 162 EP cases and 95 BVA cases](docs/team/evidence/screenshots/ss1_generator_output.png)
 
@@ -217,7 +217,7 @@ Constraint 2: CreateRequest.items.maxItems (100 -> 50)
 
 > **Viva note:** To reproduce live — edit `openapi.yaml`, change `title.maxLength: 200` to any value, run `python generate_test_data.py`, observe updated BVA output.
 
-**Screenshot 2 — Regeneration Demo (title maxLength: 200 → 100 → 200)**
+#### Figure 2: OpenAPI Specification Constraint Change and Data Regeneration Demonstration
 
 ![Regeneration demo showing before/after constraint change in openapi.yaml](docs/team/evidence/screenshots/ss2_constraint_change_demo.png)
 
@@ -228,7 +228,7 @@ Constraint 2: CreateRequest.items.maxItems (100 -> 50)
 ## 5. API & Integration Tests
 
 **File:** `tests/team/api/test_expense_api.py`  
-**Result:** ✅ **120 / 120 tests passed**
+**Result:** [Passed] **120 / 120 tests passed**
 
 ### Test Functions and Coverage
 
@@ -268,7 +268,7 @@ tests/team/api/test_expense_api.py::test_list_pagination_clamping_weakness PASSE
 ========================= 120 passed in 23.4s =========================
 ```
 
-**Screenshot 3 — API Test Local Run + CI Authoritative Evidence**
+#### Figure 3: Local API Test Suite Execution and Authoritative CI Verification
 
 ![Local API test run without backend](docs/team/evidence/screenshots/ss3_api_test_local_run.jpg)
 
@@ -337,7 +337,7 @@ tests/team/api/test_expense_api.py::test_list_pagination_clamping_weakness PASSE
 ## 7. Playwright End-to-End Tests — UC3 & UC4
 
 **File:** `tests/team/e2e/test_uc3_uc4_manager_review.py`  
-**Result:** ✅ **8 / 8 tests passed**
+**Result:** [Passed] **8 / 8 tests passed**
 
 | Test | Use Case Flow | What Is Asserted |
 |---|---|---|
@@ -365,11 +365,11 @@ tests/team/e2e/test_uc3_uc4_manager_review.py::test_uc4_exc1_reject_without_reas
 
 **Combined total: 105 passed (97 API + 8 E2E)**
 
-**Screenshot 4 — E2E UC3/UC4 Playwright Local Run (Application Offline)**
+#### Figure 4: Playwright End-to-End Test Execution for Manager Review Workflows (UC3 and UC4)
 
 ![Local E2E Playwright test run - requires live application](docs/team/evidence/screenshots/ss4_e2e_local_run.png)
 
-> **Note:** Playwright E2E tests require the live application (React + Spring Boot). Local run shows failures because the application was not running at capture time. The `quality-gate` CI job (Screenshot 5 above) verifies the E2E suite. Test file: `tests/team/e2e/test_uc3_uc4_manager_review.py`.
+> **Note:** Playwright E2E tests require the live application (React + Spring Boot). Local run shows failures because the application was not running at capture time. The `quality-gate` CI job (Figure 5) verifies the E2E suite. Test file: `tests/team/e2e/test_uc3_uc4_manager_review.py`.
 
 ---
 
@@ -451,25 +451,25 @@ Formula: $E = \frac{O + 4M + P}{6}$ hours
 
 | Req / Rule | Description | Unit Test (M1) | API Test (M2) | E2E (M2) | Status |
 |---|---|---|---|---|---|
-| REQ-A1 | Email uniqueness → 409 | AuthServiceWhiteBoxTest | auth EP tests | — | ✅ Covered |
-| REQ-A2 | Self-registration → EMPLOYEE | AuthServiceWhiteBoxTest | register EP | — | ✅ Covered |
-| REQ-A3 | Optional department | AuthServiceWhiteBoxTest | — | — | ✅ Covered |
-| REQ-A4 | Failed login → 401 | AuthServiceWhiteBoxTest | `test_unauthenticated_requests_rejected` | Login | ✅ Covered |
-| REQ-E1 / BR1 | Items 1–100 | ExpenseServiceWhiteBoxTest | `test_create_request_ep_and_bva` (items BVA) | UC1, UC2 | ✅ Covered |
-| REQ-E2 | Amount > 0, 2dp max | ExpenseServiceWhiteBoxTest | `test_item_input_ep_and_bva` | UC2 | ✅ Covered |
-| REQ-E3 | Date ≤ today | ExpenseServiceWhiteBoxTest | `test_item_input_ep_and_bva` | UC1 | ✅ Covered |
-| REQ-E4 | Currency defaults USD | ExpenseServiceWhiteBoxTest | `test_full_happy_path` | UC1 | ✅ Covered |
-| REQ-E5 | Only requester submits own draft | ExpenseServiceWhiteBoxTest | `test_disallowed_state_transitions_from_every_state` | UC1-EF | ✅ Covered |
-| REQ-E6 / BR3 | Valid state machine | DomainWhiteBoxTest | `test_disallowed_state_transitions_from_every_state` | UC1, UC3, UC4 | ✅ Covered |
-| REQ-E7 / BR1 | Empty items guard | ExpenseServiceWhiteBoxTest | `test_create_request_ep_and_bva` (below_min) | UC1-EF | ✅ Covered |
-| REQ-E8 | Optimistic locking → 409 | ExpenseServiceWhiteBoxTest | Concurrency check | M3 Recovery | ✅ Covered |
-| REQ-AP1 | Only MANAGER/FINANCE approve/reject | ExpenseServiceWhiteBoxTest | `test_br2_and_br4_authorization_rejections` | UC3, UC4 | ✅ Covered |
-| REQ-AP2 / BR4 | Stage role by status | DomainWhiteBoxTest | `test_full_happy_path` | UC3–UC6 | ✅ Covered |
-| REQ-AP3 / BR2 | Same department required | ExpenseServiceWhiteBoxTest (MC/DC) | `test_br2_and_br4_authorization_rejections` | UC3-EF1 | ✅ Covered |
-| REQ-AP4 / BR2 | No self-approval | ExpenseServiceWhiteBoxTest (MC/DC) | `test_br2_and_br4_authorization_rejections` | UC3-EF2 | ✅ Covered |
+| REQ-A1 | Email uniqueness → 409 | AuthServiceWhiteBoxTest | auth EP tests | — | [Passed] Covered |
+| REQ-A2 | Self-registration → EMPLOYEE | AuthServiceWhiteBoxTest | register EP | — | [Passed] Covered |
+| REQ-A3 | Optional department | AuthServiceWhiteBoxTest | — | — | [Passed] Covered |
+| REQ-A4 | Failed login → 401 | AuthServiceWhiteBoxTest | `test_unauthenticated_requests_rejected` | Login | [Passed] Covered |
+| REQ-E1 / BR1 | Items 1–100 | ExpenseServiceWhiteBoxTest | `test_create_request_ep_and_bva` (items BVA) | UC1, UC2 | [Passed] Covered |
+| REQ-E2 | Amount > 0, 2dp max | ExpenseServiceWhiteBoxTest | `test_item_input_ep_and_bva` | UC2 | [Passed] Covered |
+| REQ-E3 | Date ≤ today | ExpenseServiceWhiteBoxTest | `test_item_input_ep_and_bva` | UC1 | [Passed] Covered |
+| REQ-E4 | Currency defaults USD | ExpenseServiceWhiteBoxTest | `test_full_happy_path` | UC1 | [Passed] Covered |
+| REQ-E5 | Only requester submits own draft | ExpenseServiceWhiteBoxTest | `test_disallowed_state_transitions_from_every_state` | UC1-EF | [Passed] Covered |
+| REQ-E6 / BR3 | Valid state machine | DomainWhiteBoxTest | `test_disallowed_state_transitions_from_every_state` | UC1, UC3, UC4 | [Passed] Covered |
+| REQ-E7 / BR1 | Empty items guard | ExpenseServiceWhiteBoxTest | `test_create_request_ep_and_bva` (below_min) | UC1-EF | [Passed] Covered |
+| REQ-E8 | Optimistic locking → 409 | ExpenseServiceWhiteBoxTest | Concurrency check | M3 Recovery | [Passed] Covered |
+| REQ-AP1 | Only MANAGER/FINANCE approve/reject | ExpenseServiceWhiteBoxTest | `test_br2_and_br4_authorization_rejections` | UC3, UC4 | [Passed] Covered |
+| REQ-AP2 / BR4 | Stage role by status | DomainWhiteBoxTest | `test_full_happy_path` | UC3–UC6 | [Passed] Covered |
+| REQ-AP3 / BR2 | Same department required | ExpenseServiceWhiteBoxTest (MC/DC) | `test_br2_and_br4_authorization_rejections` | UC3-EF1 | [Passed] Covered |
+| REQ-AP4 / BR2 | No self-approval | ExpenseServiceWhiteBoxTest (MC/DC) | `test_br2_and_br4_authorization_rejections` | UC3-EF2 | [Passed] Covered |
 
-**Requirements Coverage: 16 / 16 = 100%** ✅  
-**Business Rules Coverage: 4 / 4 = 100%** ✅
+**Requirements Coverage: 16 / 16 = 100%** [Passed]  
+**Business Rules Coverage: 4 / 4 = 100%** [Passed]
 
 ---
 
@@ -538,14 +538,14 @@ Legend: Score = L × I. Critical ≥15 (red), Medium 8–14 (yellow), Low ≤7 (
 
 | Area | Tests | Passed | Coverage | Status |
 |---|---|---|---|---|
-| Unit + MC/DC (M1) | ≥ 40 | ✅ All | 100% branch + 100% MC/DC | ✅ Done |
-| PIT Mutation (M1) | ≥ 15 survivors analysed | ✅ Done | ≥ 90% score | ✅ Done |
-| **API & Integration (M2)** | **97** | **✅ 97** | **100% endpoint × EP partition** | **✅ Done** |
-| **E2E UC3 & UC4 (M2)** | **8** | **✅ 8** | **UC3 + UC4 all flows** | **✅ Done** |
-| E2E UC1 & UC2 (M1) | Per M1 | ✅ Per M1 | UC1, UC2 | ✅ Done |
-| Usability & Accessibility (M3) | — | — | Pending | 🔄 In Progress |
-| Security (M3) | — | — | Pending | 🔄 In Progress |
-| Performance & Recovery (M3) | — | — | Pending | 🔄 In Progress |
+| Unit + MC/DC (M1) | ≥ 40 | [Passed] All | 100% branch + 100% MC/DC | Done [Complete] |
+| PIT Mutation (M1) | ≥ 15 survivors analysed | Done [Complete] | ≥ 90% score | Done [Complete] |
+| **API & Integration (M2)** | **97** | **[Passed] 97** | **100% endpoint × EP partition** | **Done [Complete]** |
+| **E2E UC3 & UC4 (M2)** | **8** | **[Passed] 8** | **UC3 + UC4 all flows** | **Done [Complete]** |
+| E2E UC1 & UC2 (M1) | Per M1 | [Passed] Per M1 | UC1, UC2 | Done [Complete] |
+| Usability & Accessibility (M3) | — | — | Pending | In Progress |
+| Security (M3) | — | — | Pending | In Progress |
+| Performance & Recovery (M3) | — | — | Pending | In Progress |
 
 ### Deviations from Plan
 
@@ -569,9 +569,9 @@ Legend: Score = L × I. Critical ≥15 (red), Medium 8–14 (yellow), Low ≤7 (
 
 | Exit Criterion | Status |
 |---|---|
-| EC-1 (Functional & Mutation) | ✅ **Met** — 100% branch, 100% MC/DC, ≥90% PIT, 97/97 API + 8/8 E2E passing, 0 Critical/High defects |
-| EC-2 (Performance & Reliability) | 🔄 Partially met — idempotency tests confirm 0 duplicate rows; k6 results pending M3 |
-| EC-3 (Security & Accessibility) | 🔄 Partially met — API role-matrix 100% verified; ZAP + Lighthouse pending M3 |
+| EC-1 (Functional & Mutation) | [Passed] **Met** — 100% branch, 100% MC/DC, ≥90% PIT, 97/97 API + 8/8 E2E passing, 0 Critical/High defects |
+| EC-2 (Performance & Reliability) | [In Progress] Partially met — idempotency tests confirm 0 duplicate rows; k6 results pending M3 |
+| EC-3 (Security & Accessibility) | [In Progress] Partially met — API role-matrix 100% verified; ZAP + Lighthouse pending M3 |
 
 ### Release Recommendation
 
@@ -618,8 +618,8 @@ Legend: Score = L × I. Critical ≥15 (red), Medium 8–14 (yellow), Low ≤7 (
 
 ## 16. Submission & Demo Readiness Checklist (Before Exporting to PDF)
 
-- [x] All 5 screenshots captured and embedded in this report (Sections 3, 4, 5, 7).
-- [x] GitHub Actions CI screenshot (PR #20, Run ID 46075733491): quality-gate PASSED (2m 44s), python-api-tests PASSED (1m 8s).
+1. All 5 required experimental and verification screenshots captured and embedded in Sections 3, 4, 5, and 7.
+2. GitHub Actions CI screenshot (Run ID 46075733491) verifies both quality-gate (2m 44s) and python-api-tests (1m 8s) passed successfully.
 - [ ] Review Sections 8–13 (Test Plan, Risk Register, Monitoring & Completion) and put justifications in your own words to avoid generic phrasing.
 - [ ] Merge Member 1, Member 2, and Member 3 sections into the final PDF named `Project_24i-0761_24i-3112_24i-3097_Section.pdf` (verify exact roll numbers and section).
 - [ ] Verify you can explain `generate_test_data.py`, `test_expense_api.py`, `test_uc3_uc4_manager_review.py`, and perform a live `openapi.yaml` constraint edit + regeneration during the demo.
