@@ -55,8 +55,8 @@ This document compiles the complete, end-to-end quality engineering deliverables
 
 | Field | Value |
 |---|---|
-| Upstream repository | <https://github.com/LijuanTang94/expense-approval> |
-| Our fork | <https://github.com/Anfey-SE/expense-approval> |
+| Upstream repository | https://github.com/LijuanTang94/expense-approval |
+| Our fork | https://github.com/Anfey-SE/expense-approval |
 | Baseline commit | `ae596c382e61685841696a63efff094359aa4e59` |
 | Licence | MIT (see `LICENSE` in repo root) |
 | Stack | Java 21 · Spring Boot 4.1 · PostgreSQL + Flyway · Spring Security + JWT (jjwt 0.12.6) · React 19 + Vite + TypeScript |

@@ -119,6 +119,7 @@ def md_to_html(text):
             tag = "th" if not table_header_done else "td"
             proc_cells = []
             for c in cells:
+                c = re.sub(r"<(https?://[^>]+)>", r"\1", c)
                 c = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", c)
                 c = re.sub(r"\*(.+?)\*", r"<em>\1</em>", c)
                 c = re.sub(r"`(.+?)`", r"<code>\1</code>", c)
@@ -180,7 +181,8 @@ def md_to_html(text):
             continue
 
         # Standard paragraph
-        p = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", line)
+        p = re.sub(r"<(https?://[^>]+)>", r"\1", line)
+        p = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", p)
         p = re.sub(r"\*(.+?)\*", r"<em>\1</em>", p)
         p = re.sub(r"`(.+?)`", r"<code>\1</code>", p)
         p = re.sub(r"\[([^\]]+)\]\([^\)]+\)", r"\1", p)
