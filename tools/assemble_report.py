@@ -22,10 +22,7 @@ m1_ai = read_file("docs/team/ai_use_member1.md")
 m2_ai = read_file("docs/team/ai_use_member2.md")
 m3_ai = read_file("docs/m3/ai-use-record.md")
 
-header = """# FAST National University of Computer and Emerging Sciences
-## Department of Computer Science — Islamabad Campus
-### SE3002: Software Quality Engineering (Fall 2026)
-# Final Project Quality Engineering Report: Automated Testing of Expense Approval MIS
+header = """# Final Project Quality Engineering Report: Automated Testing of Expense Approval MIS
 
 ---
 
@@ -35,13 +32,13 @@ header = """# FAST National University of Computer and Emerging Sciences
 |---|---|
 | **Course** | SE3002: Software Quality Engineering |
 | **Academic Term** | Fall 2026 |
-| **Section** | Section C |
+| **Section** | Section SE-C |
 | **System Under Test** | Expense Approval Management Information System (Spring Boot 4.1, PostgreSQL 16, React 19) |
 | **Repository URL** | https://github.com/Anfey-SE/expense-approval |
 | **Upstream Repository** | https://github.com/LijuanTang94/expense-approval (MIT Licence) |
 | **Baseline Commit** | `ae596c3` |
 | **Final Integration** | Merged across PRs #14 through #21 to `master` |
-| **Group Members** | **Member 1 (24i-3112):** Static Analysis, White-Box Unit Testing, PIT Mutation, CI Quality Gate, UC1/UC2<br>**Member 2 (24i-3097):** Test Management Lead, OpenAPI Specification, EP/BVA Test Data Generator, API Test Suite, UC3/UC4, PDF Compilation<br>**Member 3 (24i-0761):** Usability & WCAG 2.1 AA Accessibility, Defensive Security, k6 Performance, ACID Failure Recovery, UC5/UC6, Defect RCA |
+| **Group Members** | **Member 1: Amna Hafeez (24I-3112) —** Static Analysis, White-Box Unit Testing, PIT Mutation, CI Quality Gate, UC1/UC2<br>**Member 2: Humna Attique (24I-3097) —** Test Management Lead, OpenAPI Specification, EP/BVA Test Data Generator, API Test Suite, UC3/UC4, PDF Compilation<br>**Member 3: Uswa Shafiq (24I-0761) —** Usability & WCAG 2.1 AA Accessibility, Defensive Security, k6 Performance, ACID Failure Recovery, UC5/UC6, Defect RCA |
 
 ---
 
