@@ -22,10 +22,7 @@ m1_ai = read_file("docs/team/ai_use_member1.md")
 m2_ai = read_file("docs/team/ai_use_member2.md")
 m3_ai = read_file("docs/m3/ai-use-record.md")
 
-header = """# FAST National University of Computer and Emerging Sciences
-## Department of Computer Science — Islamabad Campus
-### SE3002: Software Quality Engineering (Fall 2026)
-# Final Project Quality Engineering Report: Automated Testing of Expense Approval MIS
+header = """# Final Project Quality Engineering Report: Automated Testing of Expense Approval MIS
 
 ---
 

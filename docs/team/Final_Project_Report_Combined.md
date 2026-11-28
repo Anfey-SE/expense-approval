@@ -1,6 +1,3 @@
-# FAST National University of Computer and Emerging Sciences
-## Department of Computer Science — Islamabad Campus
-### SE3002: Software Quality Engineering (Fall 2026)
 # Final Project Quality Engineering Report: Automated Testing of Expense Approval MIS
 
 ---
